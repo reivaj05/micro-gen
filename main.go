@@ -2,13 +2,10 @@ package main
 
 import (
 	"fmt"
-	"os"
 
-	// "github.com/reivaj05/apigateway/generator"
-
+	"github.com/reivaj05/GoCLI"
 	"github.com/reivaj05/GoConfig"
-	// "github.com/reivaj05/apigateway/cli"
-	// "github.com/reivaj05/apigateway/server"
+	"github.com/reivaj05/GoLogger"
 )
 
 const appName = "micro-gen"
@@ -40,42 +37,59 @@ func createConfigOptions() *GoConfig.ConfigOptions {
 }
 
 func startLogger() {
+	if err := GoLogger.Init(createLoggerOptions()); err != nil {
+		finishExecution("Error while loading logger", map[string]interface{}{
+			"error": err.Error(),
+		})
+	}
+}
 
+func createLoggerOptions() *GoLogger.LoggerOptions {
+	return &GoLogger.LoggerOptions{
+		OutputFile: fmt.Sprintf("%s-log.json", appName),
+		Path:       "log/",
+		LogLevel:   getLogLevel(),
+	}
+}
+
+func getLogLevel() int {
+	levels := map[string]int{"DEBUG": GoLogger.DEBUG, "INFO": GoLogger.INFO,
+		"WARNING": GoLogger.WARNING, "ERROR": GoLogger.ERROR,
+		"PANIC": GoLogger.PANIC, "FATAL": GoLogger.FATAL,
+	}
+	if level, ok := levels[GoConfig.GetConfigStringValue("logLevel")]; ok {
+		return level
+	}
+	return GoLogger.INFO
 }
 
 func startApp() {
-	// if err := cli.StartCLI(createCLIOptions()); err != nil {
-	// 	finishExecution("Error while starting application", map[string]interface{}{
-	// 		"error": err.Error(),
-	// 	})
-	// }
+	if err := GoCLI.StartCLI(createCLIOptions()); err != nil {
+		finishExecution("Error while starting application", map[string]interface{}{
+			"error": err.Error(),
+		})
+	}
 }
 
-// func createCLIOptions() *cli.Options {
-// 	return &cli.Options{
-// 		AppName:       appName,
-// 		AppUsage:      "TODO: Set app usage",
-// 		Commands:      createCommands(),
-// 		DefaultAction: server.Serve,
-// 	}
-// }
+func createCLIOptions() *GoCLI.Options {
+	return &GoCLI.Options{
+		AppName:  appName,
+		AppUsage: "TODO: Set app usage",
+		Commands: createCommands(),
+		// DefaultAction: server.Serve,
+	}
+}
 
-// func createCommands() []*cli.Command {
-// 	return []*cli.Command{
-// 		&cli.Command{
-// 			Name:   "start",
-// 			Usage:  "TODO: Set start usage",
-// 			Action: server.Serve,
-// 		},
-// 		&cli.Command{
-// 			Name:   "create-service",
-// 			Usage:  "TODO: Set create-service usage",
-// 			Action: generator.Generate,
-// 		},
-// 	}
-// }
+func createCommands() []*GoCLI.Command {
+	return []*GoCLI.Command{
+	// &GoCLI.Command{
+	// 	Name:   "create-service",
+	// 	Usage:  "TODO: Set create-service usage",
+	// 	Action: generator.Generate,
+	// },
+	}
+}
 
 func finishExecution(msg string, fields map[string]interface{}) {
-	fmt.Println(msg, fields)
-	os.Exit(1)
+	GoLogger.LogFatal(msg, fields)
 }
