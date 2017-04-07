@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 
+	"github.com/reivaj05/micro-gen/generator"
+
 	"github.com/reivaj05/GoCLI"
 	"github.com/reivaj05/GoConfig"
 	"github.com/reivaj05/GoLogger"
@@ -82,11 +84,11 @@ func createCLIOptions() *GoCLI.Options {
 
 func createCommands() []*GoCLI.Command {
 	return []*GoCLI.Command{
-	// &GoCLI.Command{
-	// 	Name:   "create-service",
-	// 	Usage:  "TODO: Set create-service usage",
-	// 	Action: generator.Generate,
-	// },
+		&GoCLI.Command{
+			Name:   "create-service",
+			Usage:  "TODO: Set create-service usage",
+			Action: generator.Generate,
+		},
 	}
 }
 
