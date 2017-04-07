@@ -20,3 +20,5 @@
 # End of https://www.gitignore.io/api/go
 *.coverprofile
 coverage
+/log
+*.log
