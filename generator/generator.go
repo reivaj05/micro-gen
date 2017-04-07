@@ -1,6 +1,12 @@
 package generator
 
-import "fmt"
+import (
+	goGen "github.com/reivaj05/micro-gen/generator/generators/go"
+	jsGen "github.com/reivaj05/micro-gen/generator/generators/javascript"
+	pythonGen "github.com/reivaj05/micro-gen/generator/generators/python"
+	rubyGen "github.com/reivaj05/micro-gen/generator/generators/ruby"
+	rustGen "github.com/reivaj05/micro-gen/generator/generators/rust"
+)
 
 type generator func() error
 
@@ -18,26 +24,25 @@ func Generate(args ...string) error {
 }
 
 func generateGo() error {
-	fmt.Println("TODO: Implement go generator")
-	return nil
-}
-
-func generatePython() error {
-	fmt.Println("TODO: Implement python generator")
-	return nil
-}
-
-func generateRuby() error {
-	fmt.Println("TODO: Implement ruby generator")
-	return nil
+	return goGen.Build()
 }
 
 func generateJS() error {
-	fmt.Println("TODO: Implement js generator")
-	return nil
+	return jsGen.Build()
+}
+
+func generatePython() error {
+	return pythonGen.Build()
+}
+
+func generateRuby() error {
+	return rubyGen.Build()
 }
 
 func generateRust() error {
-	fmt.Println("TODO: Implement rust generator")
+	return rustGen.Build()
+}
+
+func rollback() error {
 	return nil
 }
