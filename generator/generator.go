@@ -8,7 +8,7 @@ import (
 	rustBuilder "github.com/reivaj05/micro-gen/generator/builders/rust"
 )
 
-type generator func() error
+type generator func(serviceName string) error
 
 var generators = map[string]generator{
 	"go":         generateGo,
@@ -20,27 +20,29 @@ var generators = map[string]generator{
 
 func Generate(args ...string) error {
 	language := args[0]
-	return generators[language]()
+	// TODO: Update service name from a
+	serviceName := "go"
+	return generators[language](serviceName)
 }
 
-func generateGo() error {
-	return goBuilder.Build()
+func generateGo(serviceName string) error {
+	return goBuilder.Build(serviceName)
 }
 
-func generateJS() error {
-	return jsBuilder.Build()
+func generateJS(serviceName string) error {
+	return jsBuilder.Build(serviceName)
 }
 
-func generatePython() error {
-	return pythonBuilder.Build()
+func generatePython(serviceName string) error {
+	return pythonBuilder.Build(serviceName)
 }
 
-func generateRuby() error {
-	return rubyBuilder.Build()
+func generateRuby(serviceName string) error {
+	return rubyBuilder.Build(serviceName)
 }
 
-func generateRust() error {
-	return rustBuilder.Build()
+func generateRust(serviceName string) error {
+	return rustBuilder.Build(serviceName)
 }
 
 func rollback() error {
