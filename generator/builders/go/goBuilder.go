@@ -33,6 +33,9 @@ func generateFiles(serviceName string) error {
 	if err := generateGoFiles(serviceName); err != nil {
 		return err
 	}
+	if err := generateConfigFile(serviceName); err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -76,6 +79,15 @@ func generateControllersFile(serviceName string) error {
 	})
 }
 
+func generateConfigFile(serviceName string) error {
+	return _generateFile(&utils.GenerateOptions{
+		ServiceName:   serviceName,
+		FileName:      "config",
+		FileExtension: "json",
+		FileTemplate:  "config.gen",
+	})
+}
+
 func _generateFile(options *utils.GenerateOptions) error {
 	file, err := _createFile(options)
 	if err != nil {
@@ -92,7 +104,9 @@ func _createFile(options *utils.GenerateOptions) (*os.File, error) {
 
 func _writeTemplateContent(file *os.File, options *utils.GenerateOptions) error {
 	defer file.Close()
-	templateDir := fmt.Sprintf("%s/generator/builders/go/templates/%s", utils.GetMicroGenPath(), options.FileTemplate)
+	templateDir := fmt.Sprintf(
+		"%s/generator/builders/go/templates/%s",
+		utils.GetMicroGenPath(), options.FileTemplate)
 	tmpl := template.Must(template.ParseFiles(templateDir))
 	return tmpl.Execute(file, options.Data)
 }
