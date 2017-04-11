@@ -30,16 +30,20 @@ func createService(serviceName string) error {
 }
 
 func generateFiles(serviceName string) error {
+	if err := generateGoFiles(serviceName); err != nil {
+		return err
+	}
+	return nil
+}
+
+func generateGoFiles(serviceName string) error {
 	if err := generateMainFile(serviceName); err != nil {
 		return err
 	}
 	if err := generateEndpointsFile(serviceName); err != nil {
 		return err
 	}
-	if err := generateControllersFile(serviceName); err != nil {
-		return err
-	}
-	return nil
+	return generateControllersFile(serviceName)
 }
 
 func generateMainFile(serviceName string) error {
