@@ -74,7 +74,7 @@ func process() {
 }
 
 func createEndpoints() (endpoints []*GoServer.Endpoint) {
-	// endpoints = append(endpoints, {{ .ServiceName }}.Endpoints...)
+	endpoints = append(endpoints, Endpoints...)
 	return
 }
 
