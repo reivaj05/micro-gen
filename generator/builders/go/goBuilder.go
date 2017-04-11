@@ -13,7 +13,6 @@ type data struct {
 }
 
 func Build(serviceName string) error {
-	// path := utils.GetMicroGenPath()
 	fmt.Println("TODO: Implement go generator")
 	if err := createServiceDir(serviceName); err != nil {
 		return err
@@ -34,9 +33,9 @@ func generateFiles(serviceName string) error {
 	if err := generateMainFile(serviceName); err != nil {
 		return err
 	}
-	// if err := generateServiceFile(path, serviceName); err != nil {
-	// 	return err
-	// }
+	if err := generateEndpointsFile(serviceName); err != nil {
+		return err
+	}
 	// if err := generateProtoFiles(path, serviceName); err != nil {
 	// 	return err
 	// }
@@ -52,6 +51,15 @@ func generateMainFile(serviceName string) error {
 		Data: &data{
 			ServiceName: serviceName,
 		},
+	})
+}
+
+func generateEndpointsFile(serviceName string) error {
+	return _generateFile(&utils.GenerateOptions{
+		ServiceName:   serviceName,
+		FileName:      "endpoints",
+		FileExtension: "go",
+		FileTemplate:  "endpoints.gen",
 	})
 }
 
