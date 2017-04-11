@@ -21,7 +21,7 @@ var generators = map[string]generator{
 func Generate(args ...string) error {
 	language := args[0]
 	// TODO: Update service name from a
-	serviceName := "go"
+	serviceName := "serviceMock"
 	return generators[language](serviceName)
 }
 
