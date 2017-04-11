@@ -65,7 +65,9 @@ func getLogLevel() int {
 }
 
 func process() {
-	port := GoConfig.GetConfigStringValue("port")
+	// TODO: Get port from config file
+	// port := GoConfig.GetConfigStringValue("port")
+	port := "9000"
 	if err := GoServer.Start(port, createEndpoints()); err != nil {
 		finishExecution("Error while starting server", map[string]interface{}{
 			"error": err.Error(),
