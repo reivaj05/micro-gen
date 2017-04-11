@@ -36,9 +36,9 @@ func generateFiles(serviceName string) error {
 	if err := generateEndpointsFile(serviceName); err != nil {
 		return err
 	}
-	// if err := generateProtoFiles(path, serviceName); err != nil {
-	// 	return err
-	// }
+	if err := generateControllersFile(serviceName); err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -60,6 +60,15 @@ func generateEndpointsFile(serviceName string) error {
 		FileName:      "endpoints",
 		FileExtension: "go",
 		FileTemplate:  "endpoints.gen",
+	})
+}
+
+func generateControllersFile(serviceName string) error {
+	return _generateFile(&utils.GenerateOptions{
+		ServiceName:   serviceName,
+		FileName:      "controllers",
+		FileExtension: "go",
+		FileTemplate:  "controllers.gen",
 	})
 }
 
