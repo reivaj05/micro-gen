@@ -95,6 +95,9 @@ func generateBuildFiles(serviceName string) error {
 	if err := generateMakeFile(serviceName); err != nil {
 		return err
 	}
+	if err := generateGlideFile(serviceName); err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -116,6 +119,15 @@ func generateMakeFile(serviceName string) error {
 		FileName:      "Makefile",
 		FileExtension: "",
 		FileTemplate:  "Makefile.gen",
+	})
+}
+
+func generateGlideFile(serviceName string) error {
+	return _generateFile(&utils.GenerateOptions{
+		ServiceName:   serviceName,
+		FileName:      "glide",
+		FileExtension: "yaml",
+		FileTemplate:  "glide.gen",
 	})
 }
 
