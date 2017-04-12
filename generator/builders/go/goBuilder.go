@@ -36,7 +36,7 @@ func generateFiles(serviceName string) error {
 	if err := generateConfigFile(serviceName); err != nil {
 		return err
 	}
-	return nil
+	return generateBuildFiles(serviceName)
 }
 
 func generateGoFiles(serviceName string) error {
@@ -88,6 +88,25 @@ func generateConfigFile(serviceName string) error {
 	})
 }
 
+func generateBuildFiles(serviceName string) error {
+	if err := generateDockerFile(serviceName); err != nil {
+		return err
+	}
+	return nil
+}
+
+func generateDockerFile(serviceName string) error {
+	return _generateFile(&utils.GenerateOptions{
+		ServiceName:   serviceName,
+		FileName:      "Dockerfile",
+		FileExtension: "",
+		FileTemplate:  "Dockerfile.gen",
+		Data: &data{
+			ServiceName: serviceName,
+		},
+	})
+}
+
 func _generateFile(options *utils.GenerateOptions) error {
 	file, err := _createFile(options)
 	if err != nil {
@@ -97,8 +116,10 @@ func _generateFile(options *utils.GenerateOptions) error {
 }
 
 func _createFile(options *utils.GenerateOptions) (*os.File, error) {
-	dst := fmt.Sprintf("./%s/%s.%s", options.ServiceName,
-		options.FileName, options.FileExtension)
+	dst := fmt.Sprintf("./%s/%s", options.ServiceName, options.FileName)
+	if options.FileExtension != "" {
+		dst = dst + fmt.Sprintf(".%s", options.FileExtension)
+	}
 	return os.Create(dst)
 }
 
