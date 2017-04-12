@@ -92,6 +92,9 @@ func generateBuildFiles(serviceName string) error {
 	if err := generateDockerFile(serviceName); err != nil {
 		return err
 	}
+	if err := generateMakeFile(serviceName); err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -104,6 +107,15 @@ func generateDockerFile(serviceName string) error {
 		Data: &data{
 			ServiceName: serviceName,
 		},
+	})
+}
+
+func generateMakeFile(serviceName string) error {
+	return _generateFile(&utils.GenerateOptions{
+		ServiceName:   serviceName,
+		FileName:      "Makefile",
+		FileExtension: "",
+		FileTemplate:  "Makefile.gen",
 	})
 }
 
