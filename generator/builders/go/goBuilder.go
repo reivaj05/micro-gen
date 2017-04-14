@@ -6,6 +6,8 @@ import (
 	"text/template"
 
 	"github.com/reivaj05/micro-gen/generator/utils"
+
+	"github.com/reivaj05/GoConfig"
 )
 
 type data struct {
@@ -149,9 +151,11 @@ func _createFile(options *utils.GenerateOptions) (*os.File, error) {
 
 func _writeTemplateContent(file *os.File, options *utils.GenerateOptions) error {
 	defer file.Close()
-	templateDir := fmt.Sprintf(
-		"%s/generator/builders/go/templates/%s",
-		utils.GetMicroGenPath(), options.FileTemplate)
+	templateDir := fmt.Sprintf("%s/%s%s", utils.GetMicroGenPath(),
+		GoConfig.GetConfigStringValue("goTemplatesPath"), options.FileTemplate)
+	if _, err := os.Stat(templateDir); err != nil {
+		return err
+	}
 	tmpl := template.Must(template.ParseFiles(templateDir))
 	return tmpl.Execute(file, options.Data)
 }

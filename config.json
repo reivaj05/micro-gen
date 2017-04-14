@@ -1,3 +1,4 @@
 {
-	"logLevel": "INFO"
+	"logLevel": "INFO",
+	"goTemplatesPath": "generator/builders/go/templates/"
 }
