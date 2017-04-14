@@ -6,26 +6,32 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/reivaj05/GoConfig"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
 )
 
 type GoBuilderTestSuite struct {
 	suite.Suite
-	assert *assert.Assertions
+	assert     *assert.Assertions
+	pathBackup string
 }
 
 func (suite *GoBuilderTestSuite) SetupSuite() {
 	suite.assert = assert.New(suite.T())
-	// GoConfig.Init(&GoConfig.ConfigOptions{
-	// 	ConfigType: "json",
-	// 	ConfigFile: "config",
-	// 	ConfigPath: "..",
-	// })
+	GoConfig.Init(&GoConfig.ConfigOptions{
+		ConfigType: "json",
+		ConfigFile: "config",
+		ConfigPath: "..",
+	})
 }
 
-func (suite *GoBuilderTestSuite) TearDownSuite() {
-	// rollback(suite.mockServiceName)
+func (suite *GoBuilderTestSuite) SetupTest() {
+	suite.pathBackup = GoConfig.GetConfigStringValue("goTemplatesPath")
+}
+
+func (suite *GoBuilderTestSuite) TearDownTest() {
+	GoConfig.SetConfigValue("goTemplatesPath", suite.pathBackup)
 }
 
 func (suite *GoBuilderTestSuite) TestBuildWrongServiceName() {
