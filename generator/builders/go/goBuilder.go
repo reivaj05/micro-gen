@@ -1,4 +1,4 @@
-package goGenerator
+package goBuilder
 
 import (
 	"fmt"
