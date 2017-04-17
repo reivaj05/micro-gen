@@ -1,5 +1,7 @@
 package goBuilder
 
+// TODO: Update/Fix glide package path
+
 import (
 	"fmt"
 	"os"
@@ -100,6 +102,12 @@ func generateBuildFiles(serviceName string) error {
 	if err := generateGlideFile(serviceName); err != nil {
 		return err
 	}
+	if err := generateGitIgnoreFile(serviceName); err != nil {
+		return err
+	}
+	if err := generateDockerIgnoreFile(serviceName); err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -130,6 +138,27 @@ func generateGlideFile(serviceName string) error {
 		FileName:      "glide",
 		FileExtension: "yaml",
 		FileTemplate:  "glide.gen",
+		Data: &data{
+			ServiceName: serviceName,
+		},
+	})
+}
+
+func generateGitIgnoreFile(serviceName string) error {
+	return _generateFile(&utils.GenerateOptions{
+		ServiceName:   serviceName,
+		FileName:      ".gignore",
+		FileExtension: "",
+		FileTemplate:  "ignore.gen",
+	})
+}
+
+func generateDockerIgnoreFile(serviceName string) error {
+	return _generateFile(&utils.GenerateOptions{
+		ServiceName:   serviceName,
+		FileName:      ".dockerignore",
+		FileExtension: "",
+		FileTemplate:  "ignore.gen",
 	})
 }
 
