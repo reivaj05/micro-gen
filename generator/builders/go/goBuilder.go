@@ -5,11 +5,8 @@ package goBuilder
 import (
 	"fmt"
 	"os"
-	"text/template"
 
 	"github.com/reivaj05/micro-gen/generator/utils"
-
-	"github.com/reivaj05/GoConfig"
 )
 
 type data struct {
@@ -54,42 +51,23 @@ func generateGoFiles(serviceName string) error {
 }
 
 func generateMainFile(serviceName string) error {
-	return _generateFile(&utils.GenerateOptions{
-		ServiceName:   serviceName,
-		FileName:      "main",
-		FileExtension: "go",
-		FileTemplate:  "main.gen",
-		Data: &data{
-			ServiceName: serviceName,
-		},
-	})
+	return utils.GenerateFile(serviceName, "main", "go",
+		"main.gen", &data{ServiceName: serviceName})
 }
 
 func generateEndpointsFile(serviceName string) error {
-	return _generateFile(&utils.GenerateOptions{
-		ServiceName:   serviceName,
-		FileName:      "endpoints",
-		FileExtension: "go",
-		FileTemplate:  "endpoints.gen",
-	})
+	return utils.GenerateFile(serviceName, "endpoints", "go",
+		"endpoints.gen", nil)
 }
 
 func generateControllersFile(serviceName string) error {
-	return _generateFile(&utils.GenerateOptions{
-		ServiceName:   serviceName,
-		FileName:      "controllers",
-		FileExtension: "go",
-		FileTemplate:  "controllers.gen",
-	})
+	return utils.GenerateFile(serviceName, "controllers", "go",
+		"controllers.gen", nil)
 }
 
 func generateConfigFile(serviceName string) error {
-	return _generateFile(&utils.GenerateOptions{
-		ServiceName:   serviceName,
-		FileName:      "config",
-		FileExtension: "json",
-		FileTemplate:  "config.gen",
-	})
+	return utils.GenerateFile(serviceName, "config", "json",
+		"config.gen", nil)
 }
 
 func generateBuildFiles(serviceName string) error {
@@ -112,79 +90,26 @@ func generateBuildFiles(serviceName string) error {
 }
 
 func generateDockerFile(serviceName string) error {
-	return _generateFile(&utils.GenerateOptions{
-		ServiceName:   serviceName,
-		FileName:      "Dockerfile",
-		FileExtension: "",
-		FileTemplate:  "Dockerfile.gen",
-		Data: &data{
-			ServiceName: serviceName,
-		},
-	})
+	return utils.GenerateFile(serviceName, "Dockerfile", "",
+		"Dockerfile.gen", &data{ServiceName: serviceName})
 }
 
 func generateMakeFile(serviceName string) error {
-	return _generateFile(&utils.GenerateOptions{
-		ServiceName:   serviceName,
-		FileName:      "Makefile",
-		FileExtension: "",
-		FileTemplate:  "Makefile.gen",
-	})
+	return utils.GenerateFile(serviceName, "Makefile", "",
+		"Makefile.gen", nil)
 }
 
 func generateGlideFile(serviceName string) error {
-	return _generateFile(&utils.GenerateOptions{
-		ServiceName:   serviceName,
-		FileName:      "glide",
-		FileExtension: "yaml",
-		FileTemplate:  "glide.gen",
-		Data: &data{
-			ServiceName: serviceName,
-		},
-	})
+	return utils.GenerateFile(serviceName, "glide", "yaml",
+		"glide.gen", &data{ServiceName: serviceName})
 }
 
 func generateGitIgnoreFile(serviceName string) error {
-	return _generateFile(&utils.GenerateOptions{
-		ServiceName:   serviceName,
-		FileName:      ".gignore",
-		FileExtension: "",
-		FileTemplate:  "ignore.gen",
-	})
+	return utils.GenerateFile(serviceName, ".gignore", "",
+		"ignore.gen", nil)
 }
 
 func generateDockerIgnoreFile(serviceName string) error {
-	return _generateFile(&utils.GenerateOptions{
-		ServiceName:   serviceName,
-		FileName:      ".dockerignore",
-		FileExtension: "",
-		FileTemplate:  "ignore.gen",
-	})
-}
-
-func _generateFile(options *utils.GenerateOptions) error {
-	file, err := _createFile(options)
-	if err != nil {
-		return err
-	}
-	return _writeTemplateContent(file, options)
-}
-
-func _createFile(options *utils.GenerateOptions) (*os.File, error) {
-	dst := fmt.Sprintf("./%s/%s", options.ServiceName, options.FileName)
-	if options.FileExtension != "" {
-		dst = dst + fmt.Sprintf(".%s", options.FileExtension)
-	}
-	return os.Create(dst)
-}
-
-func _writeTemplateContent(file *os.File, options *utils.GenerateOptions) error {
-	defer file.Close()
-	templateDir := fmt.Sprintf("%s/%s%s", utils.GetMicroGenPath(),
-		GoConfig.GetConfigStringValue("goTemplatesPath"), options.FileTemplate)
-	if _, err := os.Stat(templateDir); err != nil {
-		return err
-	}
-	tmpl := template.Must(template.ParseFiles(templateDir))
-	return tmpl.Execute(file, options.Data)
+	return utils.GenerateFile(serviceName, ".dockerignore", "",
+		"ignore.gen", nil)
 }
