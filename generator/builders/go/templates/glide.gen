@@ -1,4 +1,4 @@
-package: github.com/reivaj05/micro-gen/serviceMock
+package: github.com/{{ .ServiceName }}
 import:
 - package: github.com/reivaj05/GoConfig
 - package: github.com/reivaj05/GoJSON
