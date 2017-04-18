@@ -1,0 +1,12 @@
+package: github.com/reivaj05/micro-gen
+import:
+- package: github.com/reivaj05/GoCLI
+- package: github.com/reivaj05/GoConfig
+- package: github.com/reivaj05/GoJSON
+- package: github.com/reivaj05/GoLogger
+- package: github.com/reivaj05/GoServer
+testImport:
+- package: github.com/stretchr/testify
+  subpackages:
+  - assert
+  - suite
