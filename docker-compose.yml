@@ -1,0 +1,9 @@
+version: '2'
+
+services:
+  micro-gen:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    volumes:
+      - ./:/go/src/github.com/reivaj05/micro-gen
