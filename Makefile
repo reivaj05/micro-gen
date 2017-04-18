@@ -11,9 +11,7 @@ build: deps
 fmt:
 	$(GOCMD) fmt $(PKG)
 test: deps
-	$(GOCMD) test -a -v ./...
+	$(GOCMD) test $(go list ./... | grep -v /vendor/)
 deps:
-	wget -q https://raw.githubusercontent.com/pote/gpm/v1.4.0/bin/gpm
-	chmod +x gpm
-	./gpm
-	rm gpm
+	curl https://glide.sh/get | sh
+	glide install
