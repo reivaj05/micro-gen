@@ -11,7 +11,6 @@ build: deps
 fmt:
 	$(GOCMD) fmt $(PKG)
 test: deps
-	$(GOCMD) test $(go list ./... | grep -v /vendor/)
+	./scripts/tests.sh
 deps:
-	curl https://glide.sh/get | sh
-	glide install
+	./scripts/deps.sh
