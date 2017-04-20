@@ -5,6 +5,7 @@ import:
 - package: github.com/reivaj05/GoJSON
 - package: github.com/reivaj05/GoLogger
 - package: github.com/reivaj05/GoServer
+- package: github.com/serenize/snaker
 testImport:
 - package: github.com/stretchr/testify
   subpackages:
