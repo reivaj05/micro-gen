@@ -13,14 +13,15 @@ type generateOptions struct {
 	FileExtension string
 	FileTemplate  string
 	FileName      string
+	FilePath      string
 	Data          interface{}
 }
 
 func GenerateFile(serviceName, fileName, fileExtension,
-	fileTemplate string, data interface{}) error {
+	fileTemplate, filePath string, data interface{}) error {
 
 	options := createGenerateOptions(serviceName, fileName,
-		fileExtension, fileTemplate, data)
+		fileExtension, fileTemplate, filePath, data)
 	file, err := createFile(options)
 	if err != nil {
 		return err
@@ -29,13 +30,14 @@ func GenerateFile(serviceName, fileName, fileExtension,
 }
 
 func createGenerateOptions(serviceName, fileName, fileExtension,
-	fileTemplate string, data interface{}) *generateOptions {
+	fileTemplate, filePath string, data interface{}) *generateOptions {
 
 	return &generateOptions{
 		ServiceName:   serviceName,
 		FileName:      fileName,
 		FileExtension: fileExtension,
 		FileTemplate:  fileTemplate,
+		FilePath:      filePath,
 		Data:          data,
 	}
 }
@@ -50,8 +52,9 @@ func createFile(options *generateOptions) (*os.File, error) {
 
 func writeTemplateContent(file *os.File, options *generateOptions) error {
 	defer file.Close()
-	templateDir := fmt.Sprintf("%s/%s%s", getMicroGenPath(),
-		GoConfig.GetConfigStringValue("goTemplatesPath"), options.FileTemplate)
+	templateDir := fmt.Sprintf("%s/%s%s%s", getMicroGenPath(),
+		GoConfig.GetConfigStringValue("goTemplatesPath"), options.FilePath,
+		options.FileTemplate)
 	if _, err := os.Stat(templateDir); err != nil {
 		return err
 	}

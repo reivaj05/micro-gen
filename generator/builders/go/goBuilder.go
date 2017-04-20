@@ -54,22 +54,22 @@ func generateGoFiles(serviceName string) error {
 
 func generateMainFile(serviceName string) error {
 	return utils.GenerateFile(serviceName, "main", "go",
-		"main.gen", &data{ServiceName: serviceName})
+		"main.gen", "src/", &data{ServiceName: serviceName})
 }
 
 func generateEndpointsFile(serviceName string) error {
 	return utils.GenerateFile(serviceName, "endpoints", "go",
-		"endpoints.gen", nil)
+		"endpoints.gen", "src/", nil)
 }
 
 func generateControllersFile(serviceName string) error {
 	return utils.GenerateFile(serviceName, "controllers", "go",
-		"controllers.gen", nil)
+		"controllers.gen", "src/", nil)
 }
 
 func generateConfigFile(serviceName string) error {
 	return utils.GenerateFile(serviceName, "config", "json",
-		"config.gen", nil)
+		"config.gen", "src/", nil)
 }
 
 func generateBuildFiles(serviceName string) error {
@@ -96,7 +96,7 @@ func generateBuildFiles(serviceName string) error {
 
 func generateDockerComposeFile(serviceName string) error {
 	return utils.GenerateFile(serviceName, "docker-compose", "yml",
-		"docker-compose.gen", &data{
+		"docker-compose.gen", "build/", &data{
 			ServiceName:      serviceName,
 			SnakeServiceName: snaker.CamelToSnake(serviceName),
 		})
@@ -104,30 +104,30 @@ func generateDockerComposeFile(serviceName string) error {
 
 func generateDockerFile(serviceName string) error {
 	return utils.GenerateFile(serviceName, "Dockerfile", "",
-		"Dockerfile.gen", &data{ServiceName: serviceName})
+		"Dockerfile.gen", "build/", &data{ServiceName: serviceName})
 }
 
 func generateMakeFile(serviceName string) error {
 	return utils.GenerateFile(serviceName, "Makefile", "",
-		"Makefile.gen", nil)
+		"Makefile.gen", "build/", nil)
 }
 
 func generateGlideFile(serviceName string) error {
 	return utils.GenerateFile(serviceName, "glide", "yaml",
-		"glide.gen", &data{ServiceName: serviceName})
+		"glide.gen", "src/", &data{ServiceName: serviceName})
 }
 
 func generateGitIgnoreFile(serviceName string) error {
 	return utils.GenerateFile(serviceName, ".gitignore", "",
-		"ignore.gen", nil)
+		"ignore.gen", "", nil)
 }
 
 func generateDockerIgnoreFile(serviceName string) error {
 	return utils.GenerateFile(serviceName, ".dockerignore", "",
-		"ignore.gen", nil)
+		"ignore.gen", "", nil)
 }
 
 func generateTravisFile(serviceName string) error {
 	return utils.GenerateFile(serviceName, ".travis", "yml",
-		"travis.gen", nil)
+		"travis.gen", "build/", nil)
 }
