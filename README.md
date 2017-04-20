@@ -8,5 +8,5 @@ Command line tool to create microservices for different languages (Golang, Javas
 ## Usage
 
  - Install [Golang](https://golang.org/doc/install)
- - go get github.com/reivaj05
+ - go get github.com/reivaj05/micro-gen
  - micro-gen create-service language microserviceName
