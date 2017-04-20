@@ -91,7 +91,7 @@ func generateBuildFiles(serviceName string) error {
 	if err := generateDockerIgnoreFile(serviceName); err != nil {
 		return err
 	}
-	return nil
+	return generateTravisFile(serviceName)
 }
 
 func generateDockerComposeFile(serviceName string) error {
@@ -118,11 +118,16 @@ func generateGlideFile(serviceName string) error {
 }
 
 func generateGitIgnoreFile(serviceName string) error {
-	return utils.GenerateFile(serviceName, ".gignore", "",
+	return utils.GenerateFile(serviceName, ".gitignore", "",
 		"ignore.gen", nil)
 }
 
 func generateDockerIgnoreFile(serviceName string) error {
 	return utils.GenerateFile(serviceName, ".dockerignore", "",
 		"ignore.gen", nil)
+}
+
+func generateTravisFile(serviceName string) error {
+	return utils.GenerateFile(serviceName, ".travis", "yml",
+		"travis.gen", nil)
 }
