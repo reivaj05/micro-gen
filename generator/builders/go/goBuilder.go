@@ -114,7 +114,7 @@ func generateMakeFile(serviceName string) error {
 
 func generateGlideFile(serviceName string) error {
 	return utils.GenerateFile(serviceName, "glide", "yaml",
-		"glide.gen", "src/", &data{ServiceName: serviceName})
+		"glide.gen", "build/", &data{ServiceName: serviceName})
 }
 
 func generateGitIgnoreFile(serviceName string) error {
