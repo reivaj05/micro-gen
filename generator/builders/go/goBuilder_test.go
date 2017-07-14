@@ -46,7 +46,7 @@ func (suite *GoBuilderTestSuite) TestBuildWrongServiceName() {
 }
 
 func (suite *GoBuilderTestSuite) TestBuildWrongTemplatesPath() {
-	GoConfig.SetConfigValue("goTemplatesPath", "wrongPath")
+	GoConfig.SetConfigValue("templates", "wrongPath")
 	err := Build(suite.serviceName)
 	suite.assert.NotNil(err)
 }
