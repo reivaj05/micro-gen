@@ -23,3 +23,13 @@ func createService(serviceName string) error {
 	fmt.Println("TODO: Implement create service function")
 	return nil
 }
+
+func generateFiles(serviceName) error {
+	if err := generateProjectFiles(serviceName); err != nil {
+		return err
+	}
+	if err := generateAppFiles(serviceName); err != nil {
+		return err
+	}
+	return generateBuildFiles(serviceName)
+}
