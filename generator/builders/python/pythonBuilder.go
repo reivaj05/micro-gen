@@ -6,6 +6,11 @@ import (
 	"github.com/reivaj05/micro-gen/generator/utils"
 )
 
+type data struct {
+	ServiceName      string
+	SnakeServiceName string
+}
+
 func Build(serviceName string) error {
 	fmt.Println("TODO: Implement python generator")
 	path := fmt.Sprintf("./%s", serviceName)
@@ -30,8 +35,48 @@ func generateFiles(serviceName string) error {
 }
 
 func generateProjectFiles(serviceName string) error {
-	// TODO: Implement
-	return nil
+	path := fmt.Sprintf("./%s/%s", serviceName, serviceName)
+	if err := utils.CreateDir(path); err != nil {
+		return err
+	}
+	if err := generateSettingsFile(serviceName); err != nil {
+		return err
+	}
+	if err := generateUrlsFile(serviceName); err != nil {
+		return err
+	}
+	if err := generateWSGIFile(serviceName); err != nil {
+		return err
+	}
+	if err := generateInitFile(serviceName); err != nil {
+		return err
+	}
+	return generateManageFile(serviceName)
+}
+
+func generateSettingsFile(serviceName string) error {
+	return utils.GenerateFile(serviceName, serviceName+"/settings", "py",
+		"settings.gen", "src/project/", "python", &data{ServiceName: serviceName})
+}
+
+func generateUrlsFile(serviceName string) error {
+	return utils.GenerateFile(serviceName, serviceName+"/urls", "py",
+		"urls.gen", "src/project/", "python", &data{ServiceName: serviceName})
+}
+
+func generateWSGIFile(serviceName string) error {
+	return utils.GenerateFile(serviceName, serviceName+"/wsgi", "py",
+		"wsgi.gen", "src/project/", "python", &data{ServiceName: serviceName})
+}
+
+func generateInitFile(serviceName string) error {
+	return utils.GenerateFile(serviceName, serviceName+"/__init__", "py",
+		"__init__.gen", "src/", "python", &data{ServiceName: serviceName})
+}
+
+func generateManageFile(serviceName string) error {
+	return utils.GenerateFile(serviceName, "manage", "py",
+		"manage.gen", "src/", "python", &data{ServiceName: serviceName})
 }
 
 func generateAppFiles(serviceName string) error {
