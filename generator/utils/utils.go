@@ -14,6 +14,7 @@ type generateOptions struct {
 	FileTemplate  string
 	FileName      string
 	FilePath      string
+	Language      string
 	Data          interface{}
 }
 
@@ -22,10 +23,10 @@ func CreateDir(path string) error {
 }
 
 func GenerateFile(serviceName, fileName, fileExtension,
-	fileTemplate, filePath string, data interface{}) error {
+	fileTemplate, filePath, language string, data interface{}) error {
 
 	options := createGenerateOptions(serviceName, fileName,
-		fileExtension, fileTemplate, filePath, data)
+		fileExtension, fileTemplate, filePath, language, data)
 	file, err := createFile(options)
 	if err != nil {
 		return err
@@ -34,7 +35,7 @@ func GenerateFile(serviceName, fileName, fileExtension,
 }
 
 func createGenerateOptions(serviceName, fileName, fileExtension,
-	fileTemplate, filePath string, data interface{}) *generateOptions {
+	fileTemplate, filePath, language string, data interface{}) *generateOptions {
 
 	return &generateOptions{
 		ServiceName:   serviceName,
@@ -42,6 +43,7 @@ func createGenerateOptions(serviceName, fileName, fileExtension,
 		FileExtension: fileExtension,
 		FileTemplate:  fileTemplate,
 		FilePath:      filePath,
+		Language:      language,
 		Data:          data,
 	}
 }
@@ -57,7 +59,7 @@ func createFile(options *generateOptions) (*os.File, error) {
 func writeTemplateContent(file *os.File, options *generateOptions) error {
 	defer file.Close()
 	templateDir := fmt.Sprintf("%s/%s%s%s", getMicroGenPath(),
-		GoConfig.GetConfigStringValue("goTemplatesPath"), options.FilePath,
+		GoConfig.GetConfigMapValue("templates")[options.Language], options.FilePath,
 		options.FileTemplate)
 	if _, err := os.Stat(templateDir); err != nil {
 		return err

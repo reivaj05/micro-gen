@@ -1,4 +1,7 @@
 {
 	"logLevel": "INFO",
-	"goTemplatesPath": "generator/builders/go/templates/"
+	"templates": {
+		"go": "generator/builders/go/templates/",
+		"python": "generator/builders/python/templates/"
+	}
 }
