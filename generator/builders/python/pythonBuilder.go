@@ -33,3 +33,18 @@ func generateFiles(serviceName) error {
 	}
 	return generateBuildFiles(serviceName)
 }
+
+func generareProjectFiles(serviceName string) error {
+	// TODO: Implement
+	return nil
+}
+
+func generareAppFiles(serviceName string) error {
+	// TODO: Implement
+	return nil
+}
+
+func generareBuildFiles(serviceName string) error {
+	// TODO: Implement
+	return nil
+}
