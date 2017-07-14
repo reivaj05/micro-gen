@@ -20,11 +20,10 @@ func createServiceDir(serviceName string) error {
 }
 
 func createService(serviceName string) error {
-	fmt.Println("TODO: Implement create service function")
-	return nil
+	return generateFiles(serviceName)
 }
 
-func generateFiles(serviceName) error {
+func generateFiles(serviceName string) error {
 	if err := generateProjectFiles(serviceName); err != nil {
 		return err
 	}
@@ -34,17 +33,17 @@ func generateFiles(serviceName) error {
 	return generateBuildFiles(serviceName)
 }
 
-func generareProjectFiles(serviceName string) error {
+func generateProjectFiles(serviceName string) error {
 	// TODO: Implement
 	return nil
 }
 
-func generareAppFiles(serviceName string) error {
+func generateAppFiles(serviceName string) error {
 	// TODO: Implement
 	return nil
 }
 
-func generareBuildFiles(serviceName string) error {
+func generateBuildFiles(serviceName string) error {
 	// TODO: Implement
 	return nil
 }
