@@ -4,7 +4,6 @@ package goBuilder
 
 import (
 	"fmt"
-	"os"
 
 	"github.com/reivaj05/micro-gen/generator/utils"
 	"github.com/serenize/snaker"
@@ -16,16 +15,11 @@ type data struct {
 }
 
 func Build(serviceName string) error {
-	fmt.Println("TODO: Implement go generator")
-	if err := createServiceDir(serviceName); err != nil {
+	path := fmt.Sprintf("./%s", serviceName)
+	if err := utils.CreateDir(path); err != nil {
 		return err
 	}
 	return createService(serviceName)
-}
-
-func createServiceDir(serviceName string) error {
-	dst := fmt.Sprintf("./%s", serviceName)
-	return os.MkdirAll(dst, os.ModePerm)
 }
 
 func createService(serviceName string) error {

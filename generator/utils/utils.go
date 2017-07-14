@@ -17,6 +17,10 @@ type generateOptions struct {
 	Data          interface{}
 }
 
+func CreateDir(path string) error {
+	return os.MkdirAll(path, os.ModePerm)
+}
+
 func GenerateFile(serviceName, fileName, fileExtension,
 	fileTemplate, filePath string, data interface{}) error {
 
