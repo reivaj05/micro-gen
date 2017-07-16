@@ -85,34 +85,37 @@ func generateAppFiles(serviceName string) error {
 		return err
 	}
 	if err := generateAppsFile(serviceName); err != nil {
+		fmt.Println("appsfile")
 		return err
 	}
 	if err := generateURLSAppFile(serviceName); err != nil {
+		fmt.Println("urlsfile")
 		return err
 	}
 	if err := generateInitAppFile(serviceName); err != nil {
+		fmt.Println("initfile")
 		return err
 	}
 	return generateViewsFile(serviceName)
 }
 
 func generateAppsFile(serviceName string) error {
-	return utils.GenerateFile(serviceName, serviceName+"/app/apps", "py",
+	return utils.GenerateFile(serviceName, "/app/apps", "py",
 		"apps.gen", "src/app/", "python", &data{ServiceName: serviceName})
 }
 
 func generateURLSAppFile(serviceName string) error {
-	return utils.GenerateFile(serviceName, serviceName+"/app/urls", "py",
+	return utils.GenerateFile(serviceName, "/app/urls", "py",
 		"urls.gen", "src/app/", "python", &data{ServiceName: serviceName})
 }
 
 func generateInitAppFile(serviceName string) error {
-	return utils.GenerateFile(serviceName, serviceName+"/app/__init__", "py",
+	return utils.GenerateFile(serviceName, "/app/__init__", "py",
 		"__init__.gen", "src/", "python", &data{ServiceName: serviceName})
 }
 
 func generateViewsFile(serviceName string) error {
-	return utils.GenerateFile(serviceName, serviceName+"/app/views", "py",
+	return utils.GenerateFile(serviceName, "/app/views", "py",
 		"views.gen", "src/app/", "python", &data{ServiceName: serviceName})
 }
 
