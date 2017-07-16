@@ -106,6 +106,11 @@ func generateURLSAppFile(serviceName string) error {
 		"urls.gen", "src/app/", "python", &data{ServiceName: serviceName})
 }
 
+func generateInitAppFile(serviceName string) error {
+	return utils.GenerateFile(serviceName, serviceName+"/app/__init__", "py",
+		"__init__.gen", "src/", "python", &data{ServiceName: serviceName})
+}
+
 func generateBuildFiles(serviceName string) error {
 	// TODO: Implement
 	return nil
