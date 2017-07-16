@@ -111,6 +111,11 @@ func generateInitAppFile(serviceName string) error {
 		"__init__.gen", "src/", "python", &data{ServiceName: serviceName})
 }
 
+func generateViewsFile(serviceName string) error {
+	return utils.GenerateFile(serviceName, serviceName+"/app/views", "py",
+		"views.gen", "src/app/", "python", &data{ServiceName: serviceName})
+}
+
 func generateBuildFiles(serviceName string) error {
 	// TODO: Implement
 	return nil
