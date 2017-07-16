@@ -80,8 +80,25 @@ func generateManageFile(serviceName string) error {
 }
 
 func generateAppFiles(serviceName string) error {
-	// TODO: Implement
-	return nil
+	path := fmt.Sprintf("./%s/app", serviceName)
+	if err := utils.CreateDir(path); err != nil {
+		return err
+	}
+	if err := generateAppsFile(serviceName); err != nil {
+		return err
+	}
+	if err := generateURLSAppFile(serviceName); err != nil {
+		return err
+	}
+	if err := generateInitAppFile(serviceName); err != nil {
+		return err
+	}
+	return generateViewsFile(serviceName)
+}
+
+func generateAppsFile(serviceName string) error {
+	return utils.GenerateFile(serviceName, serviceName+"/app/apps", "py",
+		"apps.gen", "src/app/", "python", &data{ServiceName: serviceName})
 }
 
 func generateBuildFiles(serviceName string) error {
