@@ -123,19 +123,19 @@ func generateBuildFiles(serviceName string) error {
 	if err := generateDockerFile(serviceName); err != nil {
 		return err
 	}
-	if err := generateRequirementsFile(serviceName); err != nil {
-		return err
-	}
-	return nil
 	// if err := generateDockerComposeFile(serviceName); err != nil {
 	// 	return err
 	// }
-	// if err := generateGitIgnoreFile(serviceName); err != nil {
-	// 	return err
-	// }
-	// if err := generateDockerIgnoreFile(serviceName); err != nil {
-	// 	return err
-	// }
+	if err := generateRequirementsFile(serviceName); err != nil {
+		return err
+	}
+	if err := generateGitIgnoreFile(serviceName); err != nil {
+		return err
+	}
+	if err := generateDockerIgnoreFile(serviceName); err != nil {
+		return err
+	}
+	return nil
 	// return generateTravisFile(serviceName)
 }
 
@@ -147,4 +147,14 @@ func generateDockerFile(serviceName string) error {
 func generateRequirementsFile(serviceName string) error {
 	return utils.GenerateFile(serviceName, "requirements", "txt",
 		"requirements.gen", "build/", "python", nil)
+}
+
+func generateGitIgnoreFile(serviceName string) error {
+	return utils.GenerateFile(serviceName, ".gitignore", "",
+		"ignore.gen", "", "python", &data{ServiceName: serviceName})
+}
+
+func generateDockerIgnoreFile(serviceName string) error {
+	return utils.GenerateFile(serviceName, ".dockerignore", "",
+		"ignore.gen", "", "python", nil)
 }

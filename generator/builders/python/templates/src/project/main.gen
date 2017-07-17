@@ -1,5 +1,0 @@
-def main():
-	print("TODO: Implement")
-
-if __name__ == "__main__":
-    main()
