@@ -4,6 +4,8 @@ import (
 	"fmt"
 
 	"github.com/reivaj05/micro-gen/generator/utils"
+
+	"github.com/serenize/snaker"
 )
 
 type data struct {
@@ -123,9 +125,9 @@ func generateBuildFiles(serviceName string) error {
 	if err := generateDockerFile(serviceName); err != nil {
 		return err
 	}
-	// if err := generateDockerComposeFile(serviceName); err != nil {
-	// 	return err
-	// }
+	if err := generateDockerComposeFile(serviceName); err != nil {
+		return err
+	}
 	if err := generateRequirementsFile(serviceName); err != nil {
 		return err
 	}
@@ -142,6 +144,14 @@ func generateBuildFiles(serviceName string) error {
 func generateDockerFile(serviceName string) error {
 	return utils.GenerateFile(serviceName, "Dockerfile", "",
 		"Dockerfile.gen", "build/", "python", &data{ServiceName: serviceName})
+}
+
+func generateDockerComposeFile(serviceName string) error {
+	return utils.GenerateFile(serviceName, "docker-compose", "yml",
+		"docker-compose.gen", "build/", "python", &data{
+			ServiceName:      serviceName,
+			SnakeServiceName: snaker.CamelToSnake(serviceName),
+		})
 }
 
 func generateRequirementsFile(serviceName string) error {

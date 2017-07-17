@@ -1,0 +1,9 @@
+version: '2'
+
+services:
+  {{ .SnakeServiceName }}:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    volumes:
+      - ./:/{{ .ServiceName }}
