@@ -195,7 +195,7 @@ func generateScriptFiles(serviceName string) error {
 	if err := generateLinterFile(serviceName); err != nil {
 		return err
 	}
-	return nil
+	return generateTestsFile(serviceName)
 }
 
 func generateStartFile(serviceName string) error {
@@ -206,4 +206,9 @@ func generateStartFile(serviceName string) error {
 func generateLinterFile(serviceName string) error {
 	return utils.GenerateFile(serviceName, "scripts/linter", "sh",
 		"linter.gen", "scripts/", "python", &data{ServiceName: serviceName})
+}
+
+func generateTestsFile(serviceName string) error {
+	return utils.GenerateFile(serviceName, "scripts/tests", "sh",
+		"tests.gen", "scripts/", "python", nil)
 }
