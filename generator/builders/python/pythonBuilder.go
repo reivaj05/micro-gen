@@ -122,6 +122,9 @@ func generateViewsFile(serviceName string) error {
 }
 
 func generateBuildFiles(serviceName string) error {
+	if err := generateNoseFile(serviceName); err != nil {
+		return err
+	}
 	if err := generateDockerFile(serviceName); err != nil {
 		return err
 	}
@@ -138,6 +141,11 @@ func generateBuildFiles(serviceName string) error {
 		return err
 	}
 	return generateTravisFile(serviceName)
+}
+
+func generateNoseFile(serviceName string) error {
+	return utils.GenerateFile(serviceName, "nose", "cfg",
+		"nose.gen", "build/", "python", &data{ServiceName: serviceName})
 }
 
 func generateDockerFile(serviceName string) error {
