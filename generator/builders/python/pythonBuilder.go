@@ -33,7 +33,10 @@ func generateFiles(serviceName string) error {
 	if err := generateAppFiles(serviceName); err != nil {
 		return err
 	}
-	return generateBuildFiles(serviceName)
+	if err := generateBuildFiles(serviceName); err != nil {
+		return err
+	}
+	return generateScriptFiles(serviceName)
 }
 
 func generateProjectFiles(serviceName string) error {
@@ -102,22 +105,22 @@ func generateAppFiles(serviceName string) error {
 }
 
 func generateAppsFile(serviceName string) error {
-	return utils.GenerateFile(serviceName, "/app/apps", "py",
+	return utils.GenerateFile(serviceName, "app/apps", "py",
 		"apps.gen", "src/app/", "python", &data{ServiceName: serviceName})
 }
 
 func generateURLSAppFile(serviceName string) error {
-	return utils.GenerateFile(serviceName, "/app/urls", "py",
+	return utils.GenerateFile(serviceName, "app/urls", "py",
 		"urls.gen", "src/app/", "python", &data{ServiceName: serviceName})
 }
 
 func generateInitAppFile(serviceName string) error {
-	return utils.GenerateFile(serviceName, "/app/__init__", "py",
+	return utils.GenerateFile(serviceName, "app/__init__", "py",
 		"__init__.gen", "src/", "python", &data{ServiceName: serviceName})
 }
 
 func generateViewsFile(serviceName string) error {
-	return utils.GenerateFile(serviceName, "/app/views", "py",
+	return utils.GenerateFile(serviceName, "app/views", "py",
 		"views.gen", "src/app/", "python", &data{ServiceName: serviceName})
 }
 
@@ -179,4 +182,20 @@ func generateDockerIgnoreFile(serviceName string) error {
 func generateTravisFile(serviceName string) error {
 	return utils.GenerateFile(serviceName, ".travis", "yml",
 		"travis.gen", "build/", "python", nil)
+}
+
+func generateScriptFiles(serviceName string) error {
+	path := fmt.Sprintf("./%s/scripts", serviceName)
+	if err := utils.CreateDir(path); err != nil {
+		return err
+	}
+	if err := generateStartFile(serviceName); err != nil {
+		return err
+	}
+	return nil
+}
+
+func generateStartFile(serviceName string) error {
+	return utils.GenerateFile(serviceName, "scripts/start", "sh",
+		"start.gen", "scripts/", "python", nil)
 }
