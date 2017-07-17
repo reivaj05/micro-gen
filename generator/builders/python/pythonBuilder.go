@@ -137,8 +137,7 @@ func generateBuildFiles(serviceName string) error {
 	if err := generateDockerIgnoreFile(serviceName); err != nil {
 		return err
 	}
-	return nil
-	// return generateTravisFile(serviceName)
+	return generateTravisFile(serviceName)
 }
 
 func generateDockerFile(serviceName string) error {
@@ -161,10 +160,15 @@ func generateRequirementsFile(serviceName string) error {
 
 func generateGitIgnoreFile(serviceName string) error {
 	return utils.GenerateFile(serviceName, ".gitignore", "",
-		"ignore.gen", "", "python", &data{ServiceName: serviceName})
+		"ignore.gen", "", "python", nil)
 }
 
 func generateDockerIgnoreFile(serviceName string) error {
 	return utils.GenerateFile(serviceName, ".dockerignore", "",
 		"ignore.gen", "", "python", nil)
+}
+
+func generateTravisFile(serviceName string) error {
+	return utils.GenerateFile(serviceName, ".travis", "yml",
+		"travis.gen", "build/", "python", nil)
 }
