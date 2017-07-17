@@ -1,3 +1,4 @@
 django
 coverage
 nose
+pyflakes

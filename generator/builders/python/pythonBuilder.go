@@ -120,6 +120,23 @@ func generateViewsFile(serviceName string) error {
 }
 
 func generateBuildFiles(serviceName string) error {
-	// TODO: Implement
+	if err := generateDockerFile(serviceName); err != nil {
+		return err
+	}
 	return nil
+	// if err := generateDockerComposeFile(serviceName); err != nil {
+	// 	return err
+	// }
+	// if err := generateGitIgnoreFile(serviceName); err != nil {
+	// 	return err
+	// }
+	// if err := generateDockerIgnoreFile(serviceName); err != nil {
+	// 	return err
+	// }
+	// return generateTravisFile(serviceName)
+}
+
+func generateDockerFile(serviceName string) error {
+	return utils.GenerateFile(serviceName, "Dockerfile", "",
+		"Dockerfile.gen", "build/", "python", &data{ServiceName: serviceName})
 }
