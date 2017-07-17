@@ -192,10 +192,18 @@ func generateScriptFiles(serviceName string) error {
 	if err := generateStartFile(serviceName); err != nil {
 		return err
 	}
+	if err := generateLinterFile(serviceName); err != nil {
+		return err
+	}
 	return nil
 }
 
 func generateStartFile(serviceName string) error {
 	return utils.GenerateFile(serviceName, "scripts/start", "sh",
 		"start.gen", "scripts/", "python", nil)
+}
+
+func generateLinterFile(serviceName string) error {
+	return utils.GenerateFile(serviceName, "scripts/linter", "sh",
+		"linter.gen", "scripts/", "python", &data{ServiceName: serviceName})
 }
