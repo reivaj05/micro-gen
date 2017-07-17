@@ -123,6 +123,9 @@ func generateBuildFiles(serviceName string) error {
 	if err := generateDockerFile(serviceName); err != nil {
 		return err
 	}
+	if err := generateRequirementsFile(serviceName); err != nil {
+		return err
+	}
 	return nil
 	// if err := generateDockerComposeFile(serviceName); err != nil {
 	// 	return err
@@ -139,4 +142,9 @@ func generateBuildFiles(serviceName string) error {
 func generateDockerFile(serviceName string) error {
 	return utils.GenerateFile(serviceName, "Dockerfile", "",
 		"Dockerfile.gen", "build/", "python", &data{ServiceName: serviceName})
+}
+
+func generateRequirementsFile(serviceName string) error {
+	return utils.GenerateFile(serviceName, "requirements", "txt",
+		"requirements.gen", "build/", "python", nil)
 }
