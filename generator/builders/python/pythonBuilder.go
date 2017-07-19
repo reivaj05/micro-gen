@@ -14,7 +14,6 @@ type data struct {
 }
 
 func Build(serviceName string) error {
-	fmt.Println("TODO: Implement python generator")
 	path := fmt.Sprintf("./%s", serviceName)
 	if err := utils.CreateDir(path); err != nil {
 		return err
@@ -90,15 +89,12 @@ func generateAppFiles(serviceName string) error {
 		return err
 	}
 	if err := generateAppsFile(serviceName); err != nil {
-		fmt.Println("appsfile")
 		return err
 	}
 	if err := generateURLSAppFile(serviceName); err != nil {
-		fmt.Println("urlsfile")
 		return err
 	}
 	if err := generateInitAppFile(serviceName); err != nil {
-		fmt.Println("initfile")
 		return err
 	}
 	return generateViewsFile(serviceName)

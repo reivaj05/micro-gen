@@ -11,14 +11,14 @@ import (
 	"github.com/stretchr/testify/suite"
 )
 
-type GoBuilderTestSuite struct {
+type PythonBuilderTestSuite struct {
 	suite.Suite
 	assert      *assert.Assertions
 	pathBackup  string
 	serviceName string
 }
 
-func (suite *GoBuilderTestSuite) SetupSuite() {
+func (suite *PythonBuilderTestSuite) SetupSuite() {
 	suite.assert = assert.New(suite.T())
 	suite.serviceName = "mockService"
 	GoConfig.Init(&GoConfig.ConfigOptions{
@@ -28,16 +28,7 @@ func (suite *GoBuilderTestSuite) SetupSuite() {
 	})
 }
 
-func (suite *GoBuilderTestSuite) SetupTest() {
-	suite.pathBackup = GoConfig.GetConfigStringValue("goTemplatesPath")
-}
-
-func (suite *GoBuilderTestSuite) TearDownTest() {
-	GoConfig.SetConfigValue("goTemplatesPath", suite.pathBackup)
-	os.RemoveAll(fmt.Sprintf("./%s", suite.serviceName))
-}
-
-func (suite *GoBuilderTestSuite) TestBuildWrongServiceName() {
+func (suite *PythonBuilderTestSuite) TestBuildWrongServiceName() {
 	serviceName := strings.Repeat("f", 1000)
 	err := Build(serviceName)
 	suite.assert.NotNil(err)
@@ -45,17 +36,17 @@ func (suite *GoBuilderTestSuite) TestBuildWrongServiceName() {
 	suite.assert.False(os.IsNotExist(err))
 }
 
-func (suite *GoBuilderTestSuite) TestBuildWrongTemplatesPath() {
+func (suite *PythonBuilderTestSuite) TestBuildWrongTemplatesPath() {
 	GoConfig.SetConfigValue("templates", "wrongPath")
 	err := Build(suite.serviceName)
 	suite.assert.NotNil(err)
 }
 
-func (suite *GoBuilderTestSuite) TestBuildSuccessful() {
+func (suite *PythonBuilderTestSuite) TestBuildSuccessful() {
 	err := Build(suite.serviceName)
 	suite.assert.Nil(err)
 }
 
-func TestGoBuilder(t *testing.T) {
-	suite.Run(t, new(GoBuilderTestSuite))
+func TestPythonBuilder(t *testing.T) {
+	suite.Run(t, new(PythonBuilderTestSuite))
 }
