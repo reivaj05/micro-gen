@@ -1,4 +1,4 @@
-package pythonGenerator
+package pythonBuilder
 
 import (
 	"fmt"

@@ -1,4 +1,4 @@
-package goBuilder
+package pythonBuilder
 
 import (
 	"fmt"
