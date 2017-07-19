@@ -28,12 +28,7 @@ func (suite *GoBuilderTestSuite) SetupSuite() {
 	})
 }
 
-func (suite *GoBuilderTestSuite) SetupTest() {
-	suite.pathBackup = GoConfig.GetConfigStringValue("goTemplatesPath")
-}
-
-func (suite *GoBuilderTestSuite) TearDownTest() {
-	GoConfig.SetConfigValue("goTemplatesPath", suite.pathBackup)
+func (suite *GoBuilderTestSuite) TearDownSuite() {
 	os.RemoveAll(fmt.Sprintf("./%s", suite.serviceName))
 }
 

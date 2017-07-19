@@ -28,6 +28,10 @@ func (suite *PythonBuilderTestSuite) SetupSuite() {
 	})
 }
 
+func (suite *PythonBuilderTestSuite) TearDownSuite() {
+	os.RemoveAll(fmt.Sprintf("./%s", suite.serviceName))
+}
+
 func (suite *PythonBuilderTestSuite) TestBuildWrongServiceName() {
 	serviceName := strings.Repeat("f", 1000)
 	err := Build(serviceName)
