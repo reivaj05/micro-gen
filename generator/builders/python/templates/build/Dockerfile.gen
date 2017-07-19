@@ -12,4 +12,6 @@ RUN /{{ .ServiceName }}/scripts/linter.sh
 RUN /{{ .ServiceName }}/scripts/tests.sh
 RUN apk del libxml2-dev libffi-dev openssl-dev linux-headers
 
+EXPOSE 8000
+
 ENTRYPOINT ./scripts/start.sh

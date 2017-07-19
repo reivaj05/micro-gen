@@ -5,5 +5,5 @@ services:
     build:
       context: .
       dockerfile: ./Dockerfile
-    volumes:
-      - ./:/{{ .ServiceName }}
+    ports:
+      - "8000:8000"
