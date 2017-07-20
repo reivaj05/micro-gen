@@ -47,6 +47,15 @@ var buildFileOptions = []*utils.GenerateFileOptions{
 		"python", false),
 }
 
+var scriptFileOptions = []*utils.GenerateFileOptions{
+	utils.CreateFileOptions("start.sh", "scripts/", "start.gen", "scripts/",
+		"python", false),
+	utils.CreateFileOptions("linter.sh", "scripts/", "linter.gen", "scripts/",
+		"python", true),
+	utils.CreateFileOptions("tests.sh", "scripts/", "tests.gen", "scripts/",
+		"python", false),
+}
+
 func Build(serviceName string) error {
 	path := fmt.Sprintf("./%s", serviceName)
 	if err := utils.CreateDir(path); err != nil {
@@ -69,8 +78,7 @@ func generateFiles(serviceName string) error {
 	if err := generateBuildFiles(serviceName); err != nil {
 		return err
 	}
-	return nil
-	// return generateScriptFiles(serviceName)
+	return generateScriptFiles(serviceName)
 }
 
 func generateProjectFiles(serviceName string) error {
@@ -108,31 +116,15 @@ func generateBuildFiles(serviceName string) error {
 	return nil
 }
 
-// func generateScriptFiles(serviceName string) error {
-// 	path := fmt.Sprintf("./%s/scripts", serviceName)
-// 	if err := utils.CreateDir(path); err != nil {
-// 		return err
-// 	}
-// 	if err := generateStartFile(serviceName); err != nil {
-// 		return err
-// 	}
-// 	if err := generateLinterFile(serviceName); err != nil {
-// 		return err
-// 	}
-// 	return generateTestsFile(serviceName)
-// }
-
-// func generateStartFile(serviceName string) error {
-// 	return utils.GenerateFile(serviceName, "scripts/start", "sh",
-// 		"start.gen", "scripts/", "python", nil)
-// }
-
-// func generateLinterFile(serviceName string) error {
-// 	return utils.GenerateFile(serviceName, "scripts/linter", "sh",
-// 		"linter.gen", "scripts/", "python", &data{ServiceName: serviceName})
-// }
-
-// func generateTestsFile(serviceName string) error {
-// 	return utils.GenerateFile(serviceName, "scripts/tests", "sh",
-// 		"tests.gen", "scripts/", "python", nil)
-// }
+func generateScriptFiles(serviceName string) error {
+	path := fmt.Sprintf("./%s/scripts", serviceName)
+	if err := utils.CreateDir(path); err != nil {
+		return err
+	}
+	for _, options := range scriptFileOptions {
+		if err := utils.GenerateFile(serviceName, options); err != nil {
+			return err
+		}
+	}
+	return nil
+}
