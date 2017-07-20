@@ -6,61 +6,74 @@ import (
 	"text/template"
 
 	"github.com/reivaj05/GoConfig"
+
+	"github.com/serenize/snaker"
 )
 
-type generateOptions struct {
-	ServiceName   string
-	FileExtension string
-	FileTemplate  string
-	FileName      string
-	FilePath      string
-	Language      string
-	Data          interface{}
+// GenerateFileOptions options to create generated files from templates
+type GenerateFileOptions struct {
+	FileName         string
+	FilePath         string
+	TemplateFileName string
+	TemplateFilePath string
+	Language         string
+	Data             interface{}
+	HasTemplateData  bool
 }
 
+type templateData struct {
+	ServiceName      string
+	SnakeServiceName string
+}
+
+// CreateDir creates a new dir in the path passed as parameter
 func CreateDir(path string) error {
 	return os.MkdirAll(path, os.ModePerm)
 }
 
-func GenerateFile(serviceName, fileName, fileExtension,
-	fileTemplate, filePath, language string, data interface{}) error {
+// CreateFileOptions creates a new GenerateFileObjects item
+func CreateFileOptions(fileName, filePath, templateFileName,
+	templateFilePath, language string, hasData bool) *GenerateFileOptions {
 
-	options := createGenerateOptions(serviceName, fileName,
-		fileExtension, fileTemplate, filePath, language, data)
-	file, err := createFile(options)
+	return &GenerateFileOptions{
+		FileName:         fileName,
+		FilePath:         filePath,
+		TemplateFileName: templateFileName,
+		TemplateFilePath: templateFilePath,
+		Language:         language,
+		HasTemplateData:  hasData,
+	}
+}
+
+// GenerateFile generates a new file from a template
+func GenerateFile(serviceName string, options *GenerateFileOptions) error {
+	if options.HasTemplateData {
+		options.Data = updateTemplateData(serviceName)
+	}
+	file, err := createFile(serviceName, options)
 	if err != nil {
 		return err
 	}
 	return writeTemplateContent(file, options)
 }
 
-func createGenerateOptions(serviceName, fileName, fileExtension,
-	fileTemplate, filePath, language string, data interface{}) *generateOptions {
-
-	return &generateOptions{
-		ServiceName:   serviceName,
-		FileName:      fileName,
-		FileExtension: fileExtension,
-		FileTemplate:  fileTemplate,
-		FilePath:      filePath,
-		Language:      language,
-		Data:          data,
+func updateTemplateData(serviceName string) *templateData {
+	return &templateData{
+		ServiceName:      serviceName,
+		SnakeServiceName: snaker.CamelToSnake(serviceName),
 	}
 }
 
-func createFile(options *generateOptions) (*os.File, error) {
-	dst := fmt.Sprintf("./%s/%s", options.ServiceName, options.FileName)
-	if options.FileExtension != "" {
-		dst = dst + fmt.Sprintf(".%s", options.FileExtension)
-	}
+func createFile(serviceName string, options *GenerateFileOptions) (*os.File, error) {
+	dst := fmt.Sprintf("./%s/%s", serviceName, options.FilePath+options.FileName)
 	return os.Create(dst)
 }
 
-func writeTemplateContent(file *os.File, options *generateOptions) error {
+func writeTemplateContent(file *os.File, options *GenerateFileOptions) error {
 	defer file.Close()
-	templateDir := fmt.Sprintf("%s/%s%s%s", getMicroGenPath(),
-		GoConfig.GetConfigMapValue("templates")[options.Language], options.FilePath,
-		options.FileTemplate)
+	templateDir := fmt.Sprintf("%s/%s%s", getMicroGenPath(),
+		GoConfig.GetConfigMapValue("templates")[options.Language],
+		options.TemplateFilePath+options.TemplateFileName)
 	if _, err := os.Stat(templateDir); err != nil {
 		return err
 	}
