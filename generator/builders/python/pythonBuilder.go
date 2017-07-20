@@ -7,8 +7,8 @@ import (
 )
 
 var projectFileOptions = []*utils.GenerateFileOptions{
-	utils.CreateFileOptions("settings.py", "config/", "settings.gen", "src/project/",
-		"python", false),
+	utils.CreateFileOptions("settings.py", "config/", "settings.gen",
+		"src/project/", "python", false),
 	utils.CreateFileOptions("urls.py", "config/", "urls.gen", "src/project/",
 		"python", false),
 	utils.CreateFileOptions("wsgi.py", "config/", "wsgi.gen", "src/project/",
@@ -27,6 +27,23 @@ var appFileOptions = []*utils.GenerateFileOptions{
 	utils.CreateFileOptions("views.py", "app/", "views.gen", "src/app/",
 		"python", false),
 	utils.CreateFileOptions("__init__.py", "app/", "__init__.gen", "src/",
+		"python", false),
+}
+
+var buildFileOptions = []*utils.GenerateFileOptions{
+	utils.CreateFileOptions("nose.cfg", "", "nose.gen", "build/",
+		"python", false),
+	utils.CreateFileOptions("Dockerfile", "", "Dockerfile.gen", "build/",
+		"python", true),
+	utils.CreateFileOptions("docker-compose.yml", "", "docker-compose.gen",
+		"build/", "python", true),
+	utils.CreateFileOptions("requirements.txt", "", "requirements.gen", "build/",
+		"python", false),
+	utils.CreateFileOptions(".gitignore", "", "ignore.gen", "",
+		"python", false),
+	utils.CreateFileOptions(".dockerignore", "", "ignore.gen", "",
+		"python", false),
+	utils.CreateFileOptions(".travis.yml", "", "travis.gen", "build/",
 		"python", false),
 }
 
@@ -49,10 +66,10 @@ func generateFiles(serviceName string) error {
 	if err := generateAppFiles(serviceName); err != nil {
 		return err
 	}
+	if err := generateBuildFiles(serviceName); err != nil {
+		return err
+	}
 	return nil
-	// if err := generateBuildFiles(serviceName); err != nil {
-	// 	return err
-	// }
 	// return generateScriptFiles(serviceName)
 }
 
@@ -82,65 +99,14 @@ func generateAppFiles(serviceName string) error {
 	return nil
 }
 
-// func generateBuildFiles(serviceName string) error {
-// 	if err := generateNoseFile(serviceName); err != nil {
-// 		return err
-// 	}
-// 	if err := generateDockerFile(serviceName); err != nil {
-// 		return err
-// 	}
-// 	if err := generateDockerComposeFile(serviceName); err != nil {
-// 		return err
-// 	}
-// 	if err := generateRequirementsFile(serviceName); err != nil {
-// 		return err
-// 	}
-// 	if err := generateGitIgnoreFile(serviceName); err != nil {
-// 		return err
-// 	}
-// 	if err := generateDockerIgnoreFile(serviceName); err != nil {
-// 		return err
-// 	}
-// 	return generateTravisFile(serviceName)
-// }
-
-// func generateNoseFile(serviceName string) error {
-// 	return utils.GenerateFile(serviceName, "nose", "cfg",
-// 		"nose.gen", "build/", "python", &data{ServiceName: serviceName})
-// }
-
-// func generateDockerFile(serviceName string) error {
-// 	return utils.GenerateFile(serviceName, "Dockerfile", "",
-// 		"Dockerfile.gen", "build/", "python", &data{ServiceName: serviceName})
-// }
-
-// func generateDockerComposeFile(serviceName string) error {
-// 	return utils.GenerateFile(serviceName, "docker-compose", "yml",
-// 		"docker-compose.gen", "build/", "python", &data{
-// 			ServiceName:      serviceName,
-// 			SnakeServiceName: snaker.CamelToSnake(serviceName),
-// 		})
-// }
-
-// func generateRequirementsFile(serviceName string) error {
-// 	return utils.GenerateFile(serviceName, "requirements", "txt",
-// 		"requirements.gen", "build/", "python", nil)
-// }
-
-// func generateGitIgnoreFile(serviceName string) error {
-// 	return utils.GenerateFile(serviceName, ".gitignore", "",
-// 		"ignore.gen", "", "python", nil)
-// }
-
-// func generateDockerIgnoreFile(serviceName string) error {
-// 	return utils.GenerateFile(serviceName, ".dockerignore", "",
-// 		"ignore.gen", "", "python", nil)
-// }
-
-// func generateTravisFile(serviceName string) error {
-// 	return utils.GenerateFile(serviceName, ".travis", "yml",
-// 		"travis.gen", "build/", "python", nil)
-// }
+func generateBuildFiles(serviceName string) error {
+	for _, options := range buildFileOptions {
+		if err := utils.GenerateFile(serviceName, options); err != nil {
+			return err
+		}
+	}
+	return nil
+}
 
 // func generateScriptFiles(serviceName string) error {
 // 	path := fmt.Sprintf("./%s/scripts", serviceName)
