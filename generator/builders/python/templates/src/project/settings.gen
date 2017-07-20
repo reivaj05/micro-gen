@@ -36,9 +36,9 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = '{{ .ServiceName }}.urls'
+ROOT_URLCONF = 'config.urls'
 
-WSGI_APPLICATION = '{{ .ServiceName }}.wsgi.application'
+WSGI_APPLICATION = 'config.wsgi.application'
 
 
 # Database
