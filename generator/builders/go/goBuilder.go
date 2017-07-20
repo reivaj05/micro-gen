@@ -35,6 +35,15 @@ var buildFileOptions = []*utils.GenerateFileOptions{
 		"go", false),
 }
 
+var scriptFileOptions = []*utils.GenerateFileOptions{
+	// utils.CreateFileOptions("start.sh", "scripts/", "start.gen", "scripts/",
+	// 	"go", false),
+	// utils.CreateFileOptions("linter.sh", "scripts/", "linter.gen", "scripts/",
+	// 	"go", true),
+	utils.CreateFileOptions("tests.sh", "scripts/", "tests.gen", "scripts/",
+		"go", false),
+}
+
 func Build(serviceName string) error {
 	path := fmt.Sprintf("./%s", serviceName)
 	if err := utils.CreateDir(path); err != nil {
@@ -51,7 +60,10 @@ func generateFiles(serviceName string) error {
 	if err := generateGoFiles(serviceName); err != nil {
 		return err
 	}
-	return generateBuildFiles(serviceName)
+	if err := generateBuildFiles(serviceName); err != nil {
+		return err
+	}
+	return generateScriptFiles(serviceName)
 }
 
 func generateGoFiles(serviceName string) error {
@@ -65,6 +77,19 @@ func generateGoFiles(serviceName string) error {
 
 func generateBuildFiles(serviceName string) error {
 	for _, options := range buildFileOptions {
+		if err := utils.GenerateFile(serviceName, options); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func generateScriptFiles(serviceName string) error {
+	path := fmt.Sprintf("./%s/scripts", serviceName)
+	if err := utils.CreateDir(path); err != nil {
+		return err
+	}
+	for _, options := range scriptFileOptions {
 		if err := utils.GenerateFile(serviceName, options); err != nil {
 			return err
 		}
