@@ -1,4 +1,4 @@
-package: github.com/{{ .ServiceName }}
+package: /go/src/github.com/{{ .ServiceName }}
 import:
 - package: github.com/reivaj05/GoConfig
 - package: github.com/reivaj05/GoJSON

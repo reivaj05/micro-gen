@@ -1,9 +1,8 @@
 FROM golang:alpine
 
 
-WORKDIR /go/src/github.com/{{ .ServiceName }}
-
 ADD . /go/src/github.com/{{ .ServiceName }}
+WORKDIR /go/src/github.com/{{ .ServiceName }}
 
 RUN apk -U add make git bash wget curl gcc g++
 RUN make

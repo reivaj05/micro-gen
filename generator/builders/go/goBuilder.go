@@ -19,6 +19,23 @@ var goFileOptions = []*utils.GenerateFileOptions{
 		"src/", "go", false),
 }
 
+var buildFileOptions = []*utils.GenerateFileOptions{
+	utils.CreateFileOptions("Dockerfile", "", "Dockerfile.gen", "build/",
+		"go", true),
+	utils.CreateFileOptions("docker-compose.yml", "", "docker-compose.gen", "build/",
+		"go", true),
+	utils.CreateFileOptions("Makefile", "", "Makefile.gen", "build/",
+		"go", false),
+	utils.CreateFileOptions("glide.yaml", "", "glide.gen", "build/",
+		"go", true),
+	utils.CreateFileOptions(".gitignore", "", "ignore.gen", "",
+		"go", false),
+	utils.CreateFileOptions(".dockerignore", "", "ignore.gen", "",
+		"go", false),
+	utils.CreateFileOptions("travis.yml", "", "travis.gen", "build/",
+		"go", false),
+}
+
 func Build(serviceName string) error {
 	path := fmt.Sprintf("./%s", serviceName)
 	if err := utils.CreateDir(path); err != nil {
@@ -35,11 +52,7 @@ func generateFiles(serviceName string) error {
 	if err := generateGoFiles(serviceName); err != nil {
 		return err
 	}
-	if err := generateConfigFile(serviceName); err != nil {
-		return err
-	}
-	return nil
-	// return generateBuildFiles(serviceName)
+	return generateBuildFiles(serviceName)
 }
 
 func generateGoFiles(serviceName string) error {
@@ -51,62 +64,11 @@ func generateGoFiles(serviceName string) error {
 	return nil
 }
 
-// func generateBuildFiles(serviceName string) error {
-// 	if err := generateDockerFile(serviceName); err != nil {
-// 		return err
-// 	}
-// 	if err := generateDockerComposeFile(serviceName); err != nil {
-// 		return err
-// 	}
-// 	if err := generateMakeFile(serviceName); err != nil {
-// 		return err
-// 	}
-// 	if err := generateGlideFile(serviceName); err != nil {
-// 		return err
-// 	}
-// 	if err := generateGitIgnoreFile(serviceName); err != nil {
-// 		return err
-// 	}
-// 	if err := generateDockerIgnoreFile(serviceName); err != nil {
-// 		return err
-// 	}
-// 	return generateTravisFile(serviceName)
-// }
-
-// func generateDockerComposeFile(serviceName string) error {
-// 	return utils.GenerateFile(serviceName, "docker-compose", "yml",
-// 		"docker-compose.gen", "build/", "go", &data{
-// 			ServiceName:      serviceName,
-// 			SnakeServiceName: snaker.CamelToSnake(serviceName),
-// 		})
-// }
-
-// func generateDockerFile(serviceName string) error {
-// 	return utils.GenerateFile(serviceName, "Dockerfile", "",
-// 		"Dockerfile.gen", "build/", "go", &data{ServiceName: serviceName})
-// }
-
-// func generateMakeFile(serviceName string) error {
-// 	return utils.GenerateFile(serviceName, "Makefile", "",
-// 		"Makefile.gen", "build/", "go", nil)
-// }
-
-// func generateGlideFile(serviceName string) error {
-// 	return utils.GenerateFile(serviceName, "glide", "yaml",
-// 		"glide.gen", "build/", "go", &data{ServiceName: serviceName})
-// }
-
-// func generateGitIgnoreFile(serviceName string) error {
-// 	return utils.GenerateFile(serviceName, ".gitignore", "",
-// 		"ignore.gen", "", "go", nil)
-// }
-
-// func generateDockerIgnoreFile(serviceName string) error {
-// 	return utils.GenerateFile(serviceName, ".dockerignore", "",
-// 		"ignore.gen", "", "go", nil)
-// }
-
-// func generateTravisFile(serviceName string) error {
-// 	return utils.GenerateFile(serviceName, ".travis", "yml",
-// 		"travis.gen", "build/", "go", nil)
-// }
+func generateBuildFiles(serviceName string) error {
+	for _, options := range buildFileOptions {
+		if err := utils.GenerateFile(serviceName, options); err != nil {
+			return err
+		}
+	}
+	return nil
+}

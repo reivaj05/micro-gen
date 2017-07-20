@@ -5,5 +5,5 @@ services:
     build:
       context: .
       dockerfile: ./Dockerfile
-    volumes:
-      - ./:/go/src/github.com/{{ .ServiceName }}
+    ports:
+      - "8000:8000"

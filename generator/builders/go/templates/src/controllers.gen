@@ -50,7 +50,7 @@ func putItemHandler(rw http.ResponseWriter, req *http.Request) {
 	}
 	params := GoServer.GetQueryParams(req)
 	id, _ := strconv.Atoi(params["id"])
-	fmt.Println("TODO: Implement put ", id)
+	fmt.Println("TODO: Implement put", id)
 	if !isDataValid(data) {
 		sendBadRequestResponse(rw)
 		return
@@ -78,6 +78,6 @@ func sendBadRequestResponse(rw http.ResponseWriter) {
 func deleteItemHandler(rw http.ResponseWriter, req *http.Request) {
 	params := GoServer.GetQueryParams(req)
 	id, _ := strconv.Atoi(params["id"])
-	fmt.Println("TODO: Implement delete ", id)
+	fmt.Println("TODO: Implement delete", id)
 	GoServer.SendResponseWithStatus(rw, "", http.StatusOK)
 }
