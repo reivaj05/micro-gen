@@ -6,12 +6,12 @@ import (
 	"github.com/reivaj05/micro-gen/generator/utils"
 )
 
-var projectFileOptions = []*utils.GenerateFileOptions{
+var configFileOptions = []*utils.GenerateFileOptions{
 	utils.CreateFileOptions("settings.py", "config/", "settings.gen",
-		"src/project/", "python", false),
-	utils.CreateFileOptions("urls.py", "config/", "urls.gen", "src/project/",
+		"src/config/", "python", false),
+	utils.CreateFileOptions("urls.py", "config/", "urls.gen", "src/config/",
 		"python", false),
-	utils.CreateFileOptions("wsgi.py", "config/", "wsgi.gen", "src/project/",
+	utils.CreateFileOptions("wsgi.py", "config/", "wsgi.gen", "src/config/",
 		"python", false),
 	utils.CreateFileOptions("__init__.py", "config/", "__init__.gen", "src/",
 		"python", false),
@@ -73,7 +73,7 @@ func createService(serviceName string) error {
 }
 
 func generateFiles(serviceName string) error {
-	if err := generateProjectFiles(serviceName); err != nil {
+	if err := generateConfigFiles(serviceName); err != nil {
 		return err
 	}
 	if err := generateAppFiles(serviceName); err != nil {
@@ -85,12 +85,12 @@ func generateFiles(serviceName string) error {
 	return generateScriptFiles(serviceName)
 }
 
-func generateProjectFiles(serviceName string) error {
+func generateConfigFiles(serviceName string) error {
 	path := fmt.Sprintf("./%s/config", serviceName)
 	if err := utils.CreateDir(path); err != nil {
 		return err
 	}
-	for _, options := range projectFileOptions {
+	for _, options := range configFileOptions {
 		if err := utils.GenerateFile(serviceName, options); err != nil {
 			return err
 		}
