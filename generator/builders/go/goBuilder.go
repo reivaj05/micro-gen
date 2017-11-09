@@ -31,18 +31,18 @@ var buildFileOptions = []*utils.GenerateFileOptions{
 		"go", false),
 	utils.CreateFileOptions(".dockerignore", "", "ignore.gen", "",
 		"go", false),
-	utils.CreateFileOptions("travis.yml", "", "travis.gen", "build/",
+	utils.CreateFileOptions(".travis.yml", "", "travis.gen", "build/",
 		"go", false),
 }
 
 var scriptFileOptions = []*utils.GenerateFileOptions{
-	// utils.CreateFileOptions("start.sh", "scripts/", "start.gen", "scripts/",
-	// 	"go", false),
-	// utils.CreateFileOptions("linter.sh", "scripts/", "linter.gen", "scripts/",
-	// 	"go", true),
-	utils.CreateFileOptions("tests.sh", "scripts/", "tests.gen", "scripts/",
-		"go", false),
 	utils.CreateFileOptions("deps.sh", "scripts/", "deps.gen", "scripts/",
+		"go", false),
+	utils.CreateFileOptions("linter.sh", "scripts/", "linter.gen", "scripts/",
+		"go", true),
+	utils.CreateFileOptions("start.sh", "scripts/", "start.gen", "scripts/",
+		"go", false),
+	utils.CreateFileOptions("tests.sh", "scripts/", "tests.gen", "scripts/",
 		"go", false),
 }
 
