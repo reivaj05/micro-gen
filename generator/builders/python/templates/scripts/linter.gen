@@ -4,7 +4,7 @@ success_status_code=0
 failure_status_code=1
 
 echo 'Running linter'
-pyflakes /{{ .ServiceName }}/app
+flake8 /{{ .ServiceName }}/app
 
 if [ $? -eq $success_status_code ]
     then
