@@ -1,16 +1,17 @@
 GOCMD = go
 PKG   = ./...
 
-.PHONY: %
+default: setup fmt deps linter test build
 
-default: fmt deps test build
-
-all: build
-build: deps
-	$(GOCMD) install
+setup:
+	chmod +x ./scripts/*.sh
 fmt:
 	$(GOCMD) fmt $(PKG)
-test: deps
-	./scripts/tests.sh
 deps:
 	./scripts/deps.sh
+linter:
+	./scripts/linter.sh
+test: deps
+	./scripts/tests.sh
+build: deps
+	$(GOCMD) install

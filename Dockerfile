@@ -9,4 +9,4 @@ RUN apk -U add make git bash wget curl gcc g++
 RUN make
 RUN apk del make git wget curl gcc g++
 
-ENTRYPOINT micro-gen
+ENTRYPOINT ./scripts/start.sh
