@@ -37,6 +37,8 @@ var buildFileOptions = []*utils.GenerateFileOptions{
 		"python", true),
 	utils.CreateFileOptions("docker-compose.yml", "", "docker-compose.gen",
 		"build/", "python", true),
+	utils.CreateFileOptions("Makefile", "", "Makefile.gen",
+		"build/", "python", true),
 	utils.CreateFileOptions("requirements.txt", "", "requirements.gen", "build/",
 		"python", false),
 	utils.CreateFileOptions(".gitignore", "", "ignore.gen", "",
@@ -53,6 +55,8 @@ var scriptFileOptions = []*utils.GenerateFileOptions{
 	utils.CreateFileOptions("linter.sh", "scripts/", "linter.gen", "scripts/",
 		"python", true),
 	utils.CreateFileOptions("tests.sh", "scripts/", "tests.gen", "scripts/",
+		"python", false),
+	utils.CreateFileOptions("deps.sh", "scripts/", "deps.gen", "scripts/",
 		"python", false),
 }
 
