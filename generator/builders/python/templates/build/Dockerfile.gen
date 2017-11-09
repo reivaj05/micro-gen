@@ -1,15 +1,10 @@
 FROM python:alpine
 
-RUN set -x; echo http://nl.alpinelinux.org/alpine/edge/community >> /etc/apk/repositories
-
 ADD . /{{ .ServiceName }}
 WORKDIR /{{ .ServiceName }}
 
-RUN apk -U add gcc g++ bash git python-dev libxml2-dev libxslt-dev libffi-dev openssl-dev linux-headers
-RUN pip install -r requirements.txt
-RUN chmod +x /{{ .ServiceName }}/scripts/*.sh
-RUN /{{ .ServiceName }}/scripts/linter.sh
-RUN /{{ .ServiceName }}/scripts/tests.sh
-RUN apk del libxml2-dev libffi-dev openssl-dev linux-headers
+RUN apk -U add gcc g++ make bash git python-dev libxml2-dev libxslt-dev libffi-dev openssl-dev linux-headers
+RUN make
+RUN apk del make libxml2-dev libffi-dev openssl-dev linux-headers
 
 ENTRYPOINT ./scripts/start.sh
