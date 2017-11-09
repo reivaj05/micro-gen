@@ -28,3 +28,5 @@ coverage*
 # Log
 /log
 *.log
+
+*.DS_Store
