@@ -2,6 +2,7 @@ package generator
 
 import (
 	"fmt"
+	"os"
 
 	goBuilder "github.com/reivaj05/micro-gen/generator/builders/go"
 	jsBuilder "github.com/reivaj05/micro-gen/generator/builders/javascript"
@@ -27,7 +28,11 @@ func Generate(flags map[string]string, args ...string) error {
 	// TODO: Check language is allowed
 	language := flags["lang"]
 	serviceName := args[0]
-	return generators[language](serviceName)
+	if err := generators[language](serviceName); err != nil {
+		rollback(serviceName)
+		return err
+	}
+	return nil
 }
 
 func generateGo(serviceName string) error {
@@ -50,6 +55,6 @@ func generateRust(serviceName string) error {
 	return rustBuilder.Build(serviceName)
 }
 
-func rollback() error {
-	return nil
+func rollback(serviceName string) {
+	os.RemoveAll(fmt.Sprintf("./%s", serviceName))
 }
