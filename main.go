@@ -78,6 +78,7 @@ func createCLIOptions() *GoCLI.Options {
 		AppName:  appName,
 		AppUsage: "TODO: Set app usage",
 		Commands: createCommands(),
+		// StringFlags: createStringFlags(),
 		// DefaultAction: server.Serve,
 	}
 }
@@ -88,6 +89,17 @@ func createCommands() []*GoCLI.Command {
 			Name:   "create-service",
 			Usage:  "TODO: Set create-service usage",
 			Action: generator.Generate,
+			StringFlags: getCreateServiceStringFlags(),
+		},
+	}
+}
+
+func getCreateServiceStringFlags() []*GoCLI.StringFlag {
+	return []*GoCLI.StringFlag{
+		&GoCLI.StringFlag{
+			Name:   "lang",
+			Usage:  "Language of the microservice to be created",
+			Default: "go",
 		},
 	}
 }
