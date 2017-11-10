@@ -1,6 +1,8 @@
 package generator
 
 import (
+	"fmt"
+
 	goBuilder "github.com/reivaj05/micro-gen/generator/builders/go"
 	jsBuilder "github.com/reivaj05/micro-gen/generator/builders/javascript"
 	pythonBuilder "github.com/reivaj05/micro-gen/generator/builders/python"
@@ -18,10 +20,13 @@ var generators = map[string]generator{
 	"rust":       generateRust,
 }
 
-func Generate(args ...string) error {
-	language := args[0]
-	// TODO: Update service name from a
-	serviceName := "serviceMock"
+func Generate(flags map[string]string, args ...string) error {
+	if len(args) == 0 {
+		return fmt.Errorf("You didn't pass a name for the microservice")
+	}
+	// TODO: Check language is allowed
+	language := flags["lang"]
+	serviceName := args[0]
 	return generators[language](serviceName)
 }
 
