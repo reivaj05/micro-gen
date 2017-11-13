@@ -61,71 +61,48 @@ var scriptFileOptions = []*utils.GenerateFileOptions{
 }
 
 func Build(serviceName string) error {
-	path := fmt.Sprintf("./%s", serviceName)
-	if err := utils.CreateDir(path); err != nil {
+	if err := createDirectories(serviceName); err != nil {
 		return err
 	}
 	return createService(serviceName)
 }
 
+func createDirectories(serviceName string) error {
+	path := fmt.Sprintf("./%s", serviceName)
+	if err := utils.CreateDir(path); err != nil {
+		return err
+	}
+	path = fmt.Sprintf("./%s/config", serviceName)
+	if err := utils.CreateDir(path); err != nil {
+		return err
+	}
+	path = fmt.Sprintf("./%s/app", serviceName)
+	if err := utils.CreateDir(path); err != nil {
+		return err
+	}
+	path = fmt.Sprintf("./%s/scripts", serviceName)
+	if err := utils.CreateDir(path); err != nil {
+		return err
+	}
+	return nil
+}
+
 func createService(serviceName string) error {
-	return generateFiles(serviceName)
+	return generateAllFiles(serviceName)
 }
 
-func generateFiles(serviceName string) error {
-	if err := generateConfigFiles(serviceName); err != nil {
-		return err
-	}
-	if err := generateAppFiles(serviceName); err != nil {
-		return err
-	}
-	if err := generateBuildFiles(serviceName); err != nil {
-		return err
-	}
-	return generateScriptFiles(serviceName)
-}
-
-func generateConfigFiles(serviceName string) error {
-	path := fmt.Sprintf("./%s/config", serviceName)
-	if err := utils.CreateDir(path); err != nil {
-		return err
-	}
-	for _, options := range configFileOptions {
-		if err := utils.GenerateFile(serviceName, options); err != nil {
-			return err
-		}
+func generateAllFiles(serviceName string) error {
+	for _, optionsList := range [][]*utils.GenerateFileOptions{
+		configFileOptions, appFileOptions, buildFileOptions, scriptFileOptions}{
+			if err := generateFilesWithOptionsList(serviceName, optionsList); err != nil {
+				return err
+			}
 	}
 	return nil
 }
 
-func generateAppFiles(serviceName string) error {
-	path := fmt.Sprintf("./%s/app", serviceName)
-	if err := utils.CreateDir(path); err != nil {
-		return err
-	}
-	for _, options := range appFileOptions {
-		if err := utils.GenerateFile(serviceName, options); err != nil {
-			return err
-		}
-	}
-	return nil
-}
-
-func generateBuildFiles(serviceName string) error {
-	for _, options := range buildFileOptions {
-		if err := utils.GenerateFile(serviceName, options); err != nil {
-			return err
-		}
-	}
-	return nil
-}
-
-func generateScriptFiles(serviceName string) error {
-	path := fmt.Sprintf("./%s/scripts", serviceName)
-	if err := utils.CreateDir(path); err != nil {
-		return err
-	}
-	for _, options := range scriptFileOptions {
+func generateFilesWithOptionsList(serviceName string, fileOptions []*utils.GenerateFileOptions) error {
+	for _, options := range fileOptions {
 		if err := utils.GenerateFile(serviceName, options); err != nil {
 			return err
 		}
