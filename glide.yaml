@@ -1,13 +1,19 @@
 package: github.com/reivaj05/micro-gen
 import:
 - package: github.com/reivaj05/GoCLI
+  version: v0.0.2
 - package: github.com/reivaj05/GoConfig
+  version: v0.0.3
 - package: github.com/reivaj05/GoJSON
+  version: v0.0.1
 - package: github.com/reivaj05/GoLogger
+  version: v0.0.2
 - package: github.com/reivaj05/GoServer
+  version: v0.0.3
 - package: github.com/serenize/snaker
 testImport:
 - package: github.com/stretchr/testify
+  version: v1.1.4
   subpackages:
   - assert
   - suite
