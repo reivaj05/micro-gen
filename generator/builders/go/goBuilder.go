@@ -47,51 +47,40 @@ var scriptFileOptions = []*utils.GenerateFileOptions{
 }
 
 func Build(serviceName string) error {
-	path := fmt.Sprintf("./%s", serviceName)
-	if err := utils.CreateDir(path); err != nil {
+	if err := createDirectories(serviceName); err != nil {
 		return err
 	}
 	return createService(serviceName)
 }
 
-func createService(serviceName string) error {
-	return generateFiles(serviceName)
-}
-
-func generateFiles(serviceName string) error {
-	if err := generateGoFiles(serviceName); err != nil {
-		return err
-	}
-	if err := generateBuildFiles(serviceName); err != nil {
-		return err
-	}
-	return generateScriptFiles(serviceName)
-}
-
-func generateGoFiles(serviceName string) error {
-	for _, options := range goFileOptions {
-		if err := utils.GenerateFile(serviceName, options); err != nil {
-			return err
-		}
-	}
-	return nil
-}
-
-func generateBuildFiles(serviceName string) error {
-	for _, options := range buildFileOptions {
-		if err := utils.GenerateFile(serviceName, options); err != nil {
-			return err
-		}
-	}
-	return nil
-}
-
-func generateScriptFiles(serviceName string) error {
-	path := fmt.Sprintf("./%s/scripts", serviceName)
+func createDirectories(serviceName string) error {
+	path := fmt.Sprintf("./%s", serviceName)
 	if err := utils.CreateDir(path); err != nil {
 		return err
 	}
-	for _, options := range scriptFileOptions {
+	path = fmt.Sprintf("./%s/scripts", serviceName)
+	if err := utils.CreateDir(path); err != nil {
+		return err
+	}
+	return nil
+}
+
+func createService(serviceName string) error {
+	return generateAllFiles(serviceName)
+}
+
+func generateAllFiles(serviceName string) error {
+	for _, optionsList := range [][]*utils.GenerateFileOptions{
+		goFileOptions, buildFileOptions, scriptFileOptions}{
+			if err := generateFilesWithOptionsList(serviceName, optionsList); err != nil {
+				return err
+			}
+	}
+	return nil
+}
+
+func generateFilesWithOptionsList(serviceName string, fileOptions []*utils.GenerateFileOptions) error {
+	for _, options := range fileOptions {
 		if err := utils.GenerateFile(serviceName, options); err != nil {
 			return err
 		}
