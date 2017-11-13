@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/reivaj05/micro-gen/generator"
 
@@ -34,7 +35,7 @@ func createConfigOptions() *GoConfig.ConfigOptions {
 	return &GoConfig.ConfigOptions{
 		ConfigType: "json",
 		ConfigFile: "config",
-		ConfigPath: ".",
+		ConfigPath: fmt.Sprintf("%s/src/github.com/reivaj05/micro-gen/", os.Getenv("GOPATH")),
 	}
 }
 
