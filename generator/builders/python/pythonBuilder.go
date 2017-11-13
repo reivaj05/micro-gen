@@ -94,9 +94,9 @@ func createService(serviceName string) error {
 func generateAllFiles(serviceName string) error {
 	for _, optionsList := range [][]*utils.GenerateFileOptions{
 		configFileOptions, appFileOptions, buildFileOptions, scriptFileOptions}{
-			if err := generateFilesWithOptionsList(serviceName, optionsList); err != nil {
-				return err
-			}
+		if err := generateFilesWithOptionsList(serviceName, optionsList); err != nil {
+			return err
+		}
 	}
 	return nil
 }
