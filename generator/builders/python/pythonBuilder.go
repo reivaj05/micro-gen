@@ -68,21 +68,14 @@ func Build(serviceName string) error {
 }
 
 func createDirectories(serviceName string) error {
-	path := fmt.Sprintf("./%s", serviceName)
-	if err := utils.CreateDir(path); err != nil {
-		return err
+	paths := []string{
+		fmt.Sprintf("./%s", serviceName), fmt.Sprintf("./%s/config", serviceName),
+		fmt.Sprintf("./%s/app", serviceName), fmt.Sprintf("./%s/scripts", serviceName),
 	}
-	path = fmt.Sprintf("./%s/config", serviceName)
-	if err := utils.CreateDir(path); err != nil {
-		return err
-	}
-	path = fmt.Sprintf("./%s/app", serviceName)
-	if err := utils.CreateDir(path); err != nil {
-		return err
-	}
-	path = fmt.Sprintf("./%s/scripts", serviceName)
-	if err := utils.CreateDir(path); err != nil {
-		return err
+	for _, path := range paths {
+		if err := utils.CreateDir(path); err != nil {
+			return err
+		}	
 	}
 	return nil
 }
