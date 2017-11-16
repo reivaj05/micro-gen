@@ -1,0 +1,6 @@
+[package]
+name = {{ .ServiceName }}
+version = "0.1.0"
+authors = ["micro-gen <reivaj0705@gmail.com>"]
+
+[dependencies]
