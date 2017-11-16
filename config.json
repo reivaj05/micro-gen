@@ -2,6 +2,7 @@
 	"logLevel": "INFO",
 	"templates": {
 		"go": "generator/builders/go/templates/",
-		"python": "generator/builders/python/templates/"
+		"python": "generator/builders/python/templates/",
+		"rust": "generator/builders/rust/templates/"
 	}
 }
