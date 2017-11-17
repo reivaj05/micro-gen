@@ -1,0 +1,17 @@
+default: setup deps linter test build
+
+setup:
+	echo "TODO: setup"
+	# chmod +x ./scripts/*.sh
+deps:
+	echo "TODO: deps"
+	# ./scripts/deps.sh
+linter:
+	echo "TODO: linter"
+	# ./scripts/linter.sh
+test: #deps
+	echo "TODO: test"
+	# ./scripts/tests.sh
+build: #deps
+	echo "TODO: build"
+	# $(GOCMD) install
