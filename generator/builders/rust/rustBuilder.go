@@ -13,6 +13,21 @@ var appFileOptions = []*utils.GenerateFileOptions{
 		"rust", true),
 }
 
+var buildFileOptions = []*utils.GenerateFileOptions{
+	utils.CreateFileOptions("Dockerfile", "", "Dockerfile.gen", "build/",
+		"rust", true),
+	utils.CreateFileOptions("docker-compose.yml", "", "docker-compose.gen", "build/",
+		"rust", true),
+	utils.CreateFileOptions("Makefile", "", "Makefile.gen", "build/",
+		"rust", false),
+	utils.CreateFileOptions(".gitignore", "", "ignore.gen", "",
+		"rust", false),
+	utils.CreateFileOptions(".dockerignore", "", "ignore.gen", "",
+		"rust", false),
+	// utils.CreateFileOptions(".travis.yml", "", "travis.gen", "build/",
+		// "rust", false),
+}
+
 func Build(serviceName string) error {
 	if err := createDirectories(serviceName); err != nil {
 		return err
@@ -38,7 +53,7 @@ func createService(serviceName string) error {
 }
 
 func generateAllFiles(serviceName string) error {
-	for _, optionsList := range [][]*utils.GenerateFileOptions{appFileOptions}{
+	for _, optionsList := range [][]*utils.GenerateFileOptions{appFileOptions, buildFileOptions}{
 		if err := generateFilesWithOptionsList(serviceName, optionsList); err != nil {
 			return err
 		}
