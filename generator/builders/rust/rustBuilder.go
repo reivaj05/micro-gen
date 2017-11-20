@@ -24,8 +24,8 @@ var buildFileOptions = []*utils.GenerateFileOptions{
 		"rust", false),
 	utils.CreateFileOptions(".dockerignore", "", "ignore.gen", "",
 		"rust", false),
-	// utils.CreateFileOptions(".travis.yml", "", "travis.gen", "build/",
-		// "rust", false),
+	utils.CreateFileOptions(".travis.yml", "", "travis.gen", "build/",
+		"rust", false),
 }
 
 func Build(serviceName string) error {
