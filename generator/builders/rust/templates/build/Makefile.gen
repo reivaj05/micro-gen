@@ -1,7 +1,7 @@
 default: setup deps linter test
 
 setup:
-	chmod +x ./scripts/*.sh
+	chmod +x ./scripts/*.sh; sync
 deps:
 	./scripts/deps.sh
 linter:
