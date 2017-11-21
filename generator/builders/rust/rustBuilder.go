@@ -28,6 +28,18 @@ var buildFileOptions = []*utils.GenerateFileOptions{
 		"rust", false),
 }
 
+var scriptFileOptions = []*utils.GenerateFileOptions{
+	utils.CreateFileOptions("start.sh", "scripts/", "start.gen", "scripts/",
+		"rust", false),
+	utils.CreateFileOptions("linter.sh", "scripts/", "linter.gen", "scripts/",
+		"rust", true),
+	utils.CreateFileOptions("tests.sh", "scripts/", "tests.gen", "scripts/",
+		"rust", false),
+	utils.CreateFileOptions("deps.sh", "scripts/", "deps.gen", "scripts/",
+		"rust", false),
+}
+
+
 func Build(serviceName string) error {
 	if err := createDirectories(serviceName); err != nil {
 		return err
@@ -53,7 +65,8 @@ func createService(serviceName string) error {
 }
 
 func generateAllFiles(serviceName string) error {
-	for _, optionsList := range [][]*utils.GenerateFileOptions{appFileOptions, buildFileOptions}{
+	for _, optionsList := range [][]*utils.GenerateFileOptions{
+		appFileOptions, buildFileOptions, scriptFileOptions}{
 		if err := generateFilesWithOptionsList(serviceName, optionsList); err != nil {
 			return err
 		}
