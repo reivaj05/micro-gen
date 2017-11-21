@@ -8,4 +8,4 @@ RUN apk -U add gcc g++ make bash rust cargo git
 RUN make
 RUN apk del gcc g++ make bash git
 
-ENTRYPOINT cargo run
+ENTRYPOINT ./scripts/start.sh
