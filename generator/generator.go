@@ -22,11 +22,10 @@ var generators = map[string]generator{
 }
 
 func Generate(flags map[string]string, args ...string) error {
-	if len(args) == 0 {
-		return fmt.Errorf("You didn't pass a name for the microservice")
-	}
-	// TODO: Check language is allowed
 	language := flags["lang"]
+	if err := validateParameters(language, args...); err != nil {
+		return err
+	}
 	serviceName := args[0]
 	if err := generators[language](serviceName); err != nil {
 		rollback(serviceName)
@@ -34,6 +33,18 @@ func Generate(flags map[string]string, args ...string) error {
 	}
 	return nil
 }
+
+func validateParameters(language string, args ...string) error {
+	if len(args) == 0 {
+		return fmt.Errorf("You didn't pass a name for the microservice")
+	}
+	if _, ok := generators[language]; !ok {
+		return fmt.Errorf("Programming language not allowed")
+	}
+	return nil
+}
+
+
 
 func generateGo(serviceName string) error {
 	return goBuilder.Build(serviceName)
