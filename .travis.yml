@@ -6,6 +6,9 @@ go:
 services:
   - docker
 
+env:
+  - DOCKER_COMPOSE_VERSION=1.16.1
+
 script:
   - CI_ENV=`bash <(curl -s https://codecov.io/env)`
   - docker-compose build --build-arg CI_ENV=$CI_ENV micro-gen
