@@ -6,6 +6,6 @@ WORKDIR /{{ .ServiceName }}
 
 RUN apk -U add gcc g++ make bash rust cargo git
 RUN make
-RUN apk del gcc g++ make bash git
+RUN apk del gcc g++ make git
 
 ENTRYPOINT ./scripts/start.sh

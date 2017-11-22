@@ -41,7 +41,7 @@ var scriptFileOptions = []*utils.GenerateFileOptions{
 	utils.CreateFileOptions("linter.sh", "scripts/", "linter.gen", "scripts/",
 		"go", true),
 	utils.CreateFileOptions("start.sh", "scripts/", "start.gen", "scripts/",
-		"go", false),
+		"go", true),
 	utils.CreateFileOptions("tests.sh", "scripts/", "tests.gen", "scripts/",
 		"go", false),
 }
