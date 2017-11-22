@@ -6,17 +6,13 @@ go:
 services:
   - docker
 
-env:
-  - DOCKER_COMPOSE_VERSION=1.16.1
-
-before_install:
-  - sudo rm /usr/local/bin/docker-compose
-  - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
-  - chmod +x docker-compose
-  - sudo mv docker-compose /usr/local/bin
-  - docker --version # for verification
-  - docker-compose --version # for verification
+before_script:
+  - chmod +x ./scripts/*.sh
 
 script:
-  - CI_ENV=`bash <(curl -s https://codecov.io/env)`
-  - docker-compose build --build-arg CI_ENV=$CI_ENV micro-gen
+  - docker-compose build
+  - ./scripts/deps.sh
+  - ./scripts/tests.sh
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)

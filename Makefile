@@ -1,10 +1,8 @@
 GOCMD = go
 PKG   = ./...
 
-default: setup fmt deps linter test build
+default: fmt deps linter test build
 
-setup:
-	chmod +x ./scripts/*.sh
 fmt:
 	$(GOCMD) fmt $(PKG)
 deps:
