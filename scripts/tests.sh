@@ -20,6 +20,8 @@ for d in $(go list ./... | grep -v vendor); do
     fi
 done
 
+bash <(curl -s https://codecov.io/env)
+
 if [ $? -eq $success_status_code ]
     then
         echo "The tests ran successfully"
