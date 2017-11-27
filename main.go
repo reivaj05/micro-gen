@@ -89,7 +89,7 @@ func createCommands() []*GoCLI.Command {
 		&GoCLI.Command{
 			Name:   "create-service",
 			Usage:  "TODO: Set create-service usage",
-			Action: generator.Generate,
+			Action: generator.GenerateService,
 			StringFlags: getCreateServiceStringFlags(),
 		},
 	}

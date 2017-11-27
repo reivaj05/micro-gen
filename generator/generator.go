@@ -21,7 +21,7 @@ var generators = map[string]generator{
 	"rust":       generateRust,
 }
 
-func Generate(flags map[string]string, args ...string) error {
+func GenerateService(flags map[string]string, args ...string) error {
 	language := flags["lang"]
 	if err := validateParameters(language, args...); err != nil {
 		return err
