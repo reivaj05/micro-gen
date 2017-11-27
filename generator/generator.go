@@ -23,7 +23,7 @@ var generators = map[string]generator{
 
 func GenerateService(flags map[string]string, args ...string) error {
 	language := flags["lang"]
-	if err := validateParameters(language, args...); err != nil {
+	if err := validateGenerateServiceParameters(language, args...); err != nil {
 		return err
 	}
 	serviceName := args[0]
@@ -34,7 +34,7 @@ func GenerateService(flags map[string]string, args ...string) error {
 	return nil
 }
 
-func validateParameters(language string, args ...string) error {
+func validateGenerateServiceParameters(language string, args ...string) error {
 	if len(args) == 0 {
 		return fmt.Errorf("You didn't pass a name for the microservice")
 	}
@@ -64,6 +64,11 @@ func generateRuby(serviceName string) error {
 
 func generateRust(serviceName string) error {
 	return rustBuilder.Build(serviceName)
+}
+
+func GenerateManager(flags map[string]string, args ...string) error {
+	fmt.Println("TODO: Generate manager")
+	return nil
 }
 
 func rollback(serviceName string) {

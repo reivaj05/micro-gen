@@ -92,6 +92,12 @@ func createCommands() []*GoCLI.Command {
 			Action: generator.GenerateService,
 			StringFlags: getCreateServiceStringFlags(),
 		},
+		&GoCLI.Command{
+			Name:   "create-manager",
+			Usage:  "TODO: Set create-manager usage",
+			Action: generator.GenerateManager,
+			StringFlags: getCreateManagerStringFlags(),
+		},
 	}
 }
 
@@ -101,6 +107,15 @@ func getCreateServiceStringFlags() []*GoCLI.StringFlag {
 			Name:   "lang",
 			Usage:  "Language of the microservice to be created",
 			Default: "go",
+		},
+	}
+}
+
+func getCreateManagerStringFlags() []*GoCLI.StringFlag {
+	return []*GoCLI.StringFlag{
+		&GoCLI.StringFlag{
+			Name:   "services",
+			Usage:  "Space separated list of the services you want to manage. TODO",
 		},
 	}
 }
