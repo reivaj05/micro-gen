@@ -1,6 +1,5 @@
 package goBuilder
 
-// TODO: Update/Fix glide package path
 import (
 	"fmt"
 
