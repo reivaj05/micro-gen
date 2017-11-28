@@ -69,7 +69,11 @@ func generateRust(serviceName string) error {
 
 func GenerateManager(flags map[string]string, args ...string) error {
 	fmt.Println("TODO: Generate manager")
-	return managerBuilder.Build("manager")
+	if err := managerBuilder.Build("manager"); err != nil {
+		rollback("manager")
+		return err
+	}
+	return nil
 }
 
 func rollback(serviceName string) {
