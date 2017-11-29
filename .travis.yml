@@ -10,7 +10,8 @@ before_script:
   - chmod +x ./scripts/*.sh
 
 script:
-  - docker-compose build
+  - ./scripts/build_image.sh
+  - ./scripts/push_image.sh
   - ./scripts/deps.sh
   - ./scripts/tests.sh
 
