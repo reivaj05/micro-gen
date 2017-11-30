@@ -43,6 +43,8 @@ var scriptFileOptions = []*utils.GenerateFileOptions{
 		"go", true),
 	utils.CreateFileOptions("tests.sh", "scripts/", "tests.gen", "scripts/",
 		"go", false),
+	utils.CreateFileOptions("build_image.sh", "scripts/", "build_image.gen", "scripts/",
+		"go", true),
 }
 
 func Build(serviceName string) error {
