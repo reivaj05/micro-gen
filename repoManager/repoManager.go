@@ -2,6 +2,7 @@ package repoManager
 
 import (
 	"fmt"
+	"os/exec"
 )
 
 type repoCreator func() error
@@ -13,8 +14,25 @@ var repoProviders = map[string]repoCreator{
 }
 
 
-func CreateRepo(provider string) error {
-	return repoProviders[provider]()
+func CreateRepo(serviceName, provider string) error {
+	if err := createLocalRepo(serviceName); err != nil {
+		return err
+	}
+	if creator, ok := repoProviders[provider]; ok {
+		return creator()
+	}
+	return fmt.Errorf("Repo provider '%s' not supported", provider)
+}
+
+func createLocalRepo(serviceName string) error {
+	cmd := exec.Command("sh", "-c", fmt.Sprintf("cd %s; git init", serviceName))
+	fmt.Println("Creating local repo...")
+	output, err := cmd.CombinedOutput()
+	if err != nil {
+		return err
+	}
+	fmt.Println(string(output))
+	return nil
 }
 
 func createGitHubRepo() error {
