@@ -1,16 +1,26 @@
 package repoManager
 
 import (
+	"context"
 	"fmt"
+	"os"
 	"os/exec"
+
+	"github.com/google/go-github/github"
+	"golang.org/x/oauth2"
 )
 
 type repoCreator func() error
 
+
+var githubTokenKey = "GITHUB_TOKEN"
+var bitbucketTokenKey = "BITBUCKET_TOKEN"
+var gitlabTokenKey = "GITLAB_TOKEN"
+
 var repoProviders = map[string]repoCreator{
-	"github":		createGitHubRepo,
-	"bitbucket":    createBitBucketRepo,
-	"gitlab":       createGitLabRepo,
+	"github":		createGithubRepo,
+	"bitbucket":    createBitbucketRepo,
+	"gitlab":       createGitlabRepo,
 }
 
 
@@ -35,17 +45,40 @@ func createLocalRepo(serviceName string) error {
 	return nil
 }
 
-func createGitHubRepo() error {
-	fmt.Println("TODO: Create github repo")
+func createGithubRepo() error {
+	ctx := context.Background()
+	client, err := createGitHubClient(ctx)
+	if err != nil {
+		return err
+	}
+	orgs, _, err := client.Repositories.List(ctx, "reivaj05", nil)
+	fmt.Println(github.Stringify(orgs), err)
 	return nil
 }
 
-func createBitBucketRepo() error {
+func createGitHubClient(ctx context.Context) (*github.Client, error) {
+	accessToken, err := getToken(githubTokenKey)
+	if err != nil {
+		return nil, err
+	}
+	tc := oauth2.NewClient(ctx, oauth2.StaticTokenSource(&oauth2.Token{AccessToken: accessToken}))
+	return github.NewClient(tc), nil
+}
+
+func getToken(key string) (string, error) {
+	accessToken := os.Getenv(key)
+	if accessToken == "" {
+		return "", fmt.Errorf("%s env var does not exist", key)
+	}
+	return accessToken, nil
+}
+
+func createBitbucketRepo() error {
 	fmt.Println("TODO: Create bitbucket repo")
 	return nil
 }
 
-func createGitLabRepo() error {
+func createGitlabRepo() error {
 	fmt.Println("TODO: Create gitlab repo")
 	return nil	
 }
