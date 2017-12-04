@@ -11,6 +11,9 @@ import:
 - package: github.com/reivaj05/GoServer
   version: v0.0.3
 - package: github.com/serenize/snaker
+- package: github.com/google/go-github
+  subpackages:
+  - github
 testImport:
 - package: github.com/stretchr/testify
   version: v1.1.4
