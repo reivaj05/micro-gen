@@ -29,10 +29,12 @@ func CreateRepo(serviceName, provider string) error {
 		return err
 	}
 	if creator, ok := repoProviders[provider]; ok {
+		fmt.Printf("Creating %s repository...\n", provider)
 		repo, err := creator(serviceName)
 		if err != nil {
 			return err
 		}
+		fmt.Printf("Linking %s repository to local repository...\n", serviceName)
 		return linkGithubRepoToLocalRepo(repo)
 	}
 	return fmt.Errorf("Repo provider '%s' not supported", provider)
