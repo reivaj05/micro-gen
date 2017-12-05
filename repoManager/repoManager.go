@@ -10,7 +10,7 @@ import (
 	"golang.org/x/oauth2"
 )
 
-type repoCreator func() error
+type repoCreator func(string) (*github.Repository, error)
 
 
 var githubTokenKey = "GITHUB_TOKEN"
@@ -29,7 +29,11 @@ func CreateRepo(serviceName, provider string) error {
 		return err
 	}
 	if creator, ok := repoProviders[provider]; ok {
-		return creator()
+		repo, err := creator(serviceName)
+		if err != nil {
+			return err
+		}
+		return linkGithubRepoToLocalRepo(repo)
 	}
 	return fmt.Errorf("Repo provider '%s' not supported", provider)
 }
@@ -45,15 +49,13 @@ func createLocalRepo(serviceName string) error {
 	return nil
 }
 
-func createGithubRepo() error {
+func createGithubRepo(serviceName string) (*github.Repository, error) {
 	ctx := context.Background()
 	client, err := createGitHubClient(ctx)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	orgs, _, err := client.Repositories.List(ctx, "reivaj05", nil)
-	fmt.Println(github.Stringify(orgs), err)
-	return nil
+	return __createGithubRepo(serviceName, client, ctx)
 }
 
 func createGitHubClient(ctx context.Context) (*github.Client, error) {
@@ -73,12 +75,27 @@ func getToken(key string) (string, error) {
 	return accessToken, nil
 }
 
-func createBitbucketRepo() error {
-	fmt.Println("TODO: Create bitbucket repo")
-	return nil
+func __createGithubRepo(serviceName string, client *github.Client,
+	ctx context.Context) (repo *github.Repository, err error) {
+
+	repo = &github.Repository{Name:    github.String(serviceName)}
+	repo, _, err  = client.Repositories.Create(ctx, "", repo)
+	if err != nil {
+		return nil, err
+	}
+	return repo, nil
 }
 
-func createGitlabRepo() error {
+func createBitbucketRepo(serviceName string) (*github.Repository, error) {
+	fmt.Println("TODO: Create bitbucket repo")
+	return nil, nil
+}
+
+func createGitlabRepo(serviceName string) (*github.Repository, error) {
 	fmt.Println("TODO: Create gitlab repo")
-	return nil	
+	return nil, nil
+}
+
+func linkGithubRepoToLocalRepo(repo *github.Repository) error {
+	return nil
 }
