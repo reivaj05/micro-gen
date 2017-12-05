@@ -29,20 +29,18 @@ func CreateRepo(serviceName, provider string) error {
 		return err
 	}
 	if creator, ok := repoProviders[provider]; ok {
-		fmt.Printf("Creating %s repository...\n", provider)
 		repo, err := creator(serviceName)
 		if err != nil {
 			return err
 		}
-		fmt.Printf("Linking %s repository to local repository...\n", serviceName)
-		return linkGithubRepoToLocalRepo(repo)
+		return linkGithubRepoToLocalRepo(repo, serviceName)
 	}
 	return fmt.Errorf("Repo provider '%s' not supported", provider)
 }
 
 func createLocalRepo(serviceName string) error {
-	cmd := exec.Command("sh", "-c", fmt.Sprintf("cd %s; git init", serviceName))
 	fmt.Println("Creating local repo...")
+	cmd := exec.Command("sh", "-c", fmt.Sprintf("cd %s; git init", serviceName))
 	output, err := cmd.CombinedOutput()
 	if err != nil {
 		return err
@@ -52,6 +50,7 @@ func createLocalRepo(serviceName string) error {
 }
 
 func createGithubRepo(serviceName string) (*github.Repository, error) {
+	fmt.Printf("Creating %s github repository...\n", serviceName)
 	ctx := context.Background()
 	client, err := createGitHubClient(ctx)
 	if err != nil {
@@ -98,6 +97,13 @@ func createGitlabRepo(serviceName string) (*github.Repository, error) {
 	return nil, nil
 }
 
-func linkGithubRepoToLocalRepo(repo *github.Repository) error {
+func linkGithubRepoToLocalRepo(repo *github.Repository, serviceName string) error {
+	fmt.Printf("Linking %s repository to local repository...\n", serviceName)
+	cmd := exec.Command("sh", "-c", fmt.Sprintf("cd %s; git remote add origin %s", serviceName, *repo.SSHURL))
+	output, err := cmd.CombinedOutput()
+	if err != nil {
+		return err
+	}
+	fmt.Println(string(output))
 	return nil
 }
