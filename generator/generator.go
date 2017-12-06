@@ -33,7 +33,7 @@ func GenerateService(flags map[string]string, args ...string) error {
 		rollback(serviceName)
 		return err
 	}
-	provider := "github"
+	provider := flags["repo-provider"]
 	return repoManager.CreateRepo(serviceName, provider)
 }
 

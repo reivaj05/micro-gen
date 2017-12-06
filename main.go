@@ -108,6 +108,11 @@ func getCreateServiceStringFlags() []*GoCLI.StringFlag {
 			Usage:  "Language of the microservice to be created",
 			Default: "go",
 		},
+		&GoCLI.StringFlag{
+			Name:   "repo-provider",
+			Usage:  "Service to handle repos(github, gitlab, bitbucket)",
+			Default: "github",
+		},
 	}
 }
 
