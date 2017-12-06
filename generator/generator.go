@@ -10,6 +10,7 @@ import (
 	pythonBuilder "github.com/reivaj05/micro-gen/generator/builders/python"
 	rubyBuilder "github.com/reivaj05/micro-gen/generator/builders/ruby"
 	rustBuilder "github.com/reivaj05/micro-gen/generator/builders/rust"
+	"github.com/reivaj05/micro-gen/repoManager"
 )
 
 type generator func(serviceName string) error
@@ -32,7 +33,8 @@ func GenerateService(flags map[string]string, args ...string) error {
 		rollback(serviceName)
 		return err
 	}
-	return nil
+	provider := "github"
+	return repoManager.CreateRepo(serviceName, provider)
 }
 
 func validateGenerateServiceParameters(language string, args ...string) error {
@@ -44,8 +46,6 @@ func validateGenerateServiceParameters(language string, args ...string) error {
 	}
 	return nil
 }
-
-
 
 func generateGo(serviceName string) error {
 	return goBuilder.Build(serviceName)
