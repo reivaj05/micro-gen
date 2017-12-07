@@ -37,6 +37,8 @@ var scriptFileOptions = []*utils.GenerateFileOptions{
 		"rust", false),
 	utils.CreateFileOptions("deps.sh", "scripts/", "deps.gen", "scripts/",
 		"rust", false),
+	utils.CreateFileOptions("build_image.sh", "scripts/", "build_image.gen", "scripts/",
+		"rust", true),
 }
 
 
