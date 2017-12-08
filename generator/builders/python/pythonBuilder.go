@@ -60,6 +60,8 @@ var scriptFileOptions = []*utils.GenerateFileOptions{
 		"python", false),
 	utils.CreateFileOptions("build_image.sh", "scripts/", "build_image.gen", "scripts/",
 		"python", true),
+	utils.CreateFileOptions("push_image.sh", "scripts/", "push_image.gen", "scripts/",
+		"python", true),
 }
 
 func Build(serviceName string) error {
