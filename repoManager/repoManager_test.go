@@ -64,7 +64,8 @@ func (suite *RepoManagerTestSuite) TestCreateGitlabRepoSuccessfully() {
 }
 
 func (suite *RepoManagerTestSuite) TestCreateBitbucketRepoSuccessfully() {
-	// TODO: TestCreateBitbucketRepoSuccessfully
+	err := CreateRepo(suite.managerName, suite.bitbucketProvider)
+	suite.assert.Nil(err)
 }
 
 func (suite *RepoManagerTestSuite) TestCreateRepoWithLocalRepoError() {
