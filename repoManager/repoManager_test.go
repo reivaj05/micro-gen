@@ -55,11 +55,12 @@ func (suite *RepoManagerTestSuite) TestCreateGithubRepoWithoutAccessToken() {
 func (suite *RepoManagerTestSuite) TestCreateGithubRepoWithWrongAccessToken() {
 	os.Setenv("GITHUB_TOKEN", "GITHUB_MOCK_TOKEN")
 	err := CreateRepo(suite.managerName, suite.githubProvider)
-	suite.assert.Nil(err)
+	suite.assert.NotNil(err)
 }
 
 func (suite *RepoManagerTestSuite) TestCreateGitlabRepoSuccessfully() {
-	// TODO: TestCreateGitlabRepoSuccessfully
+	err := CreateRepo(suite.managerName, suite.gitlabProvider)
+	suite.assert.Nil(err)
 }
 
 func (suite *RepoManagerTestSuite) TestCreateBitbucketRepoSuccessfully() {
