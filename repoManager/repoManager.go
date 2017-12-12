@@ -36,7 +36,7 @@ func CreateRepo(serviceName, provider string) error {
 
 func createLocalRepo(serviceName string) error {
 	fmt.Println("Creating local repo...")
-	cmd := exec.Command("sh", "-c", fmt.Sprintf("cd %s; git init", serviceName))
+	cmd := exec.Command("sh", "-c", fmt.Sprintf("cd %s && git init", serviceName))
 	output, err := cmd.CombinedOutput()
 	if err != nil {
 		return err
@@ -85,7 +85,7 @@ func __createGithubRepo(serviceName string, client *github.Client,
 
 func linkGithubRepoToLocalRepo(repo *github.Repository, serviceName string) error {
 	fmt.Printf("Linking %s repository to local repository...\n", serviceName)
-	cmd := exec.Command("sh", "-c", fmt.Sprintf("cd %s; git remote add origin %s", serviceName, *repo.SSHURL))
+	cmd := exec.Command("sh", "-c", fmt.Sprintf("cd %s && git remote add origin %s", serviceName, *repo.SSHURL))
 	_, err := cmd.CombinedOutput()
 	return err
 }

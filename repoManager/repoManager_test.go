@@ -16,7 +16,7 @@ type RepoManagerTestSuite struct {
 	githubProvider 		string
 	gitlabProvider 		string
 	bitbucketProvider 	string
-	originalToken 		string
+	githubToken 		string
 }
 
 func (suite *RepoManagerTestSuite) SetupSuite() {
@@ -25,18 +25,19 @@ func (suite *RepoManagerTestSuite) SetupSuite() {
 	suite.githubProvider = "github"
 	suite.gitlabProvider = "gitlab"
 	suite.bitbucketProvider = "bitbucket"
+	os.MkdirAll(suite.managerName, os.ModePerm);
 }
 
 func (suite *RepoManagerTestSuite) SetupTest() {
-	suite.originalToken = os.Getenv("GITHUB_TOKEN")
+	suite.githubToken = os.Getenv("GITHUB_TOKEN")
 }
 
 func (suite *RepoManagerTestSuite) TearDownSuite() {
-	// TODO: Add teardown
+	os.RemoveAll(suite.managerName)
 }
 
 func (suite *RepoManagerTestSuite) TearDownTest() {
-	os.Setenv("GITHUB_TOKEN", suite.originalToken)
+	os.Setenv("GITHUB_TOKEN", suite.githubToken)
 }
 
 func (suite *RepoManagerTestSuite) TestCreateGithubRepoSuccessfully() {
