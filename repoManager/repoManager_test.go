@@ -73,7 +73,8 @@ func (suite *RepoManagerTestSuite) TestCreateRepoWithLocalRepoError() {
 }
 
 func (suite *RepoManagerTestSuite) TestCreateRepoWithWrongServiceProvider() {
-	// TODO: TestCreateRepoWithWrongServiceProvider
+	err := CreateRepo(suite.managerName, "wrongServiceProvider")
+	suite.assert.NotNil(err)
 }
 
 func TestRepoManager(t *testing.T) {
