@@ -1,24 +1,29 @@
 package repoManager
 
 import (
-	"fmt"
+	// "fmt"
 	"os"
-	"strings"
 	"testing"
 
-	"github.com/reivaj05/GoConfig"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
 )
 
 type RepoManagerTestSuite struct {
 	suite.Suite
-	assert      *assert.Assertions
+	assert      		*assert.Assertions
+	managerName 		string
+	githubProvider 		string
+	gitlabProvider 		string
+	bitbucketProvider 	string
 }
 
 func (suite *RepoManagerTestSuite) SetupSuite() {
 	suite.assert = assert.New(suite.T())
 	suite.managerName = "mockManager"
+	suite.githubProvider = "github"
+	suite.gitlabProvider = "gitlab"
+	suite.bitbucketProvider = "bitbucket"
 }
 
 func (suite *RepoManagerTestSuite) TearDownSuite() {
@@ -26,7 +31,11 @@ func (suite *RepoManagerTestSuite) TearDownSuite() {
 }
 
 func (suite *RepoManagerTestSuite) TestCreateGithubRepoSuccessfully() {
-	// TODO: TestCreateGithubRepoSuccessfully
+	originalToken := os.Getenv("GITHUB_TOKEN")
+	os.Setenv("GITHUB_TOKEN", "GITHUB_MOCK_TOKEN")
+	err := CreateRepo(suite.managerName, suite.githubProvider)
+	suite.assert.NotNil(err)
+	os.Setenv("GITHUB_TOKEN", originalToken)
 }
 
 func (suite *RepoManagerTestSuite) TestCreateGithubRepoWithoutAccessToken() {
@@ -50,8 +59,7 @@ func (suite *RepoManagerTestSuite) TestCreateRepoWithLocalRepoError() {
 }
 
 func (suite *RepoManagerTestSuite) TestCreateRepoWithWrongServiceProvider() {
-	err := Build(suite.serviceName)
-	suite.assert.Nil(err)
+	// TODO: TestCreateRepoWithWrongServiceProvider
 }
 
 func TestRepoManager(t *testing.T) {
