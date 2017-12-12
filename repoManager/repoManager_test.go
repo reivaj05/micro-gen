@@ -16,6 +16,7 @@ type RepoManagerTestSuite struct {
 	githubProvider 		string
 	gitlabProvider 		string
 	bitbucketProvider 	string
+	originalToken 		string
 }
 
 func (suite *RepoManagerTestSuite) SetupSuite() {
@@ -26,20 +27,28 @@ func (suite *RepoManagerTestSuite) SetupSuite() {
 	suite.bitbucketProvider = "bitbucket"
 }
 
+func (suite *RepoManagerTestSuite) SetupTest() {
+	suite.originalToken = os.Getenv("GITHUB_TOKEN")
+}
+
 func (suite *RepoManagerTestSuite) TearDownSuite() {
 	// TODO: Add teardown
 }
 
+func (suite *RepoManagerTestSuite) TearDownTest() {
+	os.Setenv("GITHUB_TOKEN", suite.originalToken)
+}
+
 func (suite *RepoManagerTestSuite) TestCreateGithubRepoSuccessfully() {
-	originalToken := os.Getenv("GITHUB_TOKEN")
 	os.Setenv("GITHUB_TOKEN", "GITHUB_MOCK_TOKEN")
 	err := CreateRepo(suite.managerName, suite.githubProvider)
-	suite.assert.NotNil(err)
-	os.Setenv("GITHUB_TOKEN", originalToken)
+	suite.assert.Nil(err)
 }
 
 func (suite *RepoManagerTestSuite) TestCreateGithubRepoWithoutAccessToken() {
-	// TODO: TestCreateGithubRepoWithoutAccessToken
+	os.Setenv("GITHUB_TOKEN", "")
+	err := CreateRepo(suite.managerName, suite.githubProvider)
+	suite.assert.NotNil(err)
 }
 
 func (suite *RepoManagerTestSuite) TestCreateGithubRepoWithWrongAccessToken() {
