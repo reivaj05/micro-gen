@@ -113,6 +113,11 @@ func getCreateServiceStringFlags() []*GoCLI.StringFlag {
 			Usage:   "Service to handle repos(github, gitlab, bitbucket)",
 			Default: "github",
 		},
+		&GoCLI.StringFlag{
+			Name:    "ci-provider",
+			Usage:   "Service to handle CI integration(travis, jenkins, circle)",
+			Default: "travis",
+		},
 	}
 }
 
