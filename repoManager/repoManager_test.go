@@ -11,12 +11,12 @@ import (
 
 type RepoManagerTestSuite struct {
 	suite.Suite
-	assert      		*assert.Assertions
-	managerName 		string
-	githubProvider 		string
-	gitlabProvider 		string
-	bitbucketProvider 	string
-	githubToken 		string
+	assert            *assert.Assertions
+	managerName       string
+	githubProvider    string
+	gitlabProvider    string
+	bitbucketProvider string
+	githubToken       string
 }
 
 func (suite *RepoManagerTestSuite) SetupSuite() {
@@ -25,7 +25,7 @@ func (suite *RepoManagerTestSuite) SetupSuite() {
 	suite.githubProvider = "github"
 	suite.gitlabProvider = "gitlab"
 	suite.bitbucketProvider = "bitbucket"
-	os.MkdirAll(suite.managerName, os.ModePerm);
+	os.MkdirAll(suite.managerName, os.ModePerm)
 }
 
 func (suite *RepoManagerTestSuite) SetupTest() {

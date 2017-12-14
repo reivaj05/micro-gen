@@ -12,17 +12,15 @@ import (
 
 type repoCreator func(string) error
 
-
 var githubTokenKey = "GITHUB_TOKEN"
 var bitbucketTokenKey = "BITBUCKET_TOKEN"
 var gitlabTokenKey = "GITLAB_TOKEN"
 
 var repoProviders = map[string]repoCreator{
-	"github":		createGithubRepo,
-	"bitbucket":    createBitbucketRepo,
-	"gitlab":       createGitlabRepo,
+	"github":    createGithubRepo,
+	"bitbucket": createBitbucketRepo,
+	"gitlab":    createGitlabRepo,
 }
-
 
 func CreateRepo(serviceName, provider string) error {
 	if err := createLocalRepo(serviceName); err != nil {
@@ -75,8 +73,8 @@ func getToken(key string) (string, error) {
 func __createGithubRepo(serviceName string, client *github.Client,
 	ctx context.Context) (err error) {
 
-	repo := &github.Repository{Name:    github.String(serviceName)}
-	repo, _, err  = client.Repositories.Create(ctx, "", repo)
+	repo := &github.Repository{Name: github.String(serviceName)}
+	repo, _, err = client.Repositories.Create(ctx, "", repo)
 	if err != nil {
 		return err
 	}
