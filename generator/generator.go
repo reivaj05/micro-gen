@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/reivaj05/micro-gen/CIManager"
 	goBuilder "github.com/reivaj05/micro-gen/generator/builders/go"
 	jsBuilder "github.com/reivaj05/micro-gen/generator/builders/javascript"
 	managerBuilder "github.com/reivaj05/micro-gen/generator/builders/manager"
@@ -24,8 +25,7 @@ var generators = map[string]generator{
 }
 
 func GenerateService(flags map[string]string, args ...string) error {
-	language := flags["lang"]
-	if err := validateGenerateServiceParameters(language, args...); err != nil {
+	if err := validateGenerateServiceParameters(flags["lang"], args...); err != nil {
 		return err
 	}
 	serviceName := args[0]
@@ -33,8 +33,10 @@ func GenerateService(flags map[string]string, args ...string) error {
 		rollback(serviceName)
 		return err
 	}
-	provider := flags["repo-provider"]
-	return repoManager.CreateRepo(serviceName, provider)
+	if err := repoManager.CreateRepo(serviceName, flags["repo-provider"]); err != nil {
+		return err
+	}
+	return CIManager.ConnectWithCIProvider(serviceName, flags["ci-provider"])
 }
 
 func validateGenerateServiceParameters(language string, args ...string) error {
