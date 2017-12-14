@@ -87,15 +87,15 @@ func createCLIOptions() *GoCLI.Options {
 func createCommands() []*GoCLI.Command {
 	return []*GoCLI.Command{
 		&GoCLI.Command{
-			Name:   "create-service",
-			Usage:  "Create a new service project in the language of your preference",
-			Action: generator.GenerateService,
+			Name:        "create-service",
+			Usage:       "Create a new service project in the language of your preference",
+			Action:      generator.GenerateService,
 			StringFlags: getCreateServiceStringFlags(),
 		},
 		&GoCLI.Command{
-			Name:   "create-manager",
-			Usage:  "Create a new manager to handle the services you previously created",
-			Action: generator.GenerateManager,
+			Name:        "create-manager",
+			Usage:       "Create a new manager to handle the services you previously created",
+			Action:      generator.GenerateManager,
 			StringFlags: getCreateManagerStringFlags(),
 		},
 	}
@@ -104,13 +104,13 @@ func createCommands() []*GoCLI.Command {
 func getCreateServiceStringFlags() []*GoCLI.StringFlag {
 	return []*GoCLI.StringFlag{
 		&GoCLI.StringFlag{
-			Name:   "lang",
-			Usage:  "Language of the microservice to be created",
+			Name:    "lang",
+			Usage:   "Language of the microservice to be created",
 			Default: "go",
 		},
 		&GoCLI.StringFlag{
-			Name:   "repo-provider",
-			Usage:  "Service to handle repos(github, gitlab, bitbucket)",
+			Name:    "repo-provider",
+			Usage:   "Service to handle repos(github, gitlab, bitbucket)",
 			Default: "github",
 		},
 	}
@@ -119,8 +119,8 @@ func getCreateServiceStringFlags() []*GoCLI.StringFlag {
 func getCreateManagerStringFlags() []*GoCLI.StringFlag {
 	return []*GoCLI.StringFlag{
 		&GoCLI.StringFlag{
-			Name:   "services",
-			Usage:  "Space separated list of the services you want to manage. TODO",
+			Name:  "services",
+			Usage: "Space separated list of the services you want to manage. TODO",
 		},
 	}
 }
