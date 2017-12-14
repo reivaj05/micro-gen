@@ -25,7 +25,8 @@ var generators = map[string]generator{
 }
 
 func GenerateService(flags map[string]string, args ...string) error {
-	if err := validateGenerateServiceParameters(flags["lang"], args...); err != nil {
+	language := flags["lang"]
+	if err := validateGenerateServiceParameters(language, args...); err != nil {
 		return err
 	}
 	serviceName := args[0]
