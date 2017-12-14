@@ -79,7 +79,7 @@ func createDirectories(serviceName string) error {
 	for _, path := range paths {
 		if err := utils.CreateDir(path); err != nil {
 			return err
-		}	
+		}
 	}
 	return nil
 }
@@ -90,7 +90,7 @@ func createService(serviceName string) error {
 
 func generateAllFiles(serviceName string) error {
 	for _, optionsList := range [][]*utils.GenerateFileOptions{
-		configFileOptions, appFileOptions, buildFileOptions, scriptFileOptions}{
+		configFileOptions, appFileOptions, buildFileOptions, scriptFileOptions} {
 		if err := generateFilesWithOptionsList(serviceName, optionsList); err != nil {
 			return err
 		}
