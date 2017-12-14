@@ -43,7 +43,6 @@ var scriptFileOptions = []*utils.GenerateFileOptions{
 		"rust", true),
 }
 
-
 func Build(serviceName string) error {
 	if err := createDirectories(serviceName); err != nil {
 		return err
@@ -59,7 +58,7 @@ func createDirectories(serviceName string) error {
 	for _, path := range paths {
 		if err := utils.CreateDir(path); err != nil {
 			return err
-		}	
+		}
 	}
 	return nil
 }
@@ -70,7 +69,7 @@ func createService(serviceName string) error {
 
 func generateAllFiles(serviceName string) error {
 	for _, optionsList := range [][]*utils.GenerateFileOptions{
-		appFileOptions, buildFileOptions, scriptFileOptions}{
+		appFileOptions, buildFileOptions, scriptFileOptions} {
 		if err := generateFilesWithOptionsList(serviceName, optionsList); err != nil {
 			return err
 		}
