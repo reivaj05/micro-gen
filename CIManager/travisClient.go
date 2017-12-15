@@ -21,6 +21,16 @@ func (client *travisClient) enableRepo(repoName string) (string, error) {
 	return "", nil
 }
 
+func (client *travisClient) filterReposByName(repoName string) []string {
+	// TODO:
+	return []string{}
+}
+
+func (client *travisClient) getRepo() (string, error) {
+	// TODO:
+	return "", nil
+}
+
 func (client *travisClient) getRepos() (string, error) {
 	// TODO:
 	return "", nil
