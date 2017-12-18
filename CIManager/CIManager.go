@@ -15,8 +15,6 @@ var circleCIKey = "CIRCLE_TOKEN"
 
 var requesterObj = requester.New()
 
-var travisActivateEndpoint = "https://api.travis-ci.org/repos"
-
 var CIConnectors = map[string]CIConnector{
 	"travis":  travisConnector,
 	"jenkins": jenkinsConnector,
