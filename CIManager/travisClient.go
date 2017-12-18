@@ -2,12 +2,15 @@ package CIManager
 
 import (
 	"fmt"
+	"net/url"
 
 	"github.com/reivaj05/GoJSON"
 	"github.com/reivaj05/GoRequester"
 )
 
-var reposEndpoint = "https://api.travis-ci.org/repos"
+var baseURL = "https://api.travis-ci.org"
+var reposEndpoint = fmt.Sprintf("%s/repos", baseURL)
+var repoActivateEndpoint = "%s/repo/%s/activate"
 
 type travisClient struct {
 	requesterObj *requester.Requester
@@ -31,14 +34,13 @@ func createTravisRequestHeaders(token string) map[string]string {
 }
 
 func (client *travisClient) ActivateRepo(serviceName string) error {
-	// TODO:
-	fmt.Println("Activate repo for ", serviceName)
+	// TODO: Sync account
 	repo, err := client.filterRepoByName(serviceName)
-	fmt.Println(repo.ToString())
 	if err != nil {
 		return err
 	}
-	return nil
+	slug, _ := repo.GetStringFromPath("slug")
+	return client.__activateRepoRequest(slug)
 }
 
 func (client *travisClient) filterRepoByName(serviceName string) (*GoJSON.JSONWrapper, error) {
@@ -47,6 +49,23 @@ func (client *travisClient) filterRepoByName(serviceName string) (*GoJSON.JSONWr
 		return nil, err
 	}
 	return client.filterBy("name", serviceName, repos)
+}
+
+func (client *travisClient) getRepos() ([]*GoJSON.JSONWrapper, error) {
+	jsonResponse, err := client.__getReposRequest()
+	if err != nil {
+		return nil, err
+	}
+	return jsonResponse.GetArrayFromPath("repositories"), nil
+}
+
+func (client *travisClient) __getReposRequest() (*GoJSON.JSONWrapper, error) {
+	config := client.createTravisRequestConfig("GET", reposEndpoint)
+	response, _, err := client.requesterObj.MakeRequest(config)
+	if err != nil {
+		return nil, err
+	}
+	return GoJSON.New(response)
 }
 
 func (client *travisClient) filterBy(key, query string,
@@ -61,26 +80,12 @@ func (client *travisClient) filterBy(key, query string,
 	return nil, fmt.Errorf("The repo %s couldn't be found", query)
 }
 
-func (client *travisClient) getRepos() ([]*GoJSON.JSONWrapper, error) {
-	jsonResponse, err := client.__getReposRequest()
-	if err != nil {
-		return nil, err
-	}
-	return jsonResponse.GetArrayFromPath("repositories"), nil
-}
-
-func (client *travisClient) getRepo() (string, error) {
-	// TODO:
-	return "", nil
-}
-
-func (client *travisClient) __getReposRequest() (*GoJSON.JSONWrapper, error) {
-	config := client.createTravisRequestConfig("GET", reposEndpoint)
-	response, _, err := client.requesterObj.MakeRequest(config)
-	if err != nil {
-		return nil, err
-	}
-	return GoJSON.New(response)
+func (client *travisClient) __activateRepoRequest(repoID string) error {
+	repoID = url.QueryEscape(repoID)
+	fmt.Println(fmt.Sprintf(repoActivateEndpoint, baseURL, repoID))
+	config := client.createTravisRequestConfig("POST", fmt.Sprintf(repoActivateEndpoint, baseURL, repoID))
+	_, _, err := client.requesterObj.MakeRequest(config)
+	return err
 }
 
 func (client *travisClient) syncAccount() (string, error) {
