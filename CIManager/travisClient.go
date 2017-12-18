@@ -33,34 +33,33 @@ func createTravisRequestHeaders(token string) map[string]string {
 func (client *travisClient) ActivateRepo(serviceName string) error {
 	// TODO:
 	fmt.Println("Activate repo for ", serviceName)
-	_, err := client.filterRepoByName(serviceName)
+	repo, err := client.filterRepoByName(serviceName)
+	fmt.Println(repo.ToString())
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (client *travisClient) filterRepoByName(serviceName string) (string, error) {
-	// TODO:
-	fmt.Println("Filterrepo by name")
+func (client *travisClient) filterRepoByName(serviceName string) (*GoJSON.JSONWrapper, error) {
 	repos, err := client.getRepos()
-	fmt.Println(repos)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
-	return "", nil
+	return client.filterBy("name", serviceName, repos)
 }
 
-// func (client *travisClient) filterBy(key, query string, repos []string) (string, error) {
-// 	for repo, _ := range repos {
-// 		if key in repo {
-// 			if repo[key] == query {
-// 				return "", nil
-// 			}
-// 		}
-// 	}
-// 	return "", fmt.Errorf("The repo %s couldn't be found", query)
-// }
+func (client *travisClient) filterBy(key, query string,
+	repos []*GoJSON.JSONWrapper) (*GoJSON.JSONWrapper, error) {
+	for _, repo := range repos {
+		if repo.HasPath(key) {
+			if value, ok := repo.GetStringFromPath(key); ok && value == query {
+				return repo, nil
+			}
+		}
+	}
+	return nil, fmt.Errorf("The repo %s couldn't be found", query)
+}
 
 func (client *travisClient) getRepos() ([]*GoJSON.JSONWrapper, error) {
 	jsonResponse, err := client.__getReposRequest()
