@@ -35,28 +35,12 @@ func travisConnector(serviceName string) error {
 	if err != nil {
 		return err
 	}
-	return activateRepoInTravis(token)
+	return activateRepoInTravis(serviceName, token)
 }
 
-func activateRepoInTravis(token string) error {
-	response, status_code, err := requesterObj.MakeRequest(createTravisRequestConfig(token))
-	fmt.Println(response, status_code, err)
-	return nil
-}
-
-func createTravisRequestConfig(token string) *requester.RequestConfig {
-	return &requester.RequestConfig{
-		Method:  "GET",
-		URL:     travisActivateEndpoint,
-		Headers: createTravisRequestHeaders(token),
-	}
-}
-
-func createTravisRequestHeaders(token string) map[string]string {
-	return map[string]string{
-		"Travis-API-Version": "3",
-		"Authorization":      fmt.Sprintf("token %s", token),
-	}
+func activateRepoInTravis(serviceName, token string) error {
+	client := NewTravisClient(token)
+	return client.ActivateRepo(serviceName)
 }
 
 func jenkinsConnector(serviceName string) error {

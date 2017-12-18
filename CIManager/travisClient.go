@@ -1,6 +1,8 @@
 package CIManager
 
 import (
+	"fmt"
+
 	"github.com/reivaj05/GoRequester"
 )
 
@@ -10,18 +12,28 @@ type travisClient struct {
 	headers      map[string]string
 }
 
-func New() *travisClient {
+func NewTravisClient(token string) *travisClient {
 	return &travisClient{
-	// TODO:
+		requesterObj: requester.New(),
+		token:        token,
+		headers:      createTravisRequestHeaders(token),
 	}
 }
 
-func (client *travisClient) enableRepo(repoName string) (string, error) {
-	// TODO:
-	return "", nil
+func createTravisRequestHeaders(token string) map[string]string {
+	return map[string]string{
+		"Travis-API-Version": "3",
+		"Authorization":      fmt.Sprintf("token %s", token),
+	}
 }
 
-func (client *travisClient) filterReposByName(repoName string) []string {
+func (client *travisClient) ActivateRepo(serviceName string) error {
+	// TODO:
+	fmt.Println("Activate repo for ", serviceName)
+	return nil
+}
+
+func (client *travisClient) filterReposByName(serviceName string) []string {
 	// TODO:
 	return []string{}
 }
