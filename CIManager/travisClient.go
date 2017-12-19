@@ -3,6 +3,7 @@ package CIManager
 import (
 	"fmt"
 	"net/url"
+	"strconv"
 
 	"github.com/reivaj05/GoJSON"
 	"github.com/reivaj05/GoRequester"
@@ -12,6 +13,7 @@ var baseURL = "https://api.travis-ci.org"
 var reposEndpoint = fmt.Sprintf("%s/repos", baseURL)
 var repoActivateEndpoint = "%s/repo/%s/activate"
 var userEndpoint = fmt.Sprintf("%s/user", baseURL)
+var syncAccountEndpoint = "%s/user/%s/sync"
 
 type travisClient struct {
 	requesterObj *requester.Requester
@@ -51,8 +53,8 @@ func (client *travisClient) syncAccount() error {
 	if err != nil {
 		return err
 	}
-	id, _ := user.GetIntFromPath(path)
-	return client.__syncAccountRequest(id)
+	id, _ := user.GetFloatFromPath("id")
+	return client.__syncAccountRequest(strconv.Itoa(int(id)))
 }
 
 func (client *travisClient) getCurrentUser() (*GoJSON.JSONWrapper, error) {
@@ -64,8 +66,10 @@ func (client *travisClient) getCurrentUser() (*GoJSON.JSONWrapper, error) {
 	return GoJSON.New(response)
 }
 
-func (client *travisClient) __syncAccountRequest() error {
-
+func (client *travisClient) __syncAccountRequest(userID string) error {
+	config := client.createTravisRequestConfig("POST", fmt.Sprintf(syncAccountEndpoint, baseURL, userID))
+	_, _, err := client.requesterObj.MakeRequest(config)
+	return err
 }
 
 func (client *travisClient) filterRepoByName(serviceName string) (*GoJSON.JSONWrapper, error) {
