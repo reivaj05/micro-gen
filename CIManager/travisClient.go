@@ -11,6 +11,7 @@ import (
 var baseURL = "https://api.travis-ci.org"
 var reposEndpoint = fmt.Sprintf("%s/repos", baseURL)
 var repoActivateEndpoint = "%s/repo/%s/activate"
+var userEndpoint = fmt.Sprintf("%s/user", baseURL)
 
 type travisClient struct {
 	requesterObj *requester.Requester
@@ -34,13 +35,37 @@ func createTravisRequestHeaders(token string) map[string]string {
 }
 
 func (client *travisClient) ActivateRepo(serviceName string) error {
-	// TODO: Sync account
+	if err := client.syncAccount(); err != nil {
+		return err
+	}
 	repo, err := client.filterRepoByName(serviceName)
 	if err != nil {
 		return err
 	}
 	slug, _ := repo.GetStringFromPath("slug")
 	return client.__activateRepoRequest(slug)
+}
+
+func (client *travisClient) syncAccount() error {
+	user, err := client.getCurrentUser()
+	if err != nil {
+		return err
+	}
+	id, _ := user.GetIntFromPath(path)
+	return client.__syncAccountRequest(id)
+}
+
+func (client *travisClient) getCurrentUser() (*GoJSON.JSONWrapper, error) {
+	config := client.createTravisRequestConfig("GET", userEndpoint)
+	response, _, err := client.requesterObj.MakeRequest(config)
+	if err != nil {
+		return nil, err
+	}
+	return GoJSON.New(response)
+}
+
+func (client *travisClient) __syncAccountRequest() error {
+
 }
 
 func (client *travisClient) filterRepoByName(serviceName string) (*GoJSON.JSONWrapper, error) {
@@ -82,15 +107,9 @@ func (client *travisClient) filterBy(key, query string,
 
 func (client *travisClient) __activateRepoRequest(repoID string) error {
 	repoID = url.QueryEscape(repoID)
-	fmt.Println(fmt.Sprintf(repoActivateEndpoint, baseURL, repoID))
 	config := client.createTravisRequestConfig("POST", fmt.Sprintf(repoActivateEndpoint, baseURL, repoID))
 	_, _, err := client.requesterObj.MakeRequest(config)
 	return err
-}
-
-func (client *travisClient) syncAccount() (string, error) {
-	// TODO:
-	return "", nil
 }
 
 func (client *travisClient) createTravisRequestConfig(method, url string) *requester.RequestConfig {
