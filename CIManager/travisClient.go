@@ -116,16 +116,6 @@ func (client *travisClient) __activateRepoRequest(repoID string) error {
 	return err
 }
 
-func (client *travisClient) makeRequestWithConfig(
-	config *requester.RequestConfig) (*GoJSON.JSONWrapper, error) {
-
-	response, _, err := client.requesterObj.MakeRequest(config)
-	if err != nil {
-		return nil, err
-	}
-	return GoJSON.New(response)
-}
-
 func (client *travisClient) createTravisRequestConfig(method, url string) *requester.RequestConfig {
 	return &requester.RequestConfig{
 		Method:  method,
