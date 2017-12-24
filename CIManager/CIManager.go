@@ -3,8 +3,6 @@ package CIManager
 import (
 	"fmt"
 	"os"
-
-	"github.com/reivaj05/GoRequester"
 )
 
 type CIConnector func(string) error
@@ -12,8 +10,6 @@ type CIConnector func(string) error
 var travisCIKey = "TRAVIS_TOKEN"
 var jenkinsCIKey = "JENKINS_TOKEN"
 var circleCIKey = "CIRCLE_TOKEN"
-
-var requesterObj = requester.New()
 
 var CIConnectors = map[string]CIConnector{
 	"travis":  travisConnector,
