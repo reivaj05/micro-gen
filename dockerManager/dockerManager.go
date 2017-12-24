@@ -26,6 +26,6 @@ func (client *dockerClient) filterImagesByName(serviceName string) []*GoJSON.JSO
 	// TODO: Implement
 }
 
-// func (client *dockerClient) getImages() []*GoJSON.JSONWrapper {
-
-// }
+func (client *dockerClient) getImages() []*GoJSON.JSONWrapper {
+	// TODO: Implement
+}
