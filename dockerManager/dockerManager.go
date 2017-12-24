@@ -17,11 +17,15 @@ func NewDockerClient(token string) *dockerClient {
 	}
 }
 
-func (client *dockerClient) getImages(serviceName string) []*GoJSON.JSONWrapper {
-
-	return nil
+func (client *dockerClient) getRelatedImages(serviceName string) []string {
+	// TODO: Implement
+	return []string{}
 }
 
-// func (client *dockerClient) filterImages() {
+func (client *dockerClient) filterImagesByName(serviceName string) []*GoJSON.JSONWrapper {
+	// TODO: Implement
+}
+
+// func (client *dockerClient) getImages() []*GoJSON.JSONWrapper {
 
 // }
