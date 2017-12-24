@@ -1,6 +1,9 @@
 package dockerManager
 
-import requester "github.com/reivaj05/GoRequester"
+import (
+	"github.com/reivaj05/GoJSON"
+	"github.com/reivaj05/GoRequester"
+)
 
 type dockerClient struct {
 	requesterObj *requester.Requester
@@ -13,3 +16,12 @@ func NewDockerClient(token string) *dockerClient {
 		token:        token,
 	}
 }
+
+func (client *dockerClient) getImages(serviceName string) []*GoJSON.JSONWrapper {
+
+	return nil
+}
+
+// func (client *dockerClient) filterImages() {
+
+// }
