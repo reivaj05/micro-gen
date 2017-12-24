@@ -79,8 +79,6 @@ func createCLIOptions() *GoCLI.Options {
 		AppName:  appName,
 		AppUsage: "Tool to create different services in different languages and managers to handle those services",
 		Commands: createCommands(),
-		// StringFlags: createStringFlags(),
-		// DefaultAction: server.Serve,
 	}
 }
 
