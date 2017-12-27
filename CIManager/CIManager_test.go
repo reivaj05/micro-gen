@@ -16,6 +16,8 @@ type CIManagerTestSuite struct {
 	jenkinsProvider string
 	circleProvider  string
 	travisToken     string
+	jenkinsToken    string
+	circleToken     string
 }
 
 func (suite *CIManagerTestSuite) SetupSuite() {
@@ -28,10 +30,14 @@ func (suite *CIManagerTestSuite) SetupSuite() {
 
 func (suite *CIManagerTestSuite) SetupTest() {
 	suite.travisToken = os.Getenv(travisCIKey)
+	suite.jenkinsToken = os.Getenv(jenkinsCIKey)
+	suite.circleToken = os.Getenv(circleCIKey)
 }
 
 func (suite *CIManagerTestSuite) TearDownTest() {
 	os.Setenv(travisCIKey, suite.travisToken)
+	os.Setenv(jenkinsCIKey, suite.jenkinsToken)
+	os.Setenv(circleCIKey, suite.circleToken)
 }
 
 func (suite *CIManagerTestSuite) TestConnectWithTravisProviderSuccessfully() {
@@ -46,9 +52,21 @@ func (suite *CIManagerTestSuite) TestConnectWithTravisProviderUnsuccessfully() {
 	suite.assert.NotNil(err)
 }
 
-func (suite *CIManagerTestSuite) TestConnectWithTravisProviderWithouToken() {
+func (suite *CIManagerTestSuite) TestConnectWithJenkinsProviderSuccessfully() {
+	os.Setenv(jenkinsCIKey, "JENKINS_MOCK_TOKEN")
+	err := ConnectWithCIProvider(suite.serviceName, suite.jenkinsProvider)
+	suite.assert.Nil(err)
+}
+
+func (suite *CIManagerTestSuite) TestConnectWithJenkinsProviderUnsuccessfully() {
+	os.Setenv(jenkinsCIKey, "JENKINS_MOCK_TOKEN")
+	err := ConnectWithCIProvider(suite.serviceName, suite.jenkinsProvider)
+	suite.assert.NotNil(err)
+}
+
+func (suite *CIManagerTestSuite) TestConnectWithCIProviderProviderWithoutToken() {
 	os.Setenv(travisCIKey, "")
-	err := ConnectWithCIProvider(suite.serviceName, suite.travisProvider)
+	err := ConnectWithCIProvider(suite.serviceName, suite.jenkinsProvider)
 	suite.assert.NotNil(err)
 }
 
