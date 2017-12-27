@@ -28,7 +28,7 @@ func (suite *RepoManagerTestSuite) SetupSuite() {
 }
 
 func (suite *RepoManagerTestSuite) SetupTest() {
-	suite.githubToken = os.Getenv("GITHUB_TOKEN")
+	suite.githubToken = os.Getenv(githubTokenKey)
 }
 
 func (suite *RepoManagerTestSuite) TearDownSuite() {
@@ -36,23 +36,23 @@ func (suite *RepoManagerTestSuite) TearDownSuite() {
 }
 
 func (suite *RepoManagerTestSuite) TearDownTest() {
-	os.Setenv("GITHUB_TOKEN", suite.githubToken)
+	os.Setenv(githubTokenKey, suite.githubToken)
 }
 
 func (suite *RepoManagerTestSuite) TestCreateGithubRepoSuccessfully() {
-	os.Setenv("GITHUB_TOKEN", "GITHUB_MOCK_TOKEN")
+	os.Setenv(githubTokenKey, "GITHUB_MOCK_TOKEN")
 	err := CreateRepo(suite.managerName, suite.githubProvider)
 	suite.assert.Nil(err)
 }
 
 func (suite *RepoManagerTestSuite) TestCreateGithubRepoWithoutAccessToken() {
-	os.Setenv("GITHUB_TOKEN", "")
+	os.Setenv(githubTokenKey, "")
 	err := CreateRepo(suite.managerName, suite.githubProvider)
 	suite.assert.NotNil(err)
 }
 
 func (suite *RepoManagerTestSuite) TestCreateGithubRepoWithWrongAccessToken() {
-	os.Setenv("GITHUB_TOKEN", "GITHUB_MOCK_TOKEN")
+	os.Setenv(githubTokenKey, "GITHUB_MOCK_TOKEN")
 	err := CreateRepo(suite.managerName, suite.githubProvider)
 	suite.assert.NotNil(err)
 }
