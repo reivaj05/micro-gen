@@ -24,8 +24,10 @@ func (client *dockerClient) getRelatedImages(serviceName string) []string {
 
 func (client *dockerClient) filterImagesByName(serviceName string) []*GoJSON.JSONWrapper {
 	// TODO: Implement
+	return nil
 }
 
 func (client *dockerClient) getImages() []*GoJSON.JSONWrapper {
 	// TODO: Implement
+	return nil
 }
