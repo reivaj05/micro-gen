@@ -23,6 +23,8 @@ var CIKeys = map[string]string{
 
 var CIClients = map[string]func(string) CIClient{
 	"travis": NewTravisClient,
+	// "jenkins": NewJenkinsClient,
+	// "circle": NewCircleClient,
 }
 
 func ConnectWithCIProvider(serviceName, provider string) error {

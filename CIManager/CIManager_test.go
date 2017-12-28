@@ -1,12 +1,15 @@
 package CIManager
 
 import (
+	"fmt"
 	"os"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
 )
+
+var successfulToken = "SUCCESSFUL_TOKEN"
 
 type CIManagerTestSuite struct {
 	suite.Suite
@@ -20,12 +23,32 @@ type CIManagerTestSuite struct {
 	circleToken     string
 }
 
+type mockClient struct {
+	token string
+}
+
 func (suite *CIManagerTestSuite) SetupSuite() {
 	suite.assert = assert.New(suite.T())
 	suite.serviceName = "mockService"
 	suite.travisProvider = "travis"
 	suite.jenkinsProvider = "jenkins"
 	suite.circleProvider = "circle"
+	CIClients = map[string]func(string) CIClient{
+		"travis":  NewMockClient,
+		"jenkins": NewMockClient,
+		"circle":  NewMockClient,
+	}
+}
+
+func NewMockClient(token string) CIClient {
+	return &mockClient{token: token}
+}
+
+func (client *mockClient) ActivateRepo(serviceName string) error {
+	if client.token == successfulToken {
+		return nil
+	}
+	return fmt.Errorf("")
 }
 
 func (suite *CIManagerTestSuite) SetupTest() {
@@ -41,26 +64,35 @@ func (suite *CIManagerTestSuite) TearDownTest() {
 }
 
 func (suite *CIManagerTestSuite) TestConnectWithTravisProviderSuccessfully() {
-	os.Setenv(travisCIKey, "TRAVIS_MOCK_TOKEN")
+	os.Setenv(travisCIKey, successfulToken)
 	err := ConnectWithCIProvider(suite.serviceName, suite.travisProvider)
 	suite.assert.Nil(err)
 }
 
 func (suite *CIManagerTestSuite) TestConnectWithTravisProviderUnsuccessfully() {
-	os.Setenv(travisCIKey, "TRAVIS_MOCK_TOKEN")
 	err := ConnectWithCIProvider(suite.serviceName, suite.travisProvider)
 	suite.assert.NotNil(err)
 }
 
 func (suite *CIManagerTestSuite) TestConnectWithJenkinsProviderSuccessfully() {
-	os.Setenv(jenkinsCIKey, "JENKINS_MOCK_TOKEN")
+	os.Setenv(jenkinsCIKey, successfulToken)
 	err := ConnectWithCIProvider(suite.serviceName, suite.jenkinsProvider)
 	suite.assert.Nil(err)
 }
 
 func (suite *CIManagerTestSuite) TestConnectWithJenkinsProviderUnsuccessfully() {
-	os.Setenv(jenkinsCIKey, "JENKINS_MOCK_TOKEN")
 	err := ConnectWithCIProvider(suite.serviceName, suite.jenkinsProvider)
+	suite.assert.NotNil(err)
+}
+
+func (suite *CIManagerTestSuite) TestConnectWithCircleProviderSuccessfully() {
+	os.Setenv(circleCIKey, successfulToken)
+	err := ConnectWithCIProvider(suite.serviceName, suite.circleProvider)
+	suite.assert.Nil(err)
+}
+
+func (suite *CIManagerTestSuite) TestConnectWithCircleProviderUnsuccessfully() {
+	err := ConnectWithCIProvider(suite.serviceName, suite.circleProvider)
 	suite.assert.NotNil(err)
 }
 
