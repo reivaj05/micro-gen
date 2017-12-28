@@ -21,7 +21,7 @@ type travisClient struct {
 	headers      map[string]string
 }
 
-func NewTravisClient(token string) *travisClient {
+func NewTravisClient(token string) CIClient {
 	return &travisClient{
 		requesterObj: requester.New(),
 		token:        token,
