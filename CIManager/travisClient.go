@@ -53,6 +53,9 @@ func (client *travisClient) syncAccount() error {
 	if err != nil {
 		return err
 	}
+	if user.HasPath("error_message") {
+		return fmt.Errorf(user.ToString())
+	}
 	id, _ := user.GetFloatFromPath("id")
 	return client.__syncAccountRequest(strconv.Itoa(int(id)))
 }
