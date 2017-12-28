@@ -15,12 +15,6 @@ var travisCIKey = "TRAVIS_TOKEN"
 var jenkinsCIKey = "JENKINS_TOKEN"
 var circleCIKey = "CIRCLE_TOKEN"
 
-var CIConnectors = map[string]CIConnector{
-	"travis":  travisConnector,
-	"jenkins": jenkinsConnector,
-	"circle":  circleConnector,
-}
-
 var CIKeys = map[string]string{
 	"travis":  travisCIKey,
 	"jenkins": jenkinsCIKey,
@@ -36,19 +30,8 @@ func ConnectWithCIProvider(serviceName, provider string) error {
 	if err != nil {
 		return err
 	}
-	return CIConnectors[provider](serviceName, CIClients[provider](token))
-}
-
-func travisConnector(serviceName string, client CIClient) error {
+	client := CIClients[provider](token)
 	return client.ActivateRepo(serviceName)
-}
-
-func jenkinsConnector(serviceName string, client CIClient) error {
-	return nil
-}
-
-func circleConnector(serviceName string, client CIClient) error {
-	return nil
 }
 
 func getToken(provider string) (string, error) {
