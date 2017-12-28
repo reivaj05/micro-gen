@@ -5,7 +5,11 @@ import (
 	"os"
 )
 
-type CIConnector func(string) error
+type CIConnector func(string, CIClient) error
+
+type CIClient interface {
+	ActivateRepo(string) error
+}
 
 var travisCIKey = "TRAVIS_TOKEN"
 var jenkinsCIKey = "JENKINS_TOKEN"
@@ -23,37 +27,27 @@ var CIKeys = map[string]string{
 	"circle":  circleCIKey,
 }
 
+var CIClients = map[string]func(string) CIClient{
+	"travis": NewTravisClient,
+}
+
 func ConnectWithCIProvider(serviceName, provider string) error {
-	_, err := getToken(provider)
+	token, err := getToken(provider)
 	if err != nil {
 		return err
 	}
-	return CIConnectors[provider](serviceName)
+	return CIConnectors[provider](serviceName, CIClients[provider](token))
 }
 
-func travisConnector(serviceName string) error {
-
-	return activateRepoInTravis(serviceName, "")
-}
-
-func activateRepoInTravis(serviceName, token string) error {
-	client := NewTravisClient(token)
+func travisConnector(serviceName string, client CIClient) error {
 	return client.ActivateRepo(serviceName)
 }
 
-func jenkinsConnector(serviceName string) error {
-	_, err := getToken(jenkinsCIKey)
-	if err != nil {
-		return err
-	}
+func jenkinsConnector(serviceName string, client CIClient) error {
 	return nil
 }
 
-func circleConnector(serviceName string) error {
-	_, err := getToken(circleCIKey)
-	if err != nil {
-		return err
-	}
+func circleConnector(serviceName string, client CIClient) error {
 	return nil
 }
 
