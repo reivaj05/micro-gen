@@ -37,6 +37,18 @@ func (suite *TravisClientTestSuite) TestActivateRepoSuccessfully() {
 
 }
 
+func (suite *TravisClientTestSuite) TestActivateRepoUserEndpointError() {
+
+}
+
+func (suite *TravisClientTestSuite) TestActivateRepoWrongCredentials() {
+
+}
+
+func (suite *TravisClientTestSuite) TestActivateRepoSyncAccountEndpointError() {
+
+}
+
 func TestTravisClient(t *testing.T) {
 	suite.Run(t, new(TravisClientTestSuite))
 }
