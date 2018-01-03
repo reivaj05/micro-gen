@@ -49,6 +49,14 @@ func (suite *TravisClientTestSuite) TestActivateRepoSyncAccountEndpointError() {
 
 }
 
+func (suite *TravisClientTestSuite) TestActivateRepoReposEndpointError() {
+
+}
+
+func (suite *TravisClientTestSuite) TestActivateRepoRepoNotFoundError() {
+
+}
+
 func TestTravisClient(t *testing.T) {
 	suite.Run(t, new(TravisClientTestSuite))
 }
