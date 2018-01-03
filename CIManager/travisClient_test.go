@@ -1,8 +1,6 @@
 package CIManager
 
 import (
-	"fmt"
-	"os"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -31,7 +29,12 @@ func (suite *TravisClientTestSuite) TearDownTest() {
 }
 
 func (suite *TravisClientTestSuite) TestNewTravisClient() {
-	//
+	client := NewTravisClient(suite.token)
+	suite.assert.NotNil(client)
+}
+
+func (suite *TravisClientTestSuite) TestActivateRepoSuccessfully() {
+
 }
 
 func TestTravisClient(t *testing.T) {
