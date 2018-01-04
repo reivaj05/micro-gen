@@ -1,6 +1,7 @@
 package CIManager
 
 import (
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -21,7 +22,7 @@ func (suite *TravisClientTestSuite) SetupSuite() {
 	suite.assert = assert.New(suite.T())
 	suite.token = "mockToken"
 	suite.serviceName = "mockServiceName"
-	suite.mockServer = httptest.NewServer(handlerWrapper(mockHandler))
+	suite.mockServer = httptest.NewServer(suite.mockHandler)
 	baseURL = suite.mockServer.URL
 	reposEndpoint = suite.mockServer.URL
 	repoActivateEndpoint = suite.mockServer.URL
