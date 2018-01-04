@@ -18,11 +18,13 @@ type TravisClientTestSuite struct {
 	mockServer  *httptest.Server
 }
 
+type mockHandler struct{}
+
 func (suite *TravisClientTestSuite) SetupSuite() {
 	suite.assert = assert.New(suite.T())
 	suite.token = "mockToken"
 	suite.serviceName = "mockServiceName"
-	suite.mockServer = httptest.NewServer(suite.mockHandler)
+	suite.mockServer = httptest.NewServer(&mockHandler{})
 	baseURL = suite.mockServer.URL
 	reposEndpoint = suite.mockServer.URL
 	repoActivateEndpoint = suite.mockServer.URL
@@ -67,7 +69,7 @@ func (suite *TravisClientTestSuite) TestActivateRepoRepoNotFoundError() {
 
 }
 
-func (suite *TravisClientTestSuite) mockHandler(w http.ResponseWriter, r *http.Request) {
+func (suite *mockHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	SendResponseWithStatus(w, "{}", http.StatusOK)
 }
 
