@@ -49,7 +49,9 @@ func (suite *TravisClientTestSuite) TestNewTravisClient() {
 }
 
 func (suite *TravisClientTestSuite) TestActivateRepoSuccessfully() {
-
+	client := NewTravisClient(suite.token)
+	err := client.ActivateRepo(suite.serviceName)
+	suite.assert.Nil(err)
 }
 
 func (suite *TravisClientTestSuite) TestActivateRepoUserEndpointError() {
