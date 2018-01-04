@@ -25,11 +25,14 @@ func (suite *TravisClientTestSuite) SetupSuite() {
 	suite.token = "mockToken"
 	suite.serviceName = "mockServiceName"
 	suite.mockServer = httptest.NewServer(&mockHandler{})
-	baseURL = suite.mockServer.URL
 	reposEndpoint = suite.mockServer.URL
 	repoActivateEndpoint = suite.mockServer.URL
 	userEndpoint = suite.mockServer.URL
 	syncAccountEndpoint = suite.mockServer.URL
+}
+
+func (suite *TravisClientTestSuite) TearDownSuite() {
+	suite.mockServer.Close()
 }
 
 func (suite *TravisClientTestSuite) SetupTest() {
