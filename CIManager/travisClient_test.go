@@ -69,7 +69,7 @@ func SendResponseWithStatus(
 func (suite *TravisClientTestSuite) initMockEndpoints() {
 	baseURL = ""
 	reposEndpoint = suite.mockReposServer.URL
-	repoActivateEndpoint = suite.mockRepoActivateServer.URL
+	repoActivateEndpoint = fmt.Sprintf("%s?%s%s", suite.mockRepoActivateServer.URL)
 	userEndpoint = suite.mockUserServer.URL
 	syncAccountEndpoint = fmt.Sprintf("%s?%s%s", suite.mockSyncAccountServer.URL)
 }
