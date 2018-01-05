@@ -50,7 +50,7 @@ func (suite *mockRepoActivateHandler) ServeHTTP(w http.ResponseWriter, r *http.R
 }
 
 func (suite *mockUserHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	SendResponseWithStatus(w, "{}", http.StatusOK)
+	SendResponseWithStatus(w, `{"id": 1}`, http.StatusOK)
 }
 
 func (suite *mockSyncAccountHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -66,10 +66,11 @@ func SendResponseWithStatus(
 }
 
 func (suite *TravisClientTestSuite) initMockEndpoints() {
+	baseURL = ""
 	reposEndpoint = suite.mockReposServer.URL
 	repoActivateEndpoint = suite.mockRepoActivateServer.URL
 	userEndpoint = suite.mockUserServer.URL
-	syncAccountEndpoint = suite.mockSyncAccountServer.URL
+	syncAccountEndpoint = fmt.Sprintf("%s?%s%s", suite.mockSyncAccountServer.URL)
 }
 
 func (suite *TravisClientTestSuite) TearDownSuite() {
