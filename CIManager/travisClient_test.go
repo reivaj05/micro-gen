@@ -41,19 +41,19 @@ func (suite *TravisClientTestSuite) createMockServers() {
 	suite.mockSyncAccountServer = httptest.NewServer(&mockSyncAccountHandler{})
 }
 
-func (suite *mockReposHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (handler *mockReposHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	SendResponseWithStatus(w, "{}", http.StatusOK)
 }
 
-func (suite *mockRepoActivateHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (handler *mockRepoActivateHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	SendResponseWithStatus(w, "{}", http.StatusOK)
 }
 
-func (suite *mockUserHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (handler *mockUserHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	SendResponseWithStatus(w, `{"id": 1}`, http.StatusOK)
 }
 
-func (suite *mockSyncAccountHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (handler *mockSyncAccountHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	SendResponseWithStatus(w, "{}", http.StatusOK)
 }
 
