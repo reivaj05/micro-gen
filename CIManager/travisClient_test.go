@@ -26,6 +26,15 @@ type mockRepoActivateHandler struct{}
 type mockUserHandler struct{}
 type mockSyncAccountHandler struct{}
 
+type statusObj struct {
+	repos, repoActivate, user, syncAccount int
+}
+
+const successStatus = 1
+const failureStatus = 0
+
+var currentStatus *statusObj
+
 func (suite *TravisClientTestSuite) SetupSuite() {
 	suite.assert = assert.New(suite.T())
 	suite.token = "mockToken"
@@ -95,6 +104,8 @@ func (suite *TravisClientTestSuite) TestNewTravisClient() {
 }
 
 func (suite *TravisClientTestSuite) TestActivateRepoSuccessfully() {
+	ss := successStatus
+	currentStatus = suite.updateCurrentStatus(ss, ss, ss, ss)
 	client := NewTravisClient(suite.token)
 	err := client.ActivateRepo(suite.serviceName)
 	suite.assert.Nil(err)
@@ -118,6 +129,17 @@ func (suite *TravisClientTestSuite) TestActivateRepoReposEndpointError() {
 
 func (suite *TravisClientTestSuite) TestActivateRepoRepoNotFoundError() {
 
+}
+
+func (suite *TravisClientTestSuite) updateCurrentStatus(
+	repos, repoActivate, user, syncAccount int) *statusObj {
+
+	return &statusObj{
+		repos:        repos,
+		repoActivate: repoActivate,
+		user:         user,
+		syncAccount:  syncAccount,
+	}
 }
 
 func TestTravisClient(t *testing.T) {
