@@ -42,7 +42,8 @@ func (suite *TravisClientTestSuite) createMockServers() {
 }
 
 func (handler *mockReposHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	SendResponseWithStatus(w, "{}", http.StatusOK)
+	response := `{"repositories":[{"name": "mockServiceName", "slug": "mockSlug"}]}`
+	SendResponseWithStatus(w, response, http.StatusOK)
 }
 
 func (handler *mockRepoActivateHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
