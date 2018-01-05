@@ -30,14 +30,15 @@ func (suite *TravisClientTestSuite) SetupSuite() {
 	suite.assert = assert.New(suite.T())
 	suite.token = "mockToken"
 	suite.serviceName = "mockServiceName"
+	suite.createMockServers()
+	suite.initMockEndpoints()
+}
+
+func (suite *TravisClientTestSuite) createMockServers() {
 	suite.mockReposServer = httptest.NewServer(&mockReposHandler{})
 	suite.mockRepoActivateServer = httptest.NewServer(&mockRepoActivateHandler{})
 	suite.mockUserServer = httptest.NewServer(&mockUserHandler{})
 	suite.mockSyncAccountServer = httptest.NewServer(&mockSyncAccountHandler{})
-	reposEndpoint = suite.mockReposServer.URL
-	repoActivateEndpoint = suite.mockRepoActivateServer.URL
-	userEndpoint = suite.mockUserServer.URL
-	syncAccountEndpoint = suite.mockSyncAccountServer.URL
 }
 
 func (suite *mockReposHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -62,6 +63,13 @@ func SendResponseWithStatus(
 	w.WriteHeader(status)
 	_, err := fmt.Fprintf(w, response)
 	return err
+}
+
+func (suite *TravisClientTestSuite) initMockEndpoints() {
+	reposEndpoint = suite.mockReposServer.URL
+	repoActivateEndpoint = suite.mockRepoActivateServer.URL
+	userEndpoint = suite.mockUserServer.URL
+	syncAccountEndpoint = suite.mockSyncAccountServer.URL
 }
 
 func (suite *TravisClientTestSuite) TearDownSuite() {
