@@ -12,27 +12,63 @@ import (
 
 type TravisClientTestSuite struct {
 	suite.Suite
-	assert      *assert.Assertions
-	serviceName string
-	token       string
-	mockServer  *httptest.Server
+	assert                 *assert.Assertions
+	serviceName            string
+	token                  string
+	mockReposServer        *httptest.Server
+	mockRepoActivateServer *httptest.Server
+	mockUserServer         *httptest.Server
+	mockSyncAccountServer  *httptest.Server
 }
 
-type mockHandler struct{}
+type mockReposHandler struct{}
+type mockRepoActivateHandler struct{}
+type mockUserHandler struct{}
+type mockSyncAccountHandler struct{}
 
 func (suite *TravisClientTestSuite) SetupSuite() {
 	suite.assert = assert.New(suite.T())
 	suite.token = "mockToken"
 	suite.serviceName = "mockServiceName"
-	suite.mockServer = httptest.NewServer(&mockHandler{})
-	reposEndpoint = suite.mockServer.URL
-	repoActivateEndpoint = suite.mockServer.URL
-	userEndpoint = suite.mockServer.URL
-	syncAccountEndpoint = suite.mockServer.URL
+	suite.mockReposServer = httptest.NewServer(&mockReposHandler{})
+	suite.mockRepoActivateServer = httptest.NewServer(&mockRepoActivateHandler{})
+	suite.mockUserServer = httptest.NewServer(&mockUserHandler{})
+	suite.mockSyncAccountServer = httptest.NewServer(&mockSyncAccountHandler{})
+	reposEndpoint = suite.mockReposServer.URL
+	repoActivateEndpoint = suite.mockRepoActivateServer.URL
+	userEndpoint = suite.mockUserServer.URL
+	syncAccountEndpoint = suite.mockSyncAccountServer.URL
+}
+
+func (suite *mockReposHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	SendResponseWithStatus(w, "{}", http.StatusOK)
+}
+
+func (suite *mockRepoActivateHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	SendResponseWithStatus(w, "{}", http.StatusOK)
+}
+
+func (suite *mockUserHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	SendResponseWithStatus(w, "{}", http.StatusOK)
+}
+
+func (suite *mockSyncAccountHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	SendResponseWithStatus(w, "{}", http.StatusOK)
+}
+
+func SendResponseWithStatus(
+	w http.ResponseWriter, response string, status int) error {
+
+	w.WriteHeader(status)
+	_, err := fmt.Fprintf(w, response)
+	return err
 }
 
 func (suite *TravisClientTestSuite) TearDownSuite() {
-	suite.mockServer.Close()
+	suite.mockReposServer.Close()
+	suite.mockRepoActivateServer.Close()
+	suite.mockUserServer.Close()
+	suite.mockSyncAccountServer.Close()
 }
 
 func (suite *TravisClientTestSuite) SetupTest() {
@@ -72,18 +108,6 @@ func (suite *TravisClientTestSuite) TestActivateRepoReposEndpointError() {
 
 func (suite *TravisClientTestSuite) TestActivateRepoRepoNotFoundError() {
 
-}
-
-func (suite *mockHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	SendResponseWithStatus(w, "{}", http.StatusOK)
-}
-
-func SendResponseWithStatus(
-	w http.ResponseWriter, response string, status int) error {
-
-	w.WriteHeader(status)
-	_, err := fmt.Fprintf(w, response)
-	return err
 }
 
 func TestTravisClient(t *testing.T) {
