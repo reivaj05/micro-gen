@@ -60,6 +60,10 @@ func (handler *mockRepoActivateHandler) ServeHTTP(w http.ResponseWriter, r *http
 }
 
 func (handler *mockUserHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	if currentStatus.user == failureStatus {
+		SendResponseWithStatus(w, `{"error_message": "mockError"}`, http.StatusBadRequest)
+		return
+	}
 	SendResponseWithStatus(w, `{"id": 1}`, http.StatusOK)
 }
 
@@ -112,7 +116,12 @@ func (suite *TravisClientTestSuite) TestActivateRepoSuccessfully() {
 }
 
 func (suite *TravisClientTestSuite) TestActivateRepoUserEndpointError() {
-
+	ss := successStatus
+	fs := failureStatus
+	currentStatus = suite.updateCurrentStatus(ss, ss, fs, ss)
+	client := NewTravisClient(suite.token)
+	err := client.ActivateRepo(suite.serviceName)
+	suite.assert.NotNil(err)
 }
 
 func (suite *TravisClientTestSuite) TestActivateRepoWrongCredentials() {
