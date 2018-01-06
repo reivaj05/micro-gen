@@ -96,9 +96,14 @@ func (suite *CIManagerTestSuite) TestConnectWithCircleProviderUnsuccessfully() {
 	suite.assert.NotNil(err)
 }
 
-func (suite *CIManagerTestSuite) TestConnectWithCIProviderProviderWithoutToken() {
+func (suite *CIManagerTestSuite) TestConnectWithCIProviderWithoutToken() {
 	os.Setenv(travisCIKey, "")
 	err := ConnectWithCIProvider(suite.serviceName, suite.jenkinsProvider)
+	suite.assert.NotNil(err)
+}
+
+func (suite *CIManagerTestSuite) TestConnectWithWrongCIProvider() {
+	err := ConnectWithCIProvider(suite.serviceName, "")
 	suite.assert.NotNil(err)
 }
 
