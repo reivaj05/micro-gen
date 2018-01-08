@@ -52,36 +52,32 @@ func (suite *TravisClientTestSuite) createMockServers() {
 
 func (handler *mockReposHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	response := `{"repositories":[{"name": "mockServiceName", "slug": "mockSlug"}]}`
-	SendResponseWithStatus(w, response, http.StatusOK)
+	sendResponseWithStatus(w, response, currentStatus.repos)
 }
 
 func (handler *mockRepoActivateHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	SendResponseWithStatus(w, "{}", http.StatusOK)
+	sendResponseWithStatus(w, "{}", currentStatus.repoActivate)
 }
 
 func (handler *mockUserHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	// TODO: Refactor into one function
-	if currentStatus.user == failureStatus {
-		SendResponseWithStatus(w, `{"error_message": "mockError"}`, http.StatusBadRequest)
-		return
-	}
-	SendResponseWithStatus(w, `{"id": 1}`, http.StatusOK)
+	sendResponseWithStatus(w, `{"id": 1}`, currentStatus.user)
 }
 
 func (handler *mockSyncAccountHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	if currentStatus.syncAccount == failureStatus {
-		SendResponseWithStatus(w, `{}`, http.StatusBadRequest)
-		return
-	}
-	SendResponseWithStatus(w, "{}", http.StatusOK)
+	sendResponseWithStatus(w, "{}", currentStatus.syncAccount)
 }
 
-func SendResponseWithStatus(
-	w http.ResponseWriter, response string, status int) error {
+func sendResponseWithStatus(w http.ResponseWriter, goodResponse string, status int) {
+	if status == failureStatus {
+		sendResponse(w, `{}`, http.StatusBadRequest)
+		return
+	}
+	sendResponse(w, goodResponse, http.StatusOK)
+}
 
+func sendResponse(w http.ResponseWriter, response string, status int) {
 	w.WriteHeader(status)
-	_, err := fmt.Fprintf(w, response)
-	return err
+	fmt.Fprintf(w, response)
 }
 
 func (suite *TravisClientTestSuite) initMockEndpoints() {
@@ -97,14 +93,6 @@ func (suite *TravisClientTestSuite) TearDownSuite() {
 	suite.mockRepoActivateServer.Close()
 	suite.mockUserServer.Close()
 	suite.mockSyncAccountServer.Close()
-}
-
-func (suite *TravisClientTestSuite) SetupTest() {
-	//
-}
-
-func (suite *TravisClientTestSuite) TearDownTest() {
-	//
 }
 
 func (suite *TravisClientTestSuite) TestNewTravisClient() {
