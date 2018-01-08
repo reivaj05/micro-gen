@@ -53,17 +53,14 @@ func (client *travisClient) syncAccount() error {
 	if err != nil {
 		return err
 	}
-	if user.HasPath("error_message") || !user.HasPath("id") {
-		return fmt.Errorf(user.ToString())
-	}
 	id, _ := user.GetFloatFromPath("id")
 	return client.__syncAccountRequest(strconv.Itoa(int(id)))
 }
 
 func (client *travisClient) getCurrentUser() (*GoJSON.JSONWrapper, error) {
 	config := client.createTravisRequestConfig("GET", userEndpoint)
-	response, _, err := client.requesterObj.MakeRequest(config)
-	if err != nil {
+	response, status, err := client.requesterObj.MakeRequest(config)
+	if err := client.checkResponse(status, err); err != nil {
 		return nil, err
 	}
 	return GoJSON.New(response)
@@ -71,8 +68,8 @@ func (client *travisClient) getCurrentUser() (*GoJSON.JSONWrapper, error) {
 
 func (client *travisClient) __syncAccountRequest(userID string) error {
 	config := client.createTravisRequestConfig("POST", fmt.Sprintf(syncAccountEndpoint, baseURL, userID))
-	_, _, err := client.requesterObj.MakeRequest(config)
-	return err
+	_, status, err := client.requesterObj.MakeRequest(config)
+	return client.checkResponse(status, err)
 }
 
 func (client *travisClient) filterRepoByName(serviceName string) (*GoJSON.JSONWrapper, error) {
@@ -117,6 +114,17 @@ func (client *travisClient) __activateRepoRequest(repoID string) error {
 	config := client.createTravisRequestConfig("POST", fmt.Sprintf(repoActivateEndpoint, baseURL, repoID))
 	_, _, err := client.requesterObj.MakeRequest(config)
 	return err
+}
+
+func (client *travisClient) checkResponse(status int, err error) error {
+	if err != nil {
+		return err
+	}
+	// TODO: Refactor, do not harcode and generalize.
+	if status >= 400 {
+		return fmt.Errorf("Got response with status %d", status)
+	}
+	return nil
 }
 
 func (client *travisClient) createTravisRequestConfig(method, url string) *requester.RequestConfig {
