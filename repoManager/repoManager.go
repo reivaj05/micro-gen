@@ -1,13 +1,8 @@
 package repoManager
 
 import (
-	"context"
 	"fmt"
-	"os"
 	"os/exec"
-
-	"github.com/google/go-github/github"
-	"golang.org/x/oauth2"
 )
 
 type repoCreator func(string) error
@@ -26,10 +21,11 @@ func CreateRepo(serviceName, provider string) error {
 	if err := createLocalRepo(serviceName); err != nil {
 		return err
 	}
-	if creator, ok := repoProviders[provider]; ok {
-		return creator(serviceName)
-	}
-	return fmt.Errorf("Repo provider '%s' not supported", provider)
+	return createRepoProvider(serviceName, provider)
+	// if creator, ok := repoProviders[provider]; ok {
+	// 	return creator(serviceName)
+	// }
+	// return fmt.Errorf("Repo provider '%s' not supported", provider)
 }
 
 func createLocalRepo(serviceName string) error {
@@ -43,57 +39,77 @@ func createLocalRepo(serviceName string) error {
 	return nil
 }
 
-func createGithubRepo(serviceName string) error {
-	fmt.Printf("Creating %s github repository...\n", serviceName)
-	ctx := context.Background()
-	client, err := createGitHubClient(ctx)
+func createRepoProvider(serviceName, provider string) error {
+	token, err := getToken(provider)
 	if err != nil {
 		return err
 	}
-	return __createGithubRepo(serviceName, client, ctx)
-}
-
-func createGitHubClient(ctx context.Context) (*github.Client, error) {
-	accessToken, err := getToken(githubTokenKey)
-	if err != nil {
-		return nil, err
-	}
-	tc := oauth2.NewClient(ctx, oauth2.StaticTokenSource(&oauth2.Token{AccessToken: accessToken}))
-	return github.NewClient(tc), nil
-}
-
-func getToken(key string) (string, error) {
-	accessToken := os.Getenv(key)
-	if accessToken == "" {
-		return "", fmt.Errorf("%s env var does not exist", key)
-	}
-	return accessToken, nil
-}
-
-func __createGithubRepo(serviceName string, client *github.Client,
-	ctx context.Context) (err error) {
-
-	repo := &github.Repository{Name: github.String(serviceName)}
-	repo, _, err = client.Repositories.Create(ctx, "", repo)
+	client := CIClients[provider](token)
+	repoURL, err := client.CreateCloudRepo(serviceName)
 	if err != nil {
 		return err
 	}
-	return linkGithubRepoToLocalRepo(repo, serviceName)
+	return linkCloudRepoToLocalRepo(repoURL, serviceName)
 }
 
-func linkGithubRepoToLocalRepo(repo *github.Repository, serviceName string) error {
+func linkCloudRepoToLocalRepo(repoURL, serviceName string) error {
 	fmt.Printf("Linking %s repository to local repository...\n", serviceName)
-	cmd := exec.Command("sh", "-c", fmt.Sprintf("cd %s && git remote add origin %s", serviceName, *repo.SSHURL))
+	cmd := exec.Command("sh", "-c", fmt.Sprintf("cd %s && git remote add origin %s", serviceName, repoURL))
 	_, err := cmd.CombinedOutput()
 	return err
 }
 
-func createBitbucketRepo(serviceName string) error {
-	fmt.Println("TODO: Create bitbucket repo")
-	return nil
-}
+// func createGithubRepo(serviceName string) error {
+// 	fmt.Printf("Creating %s github repository...\n", serviceName)
+// 	ctx := context.Background()
+// 	client, err := createGitHubClient(ctx)
+// 	if err != nil {
+// 		return err
+// 	}
+// 	return __createGithubRepo(serviceName, client, ctx)
+// }
 
-func createGitlabRepo(serviceName string) error {
-	fmt.Println("TODO: Create gitlab repo")
-	return nil
-}
+// func createGitHubClient(ctx context.Context) (*github.Client, error) {
+// 	accessToken, err := getToken(githubTokenKey)
+// 	if err != nil {
+// 		return nil, err
+// 	}
+// 	tc := oauth2.NewClient(ctx, oauth2.StaticTokenSource(&oauth2.Token{AccessToken: accessToken}))
+// 	return github.NewClient(tc), nil
+// }
+
+// func getToken(key string) (string, error) {
+// 	accessToken := os.Getenv(key)
+// 	if accessToken == "" {
+// 		return "", fmt.Errorf("%s env var does not exist", key)
+// 	}
+// 	return accessToken, nil
+// }
+
+// func __createGithubRepo(serviceName string, client *github.Client,
+// 	ctx context.Context) (err error) {
+
+// 	repo := &github.Repository{Name: github.String(serviceName)}
+// 	repo, _, err = client.Repositories.Create(ctx, "", repo)
+// 	if err != nil {
+// 		return err
+// 	}
+// 	return linkGithubRepoToLocalRepo(repo, serviceName)
+// }
+
+// func linkGithubRepoToLocalRepo(repo *github.Repository, serviceName string) error {
+// 	fmt.Printf("Linking %s repository to local repository...\n", serviceName)
+// 	cmd := exec.Command("sh", "-c", fmt.Sprintf("cd %s && git remote add origin %s", serviceName, *repo.SSHURL))
+// 	_, err := cmd.CombinedOutput()
+// 	return err
+// }
+
+// func createBitbucketRepo(serviceName string) error {
+// 	fmt.Println("TODO: Create bitbucket repo")
+// 	return nil
+// }
+
+// func createGitlabRepo(serviceName string) error {
+// 	fmt.Println("TODO: Create gitlab repo")
+// 	return nil
+// }
