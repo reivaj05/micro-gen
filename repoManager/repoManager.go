@@ -2,19 +2,28 @@ package repoManager
 
 import (
 	"fmt"
+	"os"
 	"os/exec"
 )
 
-type repoCreator func(string) error
+type repoProviderClient interface {
+	CreateCloudRepo(string) (string, error)
+}
 
 var githubTokenKey = "GITHUB_TOKEN"
 var bitbucketTokenKey = "BITBUCKET_TOKEN"
 var gitlabTokenKey = "GITLAB_TOKEN"
 
-var repoProviders = map[string]repoCreator{
-	"github":    createGithubRepo,
-	"bitbucket": createBitbucketRepo,
-	"gitlab":    createGitlabRepo,
+var repoProviderKeys = map[string]string{
+	"github":    githubTokenKey,
+	"bitbucket": bitbucketTokenKey,
+	"gitlab":    gitlabTokenKey,
+}
+
+var repoProviderClients = map[string]func(string) repoProviderClient{
+	"github": NewGithubClient,
+	// "bitbucket": NewBitbucketClient,
+	// "gitlab":    NewGitlabClient,
 }
 
 func CreateRepo(serviceName, provider string) error {
@@ -22,10 +31,6 @@ func CreateRepo(serviceName, provider string) error {
 		return err
 	}
 	return createRepoProvider(serviceName, provider)
-	// if creator, ok := repoProviders[provider]; ok {
-	// 	return creator(serviceName)
-	// }
-	// return fmt.Errorf("Repo provider '%s' not supported", provider)
 }
 
 func createLocalRepo(serviceName string) error {
@@ -44,7 +49,7 @@ func createRepoProvider(serviceName, provider string) error {
 	if err != nil {
 		return err
 	}
-	client := CIClients[provider](token)
+	client := repoProviderClients[provider](token)
 	repoURL, err := client.CreateCloudRepo(serviceName)
 	if err != nil {
 		return err
@@ -52,11 +57,36 @@ func createRepoProvider(serviceName, provider string) error {
 	return linkCloudRepoToLocalRepo(repoURL, serviceName)
 }
 
+func getToken(provider string) (string, error) {
+	if key, ok := repoProviderKeys[provider]; ok {
+		accessToken := os.Getenv(key)
+		if accessToken == "" {
+			return "", fmt.Errorf("%s env var does not exist", key)
+		}
+		return accessToken, nil
+	}
+	return "", fmt.Errorf("Repo provider '%s' not supported", provider)
+}
+
 func linkCloudRepoToLocalRepo(repoURL, serviceName string) error {
 	fmt.Printf("Linking %s repository to local repository...\n", serviceName)
 	cmd := exec.Command("sh", "-c", fmt.Sprintf("cd %s && git remote add origin %s", serviceName, repoURL))
 	_, err := cmd.CombinedOutput()
 	return err
+}
+
+type githubClient struct {
+	token string
+}
+
+func NewGithubClient(token string) repoProviderClient {
+	return &githubClient{
+		token: token,
+	}
+}
+
+func (client *githubClient) CreateCloudRepo(serviceName string) (string, error) {
+	return "", nil
 }
 
 // func createGithubRepo(serviceName string) error {
