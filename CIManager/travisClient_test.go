@@ -27,7 +27,7 @@ type mockUserHandler struct{}
 type mockSyncAccountHandler struct{}
 
 type statusObj struct {
-	repos, repoActivate, user, syncAccount int
+	repos, repoActivate, user, syncAccount, notFoundRepo int
 }
 
 const successStatus = 1
@@ -52,6 +52,9 @@ func (suite *TravisClientTestSuite) createMockServers() {
 
 func (handler *mockReposHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	response := `{"repositories":[{"name": "mockServiceName", "slug": "mockSlug"}]}`
+	if currentStatus.notFoundRepo == failureStatus {
+		response = `{"repositories":[{"name": "wrongServiceName"}]}`
+	}
 	sendResponseWithStatus(w, response, currentStatus.repos)
 }
 
@@ -102,7 +105,7 @@ func (suite *TravisClientTestSuite) TestNewTravisClient() {
 
 func (suite *TravisClientTestSuite) TestActivateRepoSuccessfully() {
 	ss := successStatus
-	currentStatus = suite.updateCurrentStatus(ss, ss, ss, ss)
+	currentStatus = suite.updateCurrentStatus(ss, ss, ss, ss, ss)
 	client := NewTravisClient(suite.token)
 	err := client.ActivateRepo(suite.serviceName)
 	suite.assert.Nil(err)
@@ -111,7 +114,7 @@ func (suite *TravisClientTestSuite) TestActivateRepoSuccessfully() {
 func (suite *TravisClientTestSuite) TestActivateRepoUserEndpointError() {
 	ss := successStatus
 	fs := failureStatus
-	currentStatus = suite.updateCurrentStatus(ss, ss, fs, ss)
+	currentStatus = suite.updateCurrentStatus(ss, ss, fs, ss, ss)
 	client := NewTravisClient(suite.token)
 	err := client.ActivateRepo(suite.serviceName)
 	suite.assert.NotNil(err)
@@ -124,7 +127,7 @@ func (suite *TravisClientTestSuite) TestActivateRepoWrongCredentials() {
 func (suite *TravisClientTestSuite) TestActivateRepoSyncAccountEndpointError() {
 	ss := successStatus
 	fs := failureStatus
-	currentStatus = suite.updateCurrentStatus(ss, ss, ss, fs)
+	currentStatus = suite.updateCurrentStatus(ss, ss, ss, fs, ss)
 	client := NewTravisClient(suite.token)
 	err := client.ActivateRepo(suite.serviceName)
 	suite.assert.NotNil(err)
@@ -133,24 +136,30 @@ func (suite *TravisClientTestSuite) TestActivateRepoSyncAccountEndpointError() {
 func (suite *TravisClientTestSuite) TestActivateRepoReposEndpointError() {
 	ss := successStatus
 	fs := failureStatus
-	currentStatus = suite.updateCurrentStatus(fs, ss, ss, ss)
+	currentStatus = suite.updateCurrentStatus(fs, ss, ss, ss, ss)
 	client := NewTravisClient(suite.token)
 	err := client.ActivateRepo(suite.serviceName)
 	suite.assert.NotNil(err)
 }
 
 func (suite *TravisClientTestSuite) TestActivateRepoRepoNotFoundError() {
-
+	ss := successStatus
+	fs := failureStatus
+	currentStatus = suite.updateCurrentStatus(ss, ss, ss, ss, fs)
+	client := NewTravisClient(suite.token)
+	err := client.ActivateRepo(suite.serviceName)
+	suite.assert.NotNil(err)
 }
 
 func (suite *TravisClientTestSuite) updateCurrentStatus(
-	repos, repoActivate, user, syncAccount int) *statusObj {
+	repos, repoActivate, user, syncAccount, notFoundRepo int) *statusObj {
 
 	return &statusObj{
 		repos:        repos,
 		repoActivate: repoActivate,
 		user:         user,
 		syncAccount:  syncAccount,
+		notFoundRepo: notFoundRepo,
 	}
 }
 
