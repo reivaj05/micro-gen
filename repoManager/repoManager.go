@@ -10,14 +10,14 @@ type repoProviderClient interface {
 	CreateCloudRepo(string) (string, error)
 }
 
-var githubTokenKey = "GITHUB_TOKEN"
-var bitbucketTokenKey = "BITBUCKET_TOKEN"
-var gitlabTokenKey = "GITLAB_TOKEN"
+var githubKey = "GITHUB_TOKEN"
+var bitbucketKey = "BITBUCKET_TOKEN"
+var gitlabKey = "GITLAB_TOKEN"
 
 var repoProviderKeys = map[string]string{
-	"github":    githubTokenKey,
-	"bitbucket": bitbucketTokenKey,
-	"gitlab":    gitlabTokenKey,
+	"github":    githubKey,
+	"bitbucket": bitbucketKey,
+	"gitlab":    gitlabKey,
 }
 
 var repoProviderClients = map[string]func(string) repoProviderClient{
@@ -100,7 +100,7 @@ func (client *githubClient) CreateCloudRepo(serviceName string) (string, error) 
 // }
 
 // func createGitHubClient(ctx context.Context) (*github.Client, error) {
-// 	accessToken, err := getToken(githubTokenKey)
+// 	accessToken, err := getToken(githubKey)
 // 	if err != nil {
 // 		return nil, err
 // 	}
