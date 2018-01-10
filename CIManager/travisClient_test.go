@@ -145,7 +145,11 @@ func (suite *TravisClientTestSuite) TestActivateRepoReposEndpointError() {
 func (suite *TravisClientTestSuite) TestActivateRepoRepoNotFoundError() {
 	ss := successStatus
 	fs := failureStatus
-	currentStatus = suite.updateCurrentStatus(ss, ss, ss, ss, fs)
+	suite.assertErrorWithStatus(suite.updateCurrentStatus(ss, ss, ss, ss, fs))
+}
+
+func (suite *TravisClientTestSuite) assertErrorWithStatus(status *statusObj) {
+	currentStatus = status
 	client := NewTravisClient(suite.token)
 	err := client.ActivateRepo(suite.serviceName)
 	suite.assert.NotNil(err)
