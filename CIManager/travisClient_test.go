@@ -114,10 +114,7 @@ func (suite *TravisClientTestSuite) TestActivateRepoSuccessfully() {
 func (suite *TravisClientTestSuite) TestActivateRepoUserEndpointError() {
 	ss := successStatus
 	fs := failureStatus
-	currentStatus = suite.updateCurrentStatus(ss, ss, fs, ss, ss)
-	client := NewTravisClient(suite.token)
-	err := client.ActivateRepo(suite.serviceName)
-	suite.assert.NotNil(err)
+	suite.assertErrorWithStatus(suite.updateCurrentStatus(ss, ss, fs, ss, ss))
 }
 
 func (suite *TravisClientTestSuite) TestActivateRepoWrongCredentials() {
@@ -127,19 +124,13 @@ func (suite *TravisClientTestSuite) TestActivateRepoWrongCredentials() {
 func (suite *TravisClientTestSuite) TestActivateRepoSyncAccountEndpointError() {
 	ss := successStatus
 	fs := failureStatus
-	currentStatus = suite.updateCurrentStatus(ss, ss, ss, fs, ss)
-	client := NewTravisClient(suite.token)
-	err := client.ActivateRepo(suite.serviceName)
-	suite.assert.NotNil(err)
+	suite.assertErrorWithStatus(suite.updateCurrentStatus(ss, ss, ss, fs, ss))
 }
 
 func (suite *TravisClientTestSuite) TestActivateRepoReposEndpointError() {
 	ss := successStatus
 	fs := failureStatus
-	currentStatus = suite.updateCurrentStatus(fs, ss, ss, ss, ss)
-	client := NewTravisClient(suite.token)
-	err := client.ActivateRepo(suite.serviceName)
-	suite.assert.NotNil(err)
+	suite.assertErrorWithStatus(suite.updateCurrentStatus(fs, ss, ss, ss, ss))
 }
 
 func (suite *TravisClientTestSuite) TestActivateRepoRepoNotFoundError() {
