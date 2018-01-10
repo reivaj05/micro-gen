@@ -90,8 +90,8 @@ func (client *travisClient) getRepos() ([]*GoJSON.JSONWrapper, error) {
 
 func (client *travisClient) __getReposRequest() (*GoJSON.JSONWrapper, error) {
 	config := client.createTravisRequestConfig("GET", reposEndpoint)
-	response, _, err := client.requesterObj.MakeRequest(config)
-	if err != nil {
+	response, status, err := client.requesterObj.MakeRequest(config)
+	if err := client.checkResponse(status, err); err != nil {
 		return nil, err
 	}
 	return GoJSON.New(response)
