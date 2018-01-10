@@ -131,7 +131,12 @@ func (suite *TravisClientTestSuite) TestActivateRepoSyncAccountEndpointError() {
 }
 
 func (suite *TravisClientTestSuite) TestActivateRepoReposEndpointError() {
-
+	ss := successStatus
+	fs := failureStatus
+	currentStatus = suite.updateCurrentStatus(fs, ss, ss, ss)
+	client := NewTravisClient(suite.token)
+	err := client.ActivateRepo(suite.serviceName)
+	suite.assert.NotNil(err)
 }
 
 func (suite *TravisClientTestSuite) TestActivateRepoRepoNotFoundError() {
