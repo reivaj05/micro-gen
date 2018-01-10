@@ -5,8 +5,6 @@ import (
 	"os"
 )
 
-type CIConnector func(string, CIClient) error
-
 type CIClient interface {
 	ActivateRepo(string) error
 }
