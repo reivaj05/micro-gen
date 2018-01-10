@@ -117,10 +117,6 @@ func (suite *TravisClientTestSuite) TestActivateRepoUserEndpointError() {
 	suite.assertErrorWithStatus(suite.updateCurrentStatus(ss, ss, fs, ss, ss))
 }
 
-func (suite *TravisClientTestSuite) TestActivateRepoWrongCredentials() {
-
-}
-
 func (suite *TravisClientTestSuite) TestActivateRepoSyncAccountEndpointError() {
 	ss := successStatus
 	fs := failureStatus
