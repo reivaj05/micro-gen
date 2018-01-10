@@ -1,12 +1,16 @@
 package repoManager
 
 import (
+	"fmt"
 	"os"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
 )
+
+var successfulToken = "SUCCESSFUL_TOKEN"
+var localRepoLinkingError = "LINKING_ERROR_TOKEN"
 
 type RepoManagerTestSuite struct {
 	suite.Suite
@@ -16,6 +20,12 @@ type RepoManagerTestSuite struct {
 	gitlabProvider    string
 	bitbucketProvider string
 	githubToken       string
+	bitbucketToken    string
+	gitlabToken       string
+}
+
+type mockClient struct {
+	token string
 }
 
 func (suite *RepoManagerTestSuite) SetupSuite() {
@@ -24,57 +34,90 @@ func (suite *RepoManagerTestSuite) SetupSuite() {
 	suite.githubProvider = "github"
 	suite.gitlabProvider = "gitlab"
 	suite.bitbucketProvider = "bitbucket"
-	os.MkdirAll(suite.managerName, os.ModePerm)
+	repoProviderClients = map[string]func(string) repoProviderClient{
+		"github":    NewMockClient,
+		"bitbucket": NewMockClient,
+		"gitlab":    NewMockClient,
+	}
+}
+
+func NewMockClient(token string) repoProviderClient {
+	return &mockClient{token: token}
+}
+
+func (client *mockClient) CreateCloudRepo(serviceName string) (string, error) {
+	if client.token == successfulToken {
+		return "mockRemote", nil
+	}
+	if client.token == localRepoLinkingError {
+		return "", nil
+	}
+	return "", fmt.Errorf("")
 }
 
 func (suite *RepoManagerTestSuite) SetupTest() {
-	suite.githubToken = os.Getenv(githubTokenKey)
-}
-
-func (suite *RepoManagerTestSuite) TearDownSuite() {
-	os.RemoveAll(suite.managerName)
+	os.MkdirAll(suite.managerName, os.ModePerm)
+	suite.githubToken = os.Getenv(githubKey)
+	suite.bitbucketToken = os.Getenv(bitbucketKey)
+	suite.gitlabToken = os.Getenv(gitlabKey)
 }
 
 func (suite *RepoManagerTestSuite) TearDownTest() {
-	os.Setenv(githubTokenKey, suite.githubToken)
+	os.RemoveAll(suite.managerName)
+	os.Setenv(githubKey, suite.githubToken)
+	os.Setenv(bitbucketKey, suite.bitbucketToken)
+	os.Setenv(gitlabKey, suite.gitlabToken)
 }
 
 func (suite *RepoManagerTestSuite) TestCreateGithubRepoSuccessfully() {
-	os.Setenv(githubTokenKey, "GITHUB_MOCK_TOKEN")
+	os.Setenv(githubKey, successfulToken)
 	err := CreateRepo(suite.managerName, suite.githubProvider)
-	// TODO: Ignore meanwhile to make CI passes
-	// TODO: this is what I expect suite.assert.NotNil(err)
-	suite.assert.NotNil(err)
-}
-
-func (suite *RepoManagerTestSuite) TestCreateGithubRepoWithoutAccessToken() {
-	os.Setenv(githubTokenKey, "")
-	err := CreateRepo(suite.managerName, suite.githubProvider)
-	suite.assert.NotNil(err)
-}
-
-func (suite *RepoManagerTestSuite) TestCreateGithubRepoWithWrongAccessToken() {
-	os.Setenv(githubTokenKey, "GITHUB_MOCK_TOKEN")
-	err := CreateRepo(suite.managerName, suite.githubProvider)
-	suite.assert.NotNil(err)
-}
-
-func (suite *RepoManagerTestSuite) TestCreateGitlabRepoSuccessfully() {
-	err := CreateRepo(suite.managerName, suite.gitlabProvider)
 	suite.assert.Nil(err)
 }
 
+func (suite *RepoManagerTestSuite) TestCreateGithubRepoUnsuccessfully() {
+	err := CreateRepo(suite.managerName, suite.githubProvider)
+	suite.assert.NotNil(err)
+}
+
 func (suite *RepoManagerTestSuite) TestCreateBitbucketRepoSuccessfully() {
+	os.Setenv(bitbucketKey, successfulToken)
 	err := CreateRepo(suite.managerName, suite.bitbucketProvider)
 	suite.assert.Nil(err)
 }
 
+func (suite *RepoManagerTestSuite) TestCreateBitbucketRepoUnsuccessfully() {
+	err := CreateRepo(suite.managerName, suite.bitbucketProvider)
+	suite.assert.NotNil(err)
+}
+
+func (suite *RepoManagerTestSuite) TestCreateGitlabRepoSuccessfully() {
+	os.Setenv(gitlabKey, successfulToken)
+	err := CreateRepo(suite.managerName, suite.gitlabProvider)
+	suite.assert.Nil(err)
+}
+
+func (suite *RepoManagerTestSuite) TestCreateGitlabRepoUnsuccessfully() {
+	err := CreateRepo(suite.managerName, suite.gitlabProvider)
+	suite.assert.NotNil(err)
+}
+
 func (suite *RepoManagerTestSuite) TestCreateRepoWithLocalRepoError() {
-	// TODO: TestCreateRepoUnsuccessfulLocalRepo
+	tmp := suite.managerName
+	suite.managerName = "wrongDir"
+	err := CreateRepo(suite.managerName, suite.githubProvider)
+	suite.assert.NotNil(err)
+	suite.managerName = tmp
+}
+
+func (suite *RepoManagerTestSuite) TestCreateRepoWithLinkingLocalRepoError() {
+	os.Setenv(githubKey, localRepoLinkingError)
+	err := CreateRepo(suite.managerName, suite.githubProvider)
+	suite.assert.NotNil(err)
 }
 
 func (suite *RepoManagerTestSuite) TestCreateRepoWithWrongServiceProvider() {
-	err := CreateRepo(suite.managerName, "wrongServiceProvider")
+	err := CreateRepo(suite.managerName, "wrongRepoProvider")
 	suite.assert.NotNil(err)
 }
 
