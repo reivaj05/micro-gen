@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/url"
 	"strconv"
+	"time"
 
 	"github.com/reivaj05/GoJSON"
 	"github.com/reivaj05/GoRequester"
@@ -40,6 +41,7 @@ func (client *travisClient) ActivateRepo(serviceName string) error {
 	if err := client.syncAccount(); err != nil {
 		return err
 	}
+	time.Sleep(5 * time.Second) // Wait 5 seconds until sync is done
 	repo, err := client.filterRepoByName(serviceName)
 	if err != nil {
 		return err

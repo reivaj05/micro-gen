@@ -31,6 +31,7 @@ func ConnectWithCIProvider(serviceName, provider string) error {
 		return err
 	}
 	client := CIClients[provider](token)
+	fmt.Println(fmt.Sprintf("Activating %s in %s provider", serviceName, provider))
 	return client.ActivateRepo(serviceName)
 }
 
