@@ -50,6 +50,7 @@ func createRepoProvider(serviceName, provider string) error {
 		return err
 	}
 	client := repoProviderClients[provider](token)
+	fmt.Printf("Creating %s repository in %s provider...\n", serviceName, provider)
 	repoURL, err := client.CreateCloudRepo(serviceName)
 	if err != nil {
 		return err
