@@ -2,7 +2,6 @@ package repoManager
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/google/go-github/github"
 	"golang.org/x/oauth2"
@@ -19,18 +18,14 @@ func NewGithubClient(token string) repoProviderClient {
 }
 
 func (client *githubClient) CreateCloudRepo(serviceName string) (string, error) {
-	fmt.Printf("Creating %s github repository...\n", serviceName)
 	ctx := context.Background()
-	gClient, err := client.createGitHubClient(ctx)
-	if err != nil {
-		return "", err
-	}
+	gClient := client.createGitHubClient(ctx)
 	return client.createGithubRepo(serviceName, gClient, ctx)
 }
 
-func (client *githubClient) createGitHubClient(ctx context.Context) (*github.Client, error) {
+func (client *githubClient) createGitHubClient(ctx context.Context) *github.Client {
 	tc := oauth2.NewClient(ctx, oauth2.StaticTokenSource(&oauth2.Token{AccessToken: client.token}))
-	return github.NewClient(tc), nil
+	return github.NewClient(tc)
 }
 
 func (client *githubClient) createGithubRepo(serviceName string, gClient *github.Client,
