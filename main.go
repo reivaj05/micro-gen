@@ -122,8 +122,9 @@ func getCreateServiceStringFlags() []*GoCLI.StringFlag {
 func getCreateManagerStringFlags() []*GoCLI.StringFlag {
 	return []*GoCLI.StringFlag{
 		&GoCLI.StringFlag{
-			Name:  "services",
-			Usage: "Space separated list of the services you want to manage. TODO",
+			Name:    "services",
+			Usage:   "Space separated list of the services you want to manage. TODO",
+			Default: "",
 		},
 	}
 }
