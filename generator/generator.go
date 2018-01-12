@@ -72,7 +72,8 @@ func generateRust(serviceName string) error {
 
 func GenerateManager(flags map[string]string, args ...string) error {
 	fmt.Println("TODO: Generate manager")
-	if err := managerBuilder.Build("manager"); err != nil {
+	services := flags["services"]
+	if err := managerBuilder.Build("manager", services); err != nil {
 		rollback("manager")
 		return err
 	}

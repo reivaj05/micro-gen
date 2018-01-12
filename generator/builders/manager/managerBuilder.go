@@ -11,7 +11,7 @@ var buildFileOptions = []*utils.GenerateFileOptions{
 		"manager", true),
 }
 
-func Build(serviceName string) error {
+func Build(serviceName, services string) error {
 	if err := createDirectories(serviceName); err != nil {
 		return err
 	}
