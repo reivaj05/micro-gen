@@ -13,6 +13,6 @@ func NewBitbucketClient(token string) repoProviderClient {
 }
 
 func (client *bitbucketClient) CreateCloudRepo(serviceName string) (string, error) {
-	fmt.Println("TODO: Implement gitlab client")
+	fmt.Println("TODO: Implement bitbucket client")
 	return "", nil
 }
