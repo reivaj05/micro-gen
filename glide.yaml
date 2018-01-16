@@ -17,6 +17,8 @@ import:
 - package: golang.org/x/oauth2
 - package: github.com/reivaj05/GoRequester
   version: v0.0.1
+- package: github.com/xanzy/go-gitlab
+  version: v0.7.4
 testImport:
 - package: github.com/stretchr/testify
   version: v1.1.4
