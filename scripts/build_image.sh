@@ -2,6 +2,7 @@
 
 IMAGE_NAME=micro-gen
 BRANCH_NAME=$(git rev-parse --abbrev-ref HEAD)
+
 if [ $BRANCH_NAME == "master" ]; then
 	BRANCH_NAME="latest"
 fi
@@ -10,6 +11,7 @@ if [ -z $DOCKER_USERNAME ]; then
 	echo "Missing DOCKER_USERNAME env var"
 	exit 1
 fi
+
 DOCKER_IMAGE=$IMAGE_NAME:$BRANCH_NAME
 REPO_IMAGE=$DOCKER_USERNAME/$DOCKER_IMAGE
 
