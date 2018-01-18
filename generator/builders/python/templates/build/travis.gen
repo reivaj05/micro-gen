@@ -16,6 +16,7 @@ before_script:
 script:
   - ./scripts/build_image.sh
   - ./scripts/tests.sh
+  - ./scripts/push_image.sh
 
 after_success:
   - codecov
