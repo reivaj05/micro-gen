@@ -1,21 +1,8 @@
-package dockerManager
+package dockerWrapper
 
 import (
 	"github.com/reivaj05/GoJSON"
-	"github.com/reivaj05/GoRequester"
 )
-
-type dockerClient struct {
-	requesterObj *requester.Requester
-	token        string
-}
-
-func NewDockerClient(token string) *dockerClient {
-	return &dockerClient{
-		requesterObj: requester.New(),
-		token:        token,
-	}
-}
 
 func (client *dockerClient) getRelatedImages(serviceName string) []string {
 	// TODO: Implement
