@@ -3,11 +3,16 @@ package dockerWrapper
 import (
 	"encoding/base64"
 	"encoding/json"
+	"fmt"
+	"os"
 
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/client"
 	"golang.org/x/net/context"
 )
+
+var dockerUsernameKey = "DOCKER_USERNAME"
+var dockerPasswordKey = "DOCKER_PASSWORD"
 
 type dockerManager struct {
 	cli   *client.Client
@@ -28,6 +33,9 @@ func NewDockerManager() (*dockerManager, error) {
 }
 
 func getAuthToken(cli *client.Client) (string, error) {
+	if err := checkDockerCredentials(); err != nil {
+		return "", err
+	}
 	authConfig := types.AuthConfig{
 		Username: "username",
 		Password: "password",
@@ -38,6 +46,15 @@ func getAuthToken(cli *client.Client) (string, error) {
 	}
 	authStr := base64.URLEncoding.EncodeToString(encodedJSON)
 
+}
+
+func checkDockerCredentials() error {
+	for _, key := range []string{dockerUsernameKey, dockerPasswordKey} {
+		if value := os.Getenv(dockerUsernameKey); value == "" {
+			return fmt.Errorf("Env var %s not set", key)
+		}
+	}
+	return nil
 }
 
 func (manager *dockerManager) test() {
