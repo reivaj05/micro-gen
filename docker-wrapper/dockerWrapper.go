@@ -4,6 +4,7 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"io"
 	"os"
 
 	"github.com/docker/docker/api/types"
@@ -61,5 +62,11 @@ func getAuthEncoded() ([]byte, error) {
 }
 
 func (manager *dockerManager) test() {
+	out, err := manager.cli.ImagePull(manager.ctx, "alpine", types.ImagePullOptions{RegistryAuth: manager.token})
+	if err != nil {
+		panic(err)
+	}
 
+	defer out.Close()
+	io.Copy(os.Stdout, out)
 }
