@@ -36,16 +36,11 @@ func getAuthToken(cli *client.Client) (string, error) {
 	if err := checkDockerCredentials(); err != nil {
 		return "", err
 	}
-	authConfig := types.AuthConfig{
-		Username: "username",
-		Password: "password",
-	}
-	encodedJSON, err := json.Marshal(authConfig)
+	encodedJSON, err := getAuthEncoded()
 	if err != nil {
-		panic(err)
+		return "", err
 	}
-	authStr := base64.URLEncoding.EncodeToString(encodedJSON)
-
+	return base64.URLEncoding.EncodeToString(encodedJSON), nil
 }
 
 func checkDockerCredentials() error {
@@ -55,6 +50,14 @@ func checkDockerCredentials() error {
 		}
 	}
 	return nil
+}
+
+func getAuthEncoded() ([]byte, error) {
+	authConfig := types.AuthConfig{
+		Username: os.Getenv(dockerUsernameKey),
+		Password: os.Getenv(dockerPasswordKey),
+	}
+	return json.Marshal(authConfig)
 }
 
 func (manager *dockerManager) test() {
