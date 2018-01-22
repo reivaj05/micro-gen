@@ -26,9 +26,10 @@ var dockerRegistryHostKey = "DOCKER_REGISTRY_HOST"
 // }
 
 type dockerRegistryManager struct {
-	client *requester.Requester
-	token  string
-	host   string
+	client   *requester.Requester
+	token    string
+	host     string
+	username string
 }
 
 // func NewDockerManager() (*dockerManager, error) {
@@ -76,9 +77,10 @@ func NewDockerRegistryManager() (*dockerRegistryManager, error) {
 		return nil, err
 	}
 	return &dockerRegistryManager{
-		token:  getToken(),
-		host:   os.Getenv(dockerRegistryHostKey),
-		client: &requester.Requester{},
+		token:    getToken(),
+		host:     os.Getenv(dockerRegistryHostKey),
+		username: os.Getenv(dockerUsernameKey),
+		client:   requester.New(),
 	}, nil
 }
 
@@ -99,6 +101,11 @@ func checkDockerRegistryCredentials() error {
 }
 
 func (manager *dockerRegistryManager) SearchRepositories() {
-	// manager.client.MakeRequest(&requester.)
+	response, status, err := manager.client.MakeRequest(&requester.RequestConfig{
+		Method:  "GET",
+		URL:     fmt.Sprintf("%s/v2/repositories/%s/", manager.host, manager.username),
+		Headers: map[string]string{"Authorization": " " + manager.token},
+	})
+	fmt.Println(response, status, err)
 
 }
