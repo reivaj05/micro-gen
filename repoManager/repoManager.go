@@ -21,9 +21,9 @@ var repoProviderKeys = map[string]string{
 }
 
 var repoProviderClients = map[string]func(string) repoProviderClient{
-	"github": NewGithubClient,
-	// "bitbucket": NewBitbucketClient,
-	// "gitlab":    NewGitlabClient,
+	"github":    NewGithubClient,
+	"bitbucket": NewBitbucketClient,
+	"gitlab":    NewGitlabClient,
 }
 
 func CreateRepo(serviceName, provider string) error {

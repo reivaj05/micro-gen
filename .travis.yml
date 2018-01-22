@@ -11,9 +11,9 @@ before_script:
 
 script:
   - ./scripts/build_image.sh
-  - ./scripts/push_image.sh
   - ./scripts/deps.sh
   - ./scripts/tests.sh
+  - ./scripts/push_image.sh
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
