@@ -28,11 +28,8 @@ func NewDockerRegistryManager() (*dockerRegistryManager, error) {
 	if err := checkDockerCredentials(); err != nil {
 		return nil, err
 	}
-	manager := &dockerRegistryManager{
-		host:     os.Getenv(dockerRegistryHostKey),
-		username: os.Getenv(dockerUsernameKey),
-		client:   requester.New(),
-	}
+	host, username := os.Getenv(dockerRegistryHostKey), os.Getenv(dockerUsernameKey)
+	manager := &dockerRegistryManager{host: host, username: username, client: requester.New()}
 	if err := manager.setToken(); err != nil {
 		return nil, err
 	}
