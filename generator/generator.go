@@ -11,7 +11,7 @@ import (
 	pythonBuilder "github.com/reivaj05/micro-gen/generator/builders/python"
 	rubyBuilder "github.com/reivaj05/micro-gen/generator/builders/ruby"
 	rustBuilder "github.com/reivaj05/micro-gen/generator/builders/rust"
-	"github.com/reivaj05/micro-gen/repoManager"
+	"github.com/reivaj05/micro-gen/repo-manager"
 )
 
 type generator func(serviceName string) error
