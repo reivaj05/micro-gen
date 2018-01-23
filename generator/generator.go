@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/reivaj05/micro-gen/CIManager"
+	"github.com/reivaj05/micro-gen/ci-manager"
 	goBuilder "github.com/reivaj05/micro-gen/generator/builders/go"
 	jsBuilder "github.com/reivaj05/micro-gen/generator/builders/javascript"
 	managerBuilder "github.com/reivaj05/micro-gen/generator/builders/manager"
