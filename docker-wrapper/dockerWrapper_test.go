@@ -74,28 +74,26 @@ func (suite *DockerWrapperTestSuite) TestNewDockerRegistryManagerSuccessful() {
 
 func (suite *DockerWrapperTestSuite) TestNewDockerRegistryManagerWithoutDockerUsername() {
 	suite.setupEnvVars("", "", "")
-	manager, err := NewDockerRegistryManager()
-	suite.assert.Nil(manager)
-	suite.assert.NotNil(err)
+	suite.assertWrongNewDockerRegistryManager()
 
 }
 func (suite *DockerWrapperTestSuite) TestNewDockerRegistryManagerWithoutDockerPasword() {
 	suite.setupEnvVars("MOCK_USERNAME", "", "")
-	manager, err := NewDockerRegistryManager()
-	suite.assert.Nil(manager)
-	suite.assert.NotNil(err)
+	suite.assertWrongNewDockerRegistryManager()
 
 }
 func (suite *DockerWrapperTestSuite) TestNewDockerRegistryManagerWithoutDockerRegistryHost() {
 	suite.setupEnvVars("MOCK_USERNAME", "MOCK_PASSWORD", "")
-	manager, err := NewDockerRegistryManager()
-	suite.assert.Nil(manager)
-	suite.assert.NotNil(err)
+	suite.assertWrongNewDockerRegistryManager()
 }
 
 func (suite *DockerWrapperTestSuite) TestNewDockerRegistryManagerErrorInLogin() {
 	currentStatus = failureStatus
 	suite.setupEnvVars("MOCK_USERNAME", "MOCK_PASSWORD", "MOCK_REGISTRY")
+	suite.assertWrongNewDockerRegistryManager()
+}
+
+func (suite *DockerWrapperTestSuite) assertWrongNewDockerRegistryManager() {
 	manager, err := NewDockerRegistryManager()
 	suite.assert.Nil(manager)
 	suite.assert.NotNil(err)
