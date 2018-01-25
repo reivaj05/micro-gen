@@ -24,11 +24,14 @@ func (suite *DockerWrapperTestSuite) SetupTest() {
 func (suite *DockerWrapperTestSuite) TearDownTest() {
 }
 
-// func (suite *DockerWrapperTestSuite) TestCreateGithubRepoSuccessfully() {
-// 	os.Setenv(githubKey, successfulToken)
-// 	err := CreateRepo(suite.managerName, suite.githubProvider)
-// 	suite.assert.Nil(err)
-// }
+func (suite *DockerWrapperTestSuite) TestNewDockerRegistryManagerSuccessful() {
+}
+
+func (suite *DockerWrapperTestSuite) TestNewDockerRegistryManagerWithoutDockerCrendentials() {
+}
+
+func (suite *DockerWrapperTestSuite) TestNewDockerRegistryManagerErrorInLogin() {
+}
 
 func TestDockerWrapper(t *testing.T) {
 	suite.Run(t, new(DockerWrapperTestSuite))
