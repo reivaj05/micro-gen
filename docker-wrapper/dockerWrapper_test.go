@@ -22,6 +22,10 @@ type DockerWrapperTestSuite struct {
 
 type loginHandler struct{}
 
+var successStatus = 0
+var failureStatus = 1
+var currentStatus int
+
 func (suite *DockerWrapperTestSuite) SetupSuite() {
 	suite.assert = assert.New(suite.T())
 	suite.createMockServers()
@@ -33,7 +37,13 @@ func (suite *DockerWrapperTestSuite) createMockServers() {
 
 func (handler *loginHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	response := `{"repositories":[{"name": "mockServiceName", "slug": "mockSlug"}]}`
-	w.WriteHeader(http.StatusOK)
+	var status int
+	if currentStatus == successStatus {
+		status = http.StatusOK
+	} else {
+		status = http.StatusBadRequest
+	}
+	w.WriteHeader(status)
 	fmt.Fprintf(w, response)
 }
 
@@ -54,6 +64,7 @@ func (suite *DockerWrapperTestSuite) TearDownTest() {
 }
 
 func (suite *DockerWrapperTestSuite) TestNewDockerRegistryManagerSuccessful() {
+	currentStatus = successStatus
 	loginEndpoint = fmt.Sprintf("%s?%s", suite.loginServer.URL)
 	suite.setupEnvVars("MOCK_USERNAME", "MOCK_PASSWORD", "MOCK_REGISTRY")
 	manager, err := NewDockerRegistryManager()
@@ -80,11 +91,10 @@ func (suite *DockerWrapperTestSuite) TestNewDockerRegistryManagerWithoutDockerRe
 	manager, err := NewDockerRegistryManager()
 	suite.assert.Nil(manager)
 	suite.assert.NotNil(err)
-
 }
 
 func (suite *DockerWrapperTestSuite) TestNewDockerRegistryManagerErrorInLogin() {
-	// TODO: Add failing server for coverage
+	currentStatus = failureStatus
 	suite.setupEnvVars("MOCK_USERNAME", "MOCK_PASSWORD", "MOCK_REGISTRY")
 	manager, err := NewDockerRegistryManager()
 	suite.assert.Nil(manager)

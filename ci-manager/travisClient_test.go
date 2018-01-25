@@ -30,8 +30,8 @@ type statusObj struct {
 	repos, repoActivate, user, syncAccount, notFoundRepo int
 }
 
-const successStatus = 1
-const failureStatus = 0
+const successStatus = 0
+const failureStatus = 1
 
 var currentStatus *statusObj
 
