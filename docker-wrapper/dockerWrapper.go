@@ -38,7 +38,7 @@ func NewDockerRegistryManager() (*dockerRegistryManager, error) {
 
 func checkDockerCredentials() error {
 	for _, key := range []string{dockerUsernameKey, dockerPasswordKey, dockerRegistryHostKey} {
-		if value := os.Getenv(dockerUsernameKey); value == "" {
+		if value := os.Getenv(key); value == "" {
 			return fmt.Errorf("Env var %s not set", key)
 		}
 	}
