@@ -99,6 +99,14 @@ func (suite *DockerWrapperTestSuite) assertWrongNewDockerRegistryManager() {
 	suite.assert.NotNil(err)
 }
 
+func (suite *DockerWrapperTestSuite) SearchReposSuccessful() {
+	// manager, _ := NewDockerRegistryManager()
+}
+
+func (suite *DockerWrapperTestSuite) SearchRéposUnsuccessful() {
+
+}
+
 func (suite *DockerWrapperTestSuite) setupEnvVars(username, password, registry string) {
 	os.Setenv(dockerUsernameKey, username)
 	os.Setenv(dockerPasswordKey, password)
