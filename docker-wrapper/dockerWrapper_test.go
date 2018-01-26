@@ -131,6 +131,12 @@ func (suite *DockerWrapperTestSuite) TestSearchReposUnsuccessful() {
 	suite.assert.NotNil(err)
 }
 
+func (suite *DockerWrapperTestSuite) setupSearchRepos(status int) {
+	currentStatus = status
+	repositoriesEndpoint = fmt.Sprintf("%s?%s%s", suite.reposServer.URL)
+	suite.setupEnvVars("MOCK_USERNAME", "MOCK_PASSWORD", "MOCK_REGISTRY")
+}
+
 func (suite *DockerWrapperTestSuite) setupEnvVars(username, password, registry string) {
 	os.Setenv(dockerUsernameKey, username)
 	os.Setenv(dockerPasswordKey, password)
