@@ -121,8 +121,14 @@ func (suite *DockerWrapperTestSuite) TestSearchReposSuccessful() {
 	suite.assert.True(data.HasPath("results"))
 }
 
-func (suite *DockerWrapperTestSuite) SearchRéposUnsuccessful() {
-
+func (suite *DockerWrapperTestSuite) TestSearchReposUnsuccessful() {
+	currentStatus = failureStatus
+	repositoriesEndpoint = fmt.Sprintf("%s?%s%s", suite.reposServer.URL)
+	suite.setupEnvVars("MOCK_USERNAME", "MOCK_PASSWORD", "MOCK_REGISTRY")
+	manager, _ := NewDockerRegistryManager()
+	data, err := manager.SearchRepos()
+	suite.assert.Nil(data)
+	suite.assert.NotNil(err)
 }
 
 func (suite *DockerWrapperTestSuite) setupEnvVars(username, password, registry string) {

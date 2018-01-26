@@ -85,7 +85,7 @@ func (manager *dockerRegistryManager) parseLoginResponse(response string) (strin
 
 func (manager *dockerRegistryManager) SearchRepos() (*GoJSON.JSONWrapper, error) {
 	response, status, err := manager.client.MakeRequest(manager.createSearchReposRequestConfig())
-	if err != nil || status > 400 {
+	if err != nil || status >= 400 {
 		return nil, fmt.Errorf("Error %v: Got status %d", status, err)
 	}
 	return manager.toJSON(response)
