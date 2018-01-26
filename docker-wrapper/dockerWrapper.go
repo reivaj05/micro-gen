@@ -104,6 +104,5 @@ func (manager *dockerRegistryManager) toJSON(data string) (*GoJSON.JSONWrapper, 
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println(jsonData.ToString())
 	return jsonData, nil
 }

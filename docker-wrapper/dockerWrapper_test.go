@@ -18,9 +18,11 @@ type DockerWrapperTestSuite struct {
 	dockerPassword     string
 	dockerRegistryHost string
 	loginServer        *httptest.Server
+	reposServer        *httptest.Server
 }
 
 type loginHandler struct{}
+type reposHandler struct{}
 
 var successStatus = 0
 var failureStatus = 1
@@ -33,10 +35,18 @@ func (suite *DockerWrapperTestSuite) SetupSuite() {
 
 func (suite *DockerWrapperTestSuite) createMockServers() {
 	suite.loginServer = httptest.NewServer(&loginHandler{})
+	suite.reposServer = httptest.NewServer(&reposHandler{})
 }
 
 func (handler *loginHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	response := `{"repositories":[{"name": "mockServiceName", "slug": "mockSlug"}]}`
+	sendResponse(w, `{"token": "mockToken"}`)
+}
+
+func (handler *reposHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	sendResponse(w, `{"results":[]}`)
+}
+
+func sendResponse(w http.ResponseWriter, response string) {
 	var status int
 	if currentStatus == successStatus {
 		status = http.StatusOK
@@ -49,6 +59,7 @@ func (handler *loginHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 func (suite *DockerWrapperTestSuite) TearDownSuite() {
 	suite.loginServer.Close()
+	suite.reposServer.Close()
 }
 
 func (suite *DockerWrapperTestSuite) SetupTest() {
@@ -99,8 +110,15 @@ func (suite *DockerWrapperTestSuite) assertWrongNewDockerRegistryManager() {
 	suite.assert.NotNil(err)
 }
 
-func (suite *DockerWrapperTestSuite) SearchReposSuccessful() {
-	// manager, _ := NewDockerRegistryManager()
+func (suite *DockerWrapperTestSuite) TestSearchReposSuccessful() {
+	currentStatus = successStatus
+	repositoriesEndpoint = fmt.Sprintf("%s?%s%s", suite.reposServer.URL)
+	suite.setupEnvVars("MOCK_USERNAME", "MOCK_PASSWORD", "MOCK_REGISTRY")
+	manager, _ := NewDockerRegistryManager()
+	data, err := manager.SearchRepos()
+	suite.assert.NotNil(data)
+	suite.assert.Nil(err)
+	suite.assert.True(data.HasPath("results"))
 }
 
 func (suite *DockerWrapperTestSuite) SearchRéposUnsuccessful() {
