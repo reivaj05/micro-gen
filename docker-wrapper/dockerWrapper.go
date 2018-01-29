@@ -83,12 +83,26 @@ func (manager *dockerRegistryManager) parseLoginResponse(response string) (strin
 	return value, nil
 }
 
-func (manager *dockerRegistryManager) SearchRepositories() {
-	response, status, err := manager.client.MakeRequest(&requester.RequestConfig{
+func (manager *dockerRegistryManager) SearchRepos() (*GoJSON.JSONWrapper, error) {
+	response, status, err := manager.client.MakeRequest(manager.createSearchReposRequestConfig())
+	if err != nil || status >= 400 {
+		return nil, fmt.Errorf("Error %v: Got status %d", status, err)
+	}
+	return manager.toJSON(response)
+}
+
+func (manager *dockerRegistryManager) createSearchReposRequestConfig() *requester.RequestConfig {
+	return &requester.RequestConfig{
 		Method:  "GET",
 		URL:     fmt.Sprintf(repositoriesEndpoint, manager.host, manager.username),
 		Headers: map[string]string{"Authorization": "JWT " + manager.token},
-	})
-	fmt.Println(response, status, err)
+	}
+}
 
+func (manager *dockerRegistryManager) toJSON(data string) (*GoJSON.JSONWrapper, error) {
+	jsonData, err := GoJSON.New(data)
+	if err != nil {
+		return nil, err
+	}
+	return jsonData, nil
 }
