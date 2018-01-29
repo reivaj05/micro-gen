@@ -1,9 +1,11 @@
 version: '3.2'
 
+
+{{ $username := .DockerUsername }}
 services:
-  image_1:
-    image: repo/image_1:tag
-    ports:
-      - "8000:8000"
-    volumes:
-      - .:.
+  {{ range .Services }}
+	{{ . }}:
+  	image: {{ $username }}/{{ . }}
+    	ports:
+      	- "8000:8000"
+  {{ end }}
