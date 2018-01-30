@@ -71,14 +71,19 @@ func createFile(serviceName string, options *GenerateFileOptions) (*os.File, err
 
 func writeTemplateContent(file *os.File, options *GenerateFileOptions) error {
 	defer file.Close()
-	templateDir := fmt.Sprintf("%s/%s%s", getMicroGenPath(),
-		GoConfig.GetConfigMapValue("templates")[options.Language],
-		options.TemplateFilePath+options.TemplateFileName)
+	templateDir := getTemplateDir(options)
 	if _, err := os.Stat(templateDir); err != nil {
 		return err
 	}
 	tmpl := template.Must(template.ParseFiles(templateDir))
 	return tmpl.Execute(file, options.Data)
+}
+
+func getTemplateDir(options *GenerateFileOptions) string {
+	templatesPath := GoConfig.GetConfigMapValue("templates")[options.Language]
+	templateFilePath := options.TemplateFilePath
+	templateFileName := options.TemplateFilePath
+	return fmt.Sprintf("%s/%s%s", getMicroGenPath(), templatesPath, templateFilePath+templateFileName)
 }
 
 func getMicroGenPath() string {
