@@ -7,10 +7,10 @@ import (
 	"github.com/reivaj05/micro-gen/ci-manager"
 	goBuilder "github.com/reivaj05/micro-gen/generator/builders/go"
 	jsBuilder "github.com/reivaj05/micro-gen/generator/builders/javascript"
-	managerBuilder "github.com/reivaj05/micro-gen/generator/builders/manager"
 	pythonBuilder "github.com/reivaj05/micro-gen/generator/builders/python"
 	rubyBuilder "github.com/reivaj05/micro-gen/generator/builders/ruby"
 	rustBuilder "github.com/reivaj05/micro-gen/generator/builders/rust"
+	toolingBuilder "github.com/reivaj05/micro-gen/generator/builders/tooling"
 	"github.com/reivaj05/micro-gen/repo-manager"
 )
 
@@ -70,11 +70,10 @@ func generateRust(serviceName string) error {
 	return rustBuilder.Build(serviceName)
 }
 
-func GenerateManager(flags map[string]string, args ...string) error {
-	fmt.Println("TODO: Generate manager")
+func GenerateTooling(flags map[string]string, args ...string) error {
 	services := flags["services"]
-	if err := managerBuilder.Build("manager", services); err != nil {
-		rollback("manager")
+	if err := toolingBuilder.Build("tooling", services); err != nil {
+		rollback("tooling")
 		return err
 	}
 	return nil

@@ -1,4 +1,4 @@
-package managerBuilder
+package toolingBuilder
 
 import (
 	"fmt"
@@ -10,7 +10,7 @@ import (
 
 var buildFileOptions = []*utils.GenerateFileOptions{
 	utils.CreateFileOptions("docker-compose.yml", "", "docker-compose.gen", "build/",
-		"manager", false),
+		"tooling", false),
 }
 
 func Build(serviceName, services string) error {

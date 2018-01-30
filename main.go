@@ -77,7 +77,7 @@ func startApp() {
 func createCLIOptions() *GoCLI.Options {
 	return &GoCLI.Options{
 		AppName:  appName,
-		AppUsage: "Tool to create different services in different languages and managers to handle those services",
+		AppUsage: "Tool to create different services in different languages and tooling to handle those services",
 		Commands: createCommands(),
 	}
 }
@@ -91,10 +91,10 @@ func createCommands() []*GoCLI.Command {
 			StringFlags: getCreateServiceStringFlags(),
 		},
 		&GoCLI.Command{
-			Name:        "create-manager",
-			Usage:       "Create a new manager to handle the services you previously created",
-			Action:      generator.GenerateManager,
-			StringFlags: getCreateManagerStringFlags(),
+			Name:        "create-tooling",
+			Usage:       "Create a new tooling to handle the services you previously created",
+			Action:      generator.GenerateTooling,
+			StringFlags: getCreateToolingStringFlags(),
 		},
 	}
 }
@@ -119,7 +119,7 @@ func getCreateServiceStringFlags() []*GoCLI.StringFlag {
 	}
 }
 
-func getCreateManagerStringFlags() []*GoCLI.StringFlag {
+func getCreateToolingStringFlags() []*GoCLI.StringFlag {
 	return []*GoCLI.StringFlag{
 		&GoCLI.StringFlag{
 			Name:    "services",
