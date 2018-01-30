@@ -75,14 +75,14 @@ func writeTemplateContent(file *os.File, options *GenerateFileOptions) error {
 	if _, err := os.Stat(templateDir); err != nil {
 		return err
 	}
-	tmpl := template.Must(template.ParseFiles(templateDir))
+	tmpl := createTemplate(options.TemplateFileName, templateDir)
 	return tmpl.Execute(file, options.Data)
 }
 
 func getTemplateDir(options *GenerateFileOptions) string {
 	templatesPath := GoConfig.GetConfigMapValue("templates")[options.Language]
 	templateFilePath := options.TemplateFilePath
-	templateFileName := options.TemplateFilePath
+	templateFileName := options.TemplateFileName
 	return fmt.Sprintf("%s/%s%s", getMicroGenPath(), templatesPath, templateFilePath+templateFileName)
 }
 
@@ -90,4 +90,16 @@ func getMicroGenPath() string {
 	const relativePath = "/src/github.com/reivaj05/micro-gen"
 	goPath := os.Getenv("GOPATH")
 	return goPath + relativePath
+}
+
+func createTemplate(filename, templateDir string) *template.Template {
+	tmpl := template.New(filename).Funcs(addTemplateFunctions())
+	return template.Must(tmpl.ParseFiles(templateDir))
+}
+func addTemplateFunctions() template.FuncMap {
+	return template.FuncMap{
+		"add": func(a, b int) int {
+			return a + b
+		},
+	}
 }
