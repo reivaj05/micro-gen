@@ -2,10 +2,11 @@ version: '3.2'
 
 
 {{ $username := .DockerUsername }}
+{{ $initialPort := 8000 }}
 services:
-  {{ range .Services }}
+  {{ range $index, $value := .Services }}
 	{{ . }}:
-  	image: {{ $username }}/{{ . }}
+    image: {{ $username }}/{{ $value }}
     	ports:
-      	- "8000:8000"
+        - "{{ add $initialPort $index }}:8000"
   {{ end }}
