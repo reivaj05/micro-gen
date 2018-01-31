@@ -31,7 +31,12 @@ func createDirectories(serviceName string) error {
 }
 
 func createService(serviceName, services string) error {
+	services := filterServices(services)
 	return generateAllFiles(serviceName, services)
+}
+
+func filterServices(services []string) []string {
+	return services
 }
 
 func generateAllFiles(serviceName, services string) error {
