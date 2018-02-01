@@ -32,6 +32,8 @@ var buildFileOptions = []*utils.GenerateFileOptions{
 		"go", false),
 	utils.CreateFileOptions(".travis.yml", "", "travis.gen", "build/",
 		"go", false),
+	utils.CreateFileOptions("README.md", "", "README.gen", "build/",
+		"go", true),
 }
 
 var scriptFileOptions = []*utils.GenerateFileOptions{
