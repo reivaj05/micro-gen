@@ -47,6 +47,8 @@ var buildFileOptions = []*utils.GenerateFileOptions{
 		"python", false),
 	utils.CreateFileOptions(".travis.yml", "", "travis.gen", "build/",
 		"python", false),
+	utils.CreateFileOptions("README.md", "", "README.gen", "build/",
+		"python", true),
 }
 
 var scriptFileOptions = []*utils.GenerateFileOptions{
