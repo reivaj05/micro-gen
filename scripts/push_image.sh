@@ -1,7 +1,7 @@
 #!/bin/bash
 
 IMAGE_NAME=micro-gen
-BRANCH_NAME=$(git rev-parse --abbrev-ref HEAD)
+BRANCH_NAME=$TRAVIS_BRANCH
 
 if [ $BRANCH_NAME == "master" ]; then
 	BRANCH_NAME="latest"
