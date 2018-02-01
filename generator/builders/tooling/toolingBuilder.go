@@ -59,6 +59,17 @@ func filterAgainstDockerRegistryRepos(
 	return filteredServices
 }
 
+func serviceIsInDockerRegistry(repos []*GoJSON.JSONWrapper, service string) bool {
+	for _, repo := range repos {
+		if repo.HasPath("name") {
+			if name, ok := repo.GetStringFromPath("name"); ok && name == service {
+				return true
+			}
+		}
+	}
+	return false
+}
+
 func generateAllFiles(serviceName, services string) error {
 	for _, optionsList := range [][]*utils.GenerateFileOptions{buildFileOptions} {
 		if err := generateFilesWithOptionsList(serviceName, services, optionsList); err != nil {
