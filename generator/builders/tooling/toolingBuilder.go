@@ -2,9 +2,11 @@ package toolingBuilder
 
 import (
 	"fmt"
+	"github.com/reivaj05/GoJSON"
 	"os"
 	"strings"
 
+	"github.com/reivaj05/micro-gen/docker-wrapper"
 	"github.com/reivaj05/micro-gen/generator/utils"
 )
 
@@ -31,12 +33,30 @@ func createDirectories(serviceName string) error {
 }
 
 func createService(serviceName, services string) error {
-	services := filterServices(services)
+	services = filterServices(strings.Split(services, ","))
 	return generateAllFiles(serviceName, services)
 }
 
-func filterServices(services []string) []string {
-	return services
+func filterServices(services []string) string {
+	if docker, err := dockerWrapper.NewDockerRegistryManager(); err == nil {
+		reposResponse, err := docker.SearchRepos()
+		if err == nil {
+			services = filterAgainstDockerRegistryRepos(services, reposResponse)
+		}
+	}
+	return strings.Join(services, ",")
+}
+
+func filterAgainstDockerRegistryRepos(
+	services []string, reposResponse *GoJSON.JSONWrapper) (filteredServices []string) {
+
+	repos := reposResponse.GetArrayFromPath("results")
+	for _, service := range services {
+		if serviceIsInDockerRegistry(repos, service) {
+			filteredServices = append(filteredServices, service)
+		}
+	}
+	return filteredServices
 }
 
 func generateAllFiles(serviceName, services string) error {
