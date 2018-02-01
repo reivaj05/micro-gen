@@ -3,8 +3,10 @@ version: '3.2'
 {{ $initialPort := 8000 }}
 services:
   {{ range $index, $value := .Services }}
+  {{ if $value }}
   {{ $value }}:
     image: {{ $username }}/{{ $value }}
     ports:
       - "{{ add $initialPort $index }}:8000"
+  {{ end }}
   {{ end }}
