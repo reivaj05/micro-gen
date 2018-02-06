@@ -17,6 +17,12 @@ var configFileOptions = []*utils.GenerateFileOptions{
 		"python", false),
 	utils.CreateFileOptions("manage.py", "", "manage.gen", "src/",
 		"python", false),
+	utils.CreateFileOptions("base.txt", "requirements/", "requirements_base.gen",
+		"src/requirements/", "python", false),
+	utils.CreateFileOptions("develop.txt", "requirements/", "requirements_develop.gen",
+		"src/requirements/", "python", false),
+	utils.CreateFileOptions("production.txt", "requirements/", "requirements_production.gen",
+		"src/requirements/", "python", false),
 }
 
 var appFileOptions = []*utils.GenerateFileOptions{
@@ -39,10 +45,6 @@ var buildFileOptions = []*utils.GenerateFileOptions{
 		"build/", "python", true),
 	utils.CreateFileOptions("Makefile", "", "Makefile.gen",
 		"build/", "python", true),
-	utils.CreateFileOptions("base.txt", "requirements/", "requirements_base.gen", "build/",
-		"python", false),
-	utils.CreateFileOptions("develop.txt", "requirements/", "requirements_develop.gen", "build/",
-		"python", false),
 	utils.CreateFileOptions(".gitignore", "", "ignore.gen", "",
 		"python", false),
 	utils.CreateFileOptions(".dockerignore", "", "ignore.gen", "",
