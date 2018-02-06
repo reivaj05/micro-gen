@@ -39,7 +39,7 @@ var buildFileOptions = []*utils.GenerateFileOptions{
 		"build/", "python", true),
 	utils.CreateFileOptions("Makefile", "", "Makefile.gen",
 		"build/", "python", true),
-	utils.CreateFileOptions("requirements.txt", "", "requirements.gen", "build/",
+	utils.CreateFileOptions("base.txt", "requirements/", "requirements_base.gen", "build/",
 		"python", false),
 	utils.CreateFileOptions(".gitignore", "", "ignore.gen", "",
 		"python", false),
@@ -77,6 +77,7 @@ func createDirectories(serviceName string) error {
 	paths := []string{
 		fmt.Sprintf("./%s", serviceName), fmt.Sprintf("./%s/config", serviceName),
 		fmt.Sprintf("./%s/app", serviceName), fmt.Sprintf("./%s/scripts", serviceName),
+		fmt.Sprintf("./%s/requirements", serviceName),
 	}
 	for _, path := range paths {
 		if err := utils.CreateDir(path); err != nil {
