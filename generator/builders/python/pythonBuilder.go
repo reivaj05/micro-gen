@@ -41,6 +41,8 @@ var buildFileOptions = []*utils.GenerateFileOptions{
 		"build/", "python", true),
 	utils.CreateFileOptions("base.txt", "requirements/", "requirements_base.gen", "build/",
 		"python", false),
+	utils.CreateFileOptions("develop.txt", "requirements/", "requirements_develop.gen", "build/",
+		"python", false),
 	utils.CreateFileOptions(".gitignore", "", "ignore.gen", "",
 		"python", false),
 	utils.CreateFileOptions(".dockerignore", "", "ignore.gen", "",
