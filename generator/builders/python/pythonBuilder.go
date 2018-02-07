@@ -7,8 +7,14 @@ import (
 )
 
 var configFileOptions = []*utils.GenerateFileOptions{
-	utils.CreateFileOptions("settings.py", "config/", "settings.gen",
+	utils.CreateFileOptions("base.py", "config/settings/", "settings_base.gen",
 		"src/config/", "python", false),
+	utils.CreateFileOptions("develop.py", "config/settings/", "settings_develop.gen",
+		"src/config/", "python", false),
+	utils.CreateFileOptions("production.py", "config/settings/", "settings_production.gen",
+		"src/config/", "python", false),
+	utils.CreateFileOptions("__init__.py", "config/settings/", "__init__.gen",
+		"src/", "python", false),
 	utils.CreateFileOptions("urls.py", "config/", "urls.gen", "src/config/",
 		"python", false),
 	utils.CreateFileOptions("wsgi.py", "config/", "wsgi.gen", "src/config/",
@@ -81,7 +87,7 @@ func createDirectories(serviceName string) error {
 	paths := []string{
 		fmt.Sprintf("./%s", serviceName), fmt.Sprintf("./%s/config", serviceName),
 		fmt.Sprintf("./%s/app", serviceName), fmt.Sprintf("./%s/scripts", serviceName),
-		fmt.Sprintf("./%s/requirements", serviceName),
+		fmt.Sprintf("./%s/config/settings", serviceName), fmt.Sprintf("./%s/requirements", serviceName),
 	}
 	for _, path := range paths {
 		if err := utils.CreateDir(path); err != nil {
