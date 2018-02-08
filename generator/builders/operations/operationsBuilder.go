@@ -11,10 +11,11 @@ import (
 )
 
 func Build(serviceName, services string) error {
-	if err := createDirectories(serviceName); err != nil {
-		return err
-	}
-	return createService(serviceName, services)
+	fmt.Println("TODO: Implement operations")
+	// if err := createDirectories(serviceName); err != nil {
+	// 	return err
+	// }
+	// return createService(serviceName, services)
 }
 
 func createDirectories(serviceName string) error {
