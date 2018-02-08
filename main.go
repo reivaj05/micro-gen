@@ -84,54 +84,58 @@ func createCLIOptions() *GoCLI.Options {
 
 func createCommands() []*GoCLI.Command {
 	return []*GoCLI.Command{
-		&GoCLI.Command{
-			Name:        "create-service",
-			Usage:       "Create a new service project in the language of your preference",
-			Action:      generator.GenerateService,
-			StringFlags: getCreateServiceStringFlags(),
-		},
-		&GoCLI.Command{
-			Name:        "create-tooling",
-			Usage:       "Create a new tooling project to handle the services you previously created",
-			Action:      generator.GenerateTooling,
-			StringFlags: getCreateToolingStringFlags(),
-		},
-		&GoCLI.Command{
-			Name:        "create-operations",
-			Usage:       "Create a new kubernetes project to handle the services you previously created",
-			Action:      generator.GenerateOperations,
-			StringFlags: getCreateToolingStringFlags(),
-		},
+		createServiceCommand(),
+		createToolingCommand(),
+		createOperationsCommand(),
+	}
+}
+
+func createServiceCommand() *GoCLI.Command {
+	return &GoCLI.Command{
+		Name:        "create-service",
+		Usage:       "Create a new service project in the language of your preference",
+		Action:      generator.GenerateService,
+		StringFlags: getCreateServiceStringFlags(),
 	}
 }
 
 func getCreateServiceStringFlags() []*GoCLI.StringFlag {
 	return []*GoCLI.StringFlag{
-		&GoCLI.StringFlag{
-			Name:    "lang",
-			Usage:   "Language of the microservice to be created",
-			Default: "go",
-		},
-		&GoCLI.StringFlag{
-			Name:    "repo-provider",
-			Usage:   "Service to handle repos(github, gitlab, bitbucket)",
-			Default: "github",
-		},
-		&GoCLI.StringFlag{
-			Name:    "ci-provider",
-			Usage:   "Service to handle CI integration(travis, jenkins, circle)",
-			Default: "travis",
-		},
+		createStringFlag("lang", "Language of the microservice to be created", "go"),
+		createStringFlag("repo-provider", "Service to handle repos(github, gitlab)", "github"),
+		createStringFlag("ci-provider", "Service to handle CI integration(travis)", "travis"),
+	}
+}
+
+func createToolingCommand() *GoCLI.Command {
+	return &GoCLI.Command{
+		Name:        "create-tooling",
+		Usage:       "Create a new tooling project to handle the services you previously created",
+		Action:      generator.GenerateTooling,
+		StringFlags: getCreateToolingStringFlags(),
+	}
+}
+
+func createOperationsCommand() *GoCLI.Command {
+	return &GoCLI.Command{
+		Name:        "create-operations",
+		Usage:       "Create a new kubernetes project to handle the services you previously created",
+		Action:      generator.GenerateOperations,
+		StringFlags: getCreateToolingStringFlags(),
 	}
 }
 
 func getCreateToolingStringFlags() []*GoCLI.StringFlag {
 	return []*GoCLI.StringFlag{
-		&GoCLI.StringFlag{
-			Name:    "services",
-			Usage:   "Space separated list of the services you want to manage. TODO",
-			Default: "",
-		},
+		createStringFlag("services", "Space separated list of the services you want to manage", ""),
+	}
+}
+
+func createStringFlag(name, usage, _default string) *GoCLI.StringFlag {
+	return &GoCLI.StringFlag{
+		Name:    name,
+		Usage:   usage,
+		Default: _default,
 	}
 }
 
