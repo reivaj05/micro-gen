@@ -92,8 +92,14 @@ func createCommands() []*GoCLI.Command {
 		},
 		&GoCLI.Command{
 			Name:        "create-tooling",
-			Usage:       "Create a new tooling to handle the services you previously created",
+			Usage:       "Create a new tooling project to handle the services you previously created",
 			Action:      generator.GenerateTooling,
+			StringFlags: getCreateToolingStringFlags(),
+		},
+		&GoCLI.Command{
+			Name:        "create-operations",
+			Usage:       "Create a new kubernetes project to handle the services you previously created",
+			Action:      generator.GenerateOperations,
 			StringFlags: getCreateToolingStringFlags(),
 		},
 	}

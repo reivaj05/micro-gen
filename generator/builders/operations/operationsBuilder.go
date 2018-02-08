@@ -2,9 +2,10 @@ package operationsBuilder
 
 import (
 	"fmt"
-	"github.com/reivaj05/GoJSON"
 	"os"
 	"strings"
+
+	"github.com/reivaj05/GoJSON"
 
 	"github.com/reivaj05/micro-gen/docker-wrapper"
 	"github.com/reivaj05/micro-gen/generator/utils"
@@ -12,6 +13,7 @@ import (
 
 func Build(serviceName, services string) error {
 	fmt.Println("TODO: Implement operations")
+	return nil
 	// if err := createDirectories(serviceName); err != nil {
 	// 	return err
 	// }
@@ -28,10 +30,10 @@ func createDirectories(serviceName string) error {
 	return nil
 }
 
-func createService(serviceName, services string) error {
-	services = filterServices(strings.Split(services, ","))
-	return generateAllFiles(serviceName, services)
-}
+// func createService(serviceName, services string) error {
+// 	services = filterServices(strings.Split(services, ","))
+// 	return generateAllFiles(serviceName, services)
+// }
 
 func filterServices(services []string) string {
 	if docker, err := dockerWrapper.NewDockerRegistryManager(); err == nil {
@@ -66,14 +68,14 @@ func serviceIsInDockerRegistry(repos []*GoJSON.JSONWrapper, service string) bool
 	return false
 }
 
-func generateAllFiles(serviceName, services string) error {
-	for _, optionsList := range [][]*utils.GenerateFileOptions{buildFileOptions} {
-		if err := generateFilesWithOptionsList(serviceName, services, optionsList); err != nil {
-			return err
-		}
-	}
-	return nil
-}
+// func generateAllFiles(serviceName, services string) error {
+// 	for _, optionsList := range [][]*utils.GenerateFileOptions{buildFileOptions} {
+// 		if err := generateFilesWithOptionsList(serviceName, services, optionsList); err != nil {
+// 			return err
+// 		}
+// 	}
+// 	return nil
+// }
 
 func generateFilesWithOptionsList(serviceName, services string, fileOptions []*utils.GenerateFileOptions) error {
 	for _, options := range fileOptions {

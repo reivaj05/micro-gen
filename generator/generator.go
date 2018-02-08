@@ -4,12 +4,15 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/reivaj05/micro-gen/ci-manager"
 	goBuilder "github.com/reivaj05/micro-gen/generator/builders/go"
 	jsBuilder "github.com/reivaj05/micro-gen/generator/builders/javascript"
+	operationsBuilder "github.com/reivaj05/micro-gen/generator/builders/operations"
 	pythonBuilder "github.com/reivaj05/micro-gen/generator/builders/python"
 	rubyBuilder "github.com/reivaj05/micro-gen/generator/builders/ruby"
 	rustBuilder "github.com/reivaj05/micro-gen/generator/builders/rust"
 	toolingBuilder "github.com/reivaj05/micro-gen/generator/builders/tooling"
+	"github.com/reivaj05/micro-gen/repo-manager"
 )
 
 type generator func(serviceName string) error
@@ -79,7 +82,7 @@ func GenerateTooling(flags map[string]string, args ...string) error {
 
 func GenerateOperations(flags map[string]string, args ...string) error {
 	services := flags["services"]
-	if err := toolingBuilder.Build("operations", services); err != nil {
+	if err := operationsBuilder.Build("operations", services); err != nil {
 		rollback("operations")
 		return err
 	}
