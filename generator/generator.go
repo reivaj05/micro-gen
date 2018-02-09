@@ -77,7 +77,7 @@ func GenerateTooling(flags map[string]string, args ...string) error {
 		rollback("tooling")
 		return err
 	}
-	return nil
+	return repoManager.CreateRepo("tooling", flags["repo-provider"])
 }
 
 func GenerateOperations(flags map[string]string, args ...string) error {
