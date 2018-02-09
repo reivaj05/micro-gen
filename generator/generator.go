@@ -86,7 +86,7 @@ func GenerateOperations(flags map[string]string, args ...string) error {
 		rollback("operations")
 		return err
 	}
-	return nil
+	return repoManager.CreateRepo("operations", flags["repo-provider"])
 }
 
 func rollback(serviceName string) {
