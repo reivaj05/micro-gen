@@ -128,6 +128,7 @@ func createOperationsCommand() *GoCLI.Command {
 func getCreateToolingStringFlags() []*GoCLI.StringFlag {
 	return []*GoCLI.StringFlag{
 		createStringFlag("services", "Space separated list of the services you want to manage", ""),
+		createStringFlag("repo-provider", "Service to handle repos(github, gitlab)", "github"),
 	}
 }
 
