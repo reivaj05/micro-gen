@@ -2,26 +2,25 @@ package operationsBuilder
 
 import (
 	"fmt"
-	"os"
 	"strings"
 
 	"github.com/reivaj05/GoJSON"
 
-	"github.com/reivaj05/micro-gen/docker-wrapper"
 	"github.com/reivaj05/micro-gen/generator/utils"
 )
 
-func Build(serviceName, services string) error {
+func Build(opName, services string) error {
 	fmt.Println("TODO: Implement operations")
-	return nil
-	// if err := createDirectories(serviceName); err != nil {
-	// 	return err
-	// }
-	// return createService(serviceName, services)
+	// return nil
+	if err := createDirectories(opName); err != nil {
+		return err
+	}
+	return createService(opName, strings.Split(services, ","))
 }
 
-func createDirectories(serviceName string) error {
-	paths := []string{fmt.Sprintf("./%s", serviceName)}
+func createDirectories(opName string) error {
+	paths := []string{fmt.Sprintf("./%s", opName)}
+	fmt.Println(paths)
 	for _, path := range paths {
 		if err := utils.CreateDir(path); err != nil {
 			return err
@@ -30,19 +29,19 @@ func createDirectories(serviceName string) error {
 	return nil
 }
 
-// func createService(serviceName, services string) error {
-// 	services = filterServices(strings.Split(services, ","))
-// 	return generateAllFiles(serviceName, services)
-// }
+func createService(opName string, services []string) error {
+	services = filterServices(services)
+	return generateAllFiles(opName, services)
+}
 
-func filterServices(services []string) string {
-	if docker, err := dockerWrapper.NewDockerRegistryManager(); err == nil {
-		reposResponse, err := docker.SearchRepos()
-		if err == nil {
-			services = filterAgainstDockerRegistryRepos(services, reposResponse)
-		}
-	}
-	return strings.Join(services, ",")
+func filterServices(services []string) []string {
+	// if docker, err := dockerWrapper.NewDockerRegistryManager(); err == nil {
+	// 	reposResponse, err := docker.SearchRepos()
+	// 	if err == nil {
+	// 		services = filterAgainstDockerRegistryRepos(services, reposResponse)
+	// 	}
+	// }
+	return services
 }
 
 func filterAgainstDockerRegistryRepos(
@@ -68,27 +67,33 @@ func serviceIsInDockerRegistry(repos []*GoJSON.JSONWrapper, service string) bool
 	return false
 }
 
-// func generateAllFiles(serviceName, services string) error {
-// 	for _, optionsList := range [][]*utils.GenerateFileOptions{buildFileOptions} {
-// 		if err := generateFilesWithOptionsList(serviceName, services, optionsList); err != nil {
-// 			return err
-// 		}
-// 	}
-// 	return nil
-// }
-
-func generateFilesWithOptionsList(serviceName, services string, fileOptions []*utils.GenerateFileOptions) error {
-	for _, options := range fileOptions {
-		options.Data = struct {
-			DockerUsername string
-			Services       []string
-		}{
-			DockerUsername: os.Getenv("DOCKER_USERNAME"),
-			Services:       strings.Split(services, ","),
-		}
-		if err := utils.GenerateFile(serviceName, options); err != nil {
+func generateAllFiles(opName string, services []string) error {
+	for _, service := range services {
+		if err := generateFilesForService(opName, service); err != nil {
 			return err
 		}
 	}
 	return nil
+}
+
+func generateFilesForService(opName, service string) error {
+	if err := utils.CreateDir(fmt.Sprintf("./%s/%s", opName, service)); err != nil {
+		return err
+	}
+	if err := generateDeploymentFile(opName, service); err != nil {
+		return err
+	}
+	return generateServiceFile(opName, service)
+}
+
+func generateDeploymentFile(opName, service string) error {
+	options := utils.CreateFileOptions("deployment.yml", fmt.Sprintf("%s/", service),
+		"deployment.gen", "", "operations", true)
+	return utils.GenerateFile(opName, options)
+}
+
+func generateServiceFile(opName, service string) error {
+	options := utils.CreateFileOptions("service.yml", fmt.Sprintf("%s/", service),
+		"service.gen", "", "operations", true)
+	return utils.GenerateFile(opName, options)
 }
