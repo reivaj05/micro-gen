@@ -1,4 +1,4 @@
 #!/bin/bash
 
-curl https://glide.sh/get | sh
-glide install
+go get -u github.com/golang/dep/cmd/dep
+dep ensure

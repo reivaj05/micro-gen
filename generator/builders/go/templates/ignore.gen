@@ -17,6 +17,7 @@
 # Project-local glide cache, RE: https://github.com/Masterminds/glide/issues/736
 .glide/
 glide.lock
+Gopkg.lock
 vendor
 
 # End of https://www.gitignore.io/api/go
@@ -28,3 +29,7 @@ coverage*
 # Log
 /log
 *.log
+
+*.DS_Store
+
+env.sh
