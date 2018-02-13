@@ -20,7 +20,6 @@ func Build(opName, services string) error {
 
 func createDirectories(opName string) error {
 	paths := []string{fmt.Sprintf("./%s", opName)}
-	fmt.Println(paths)
 	for _, path := range paths {
 		if err := utils.CreateDir(path); err != nil {
 			return err

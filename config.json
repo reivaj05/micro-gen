@@ -3,6 +3,7 @@
 	"templates": {
 		"go": "generator/builders/go/templates/",
 		"tooling": "generator/builders/tooling/templates/",
+		"operations": "generator/builders/operations/templates/",
 		"python": "generator/builders/python/templates/",
 		"rust": "generator/builders/rust/templates/"
 	}
