@@ -4,14 +4,13 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/reivaj05/GoJSON"
-
 	"github.com/reivaj05/micro-gen/generator/utils"
+
+	"github.com/reivaj05/GoJSON"
+	"github.com/reivaj05/micro-gen/docker-wrapper"
 )
 
 func Build(opName, services string) error {
-	fmt.Println("TODO: Implement operations")
-	// return nil
 	if err := createDirectories(opName); err != nil {
 		return err
 	}
@@ -34,12 +33,12 @@ func createService(opName string, services []string) error {
 }
 
 func filterServices(services []string) []string {
-	// if docker, err := dockerWrapper.NewDockerRegistryManager(); err == nil {
-	// 	reposResponse, err := docker.SearchRepos()
-	// 	if err == nil {
-	// 		services = filterAgainstDockerRegistryRepos(services, reposResponse)
-	// 	}
-	// }
+	if docker, err := dockerWrapper.NewDockerRegistryManager(); err == nil {
+		reposResponse, err := docker.SearchRepos()
+		if err == nil {
+			services = filterAgainstDockerRegistryRepos(services, reposResponse)
+		}
+	}
 	return services
 }
 
