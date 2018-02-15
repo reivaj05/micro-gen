@@ -18,4 +18,4 @@ spec:
       - name: {{ .ServiceName }}
         image: image-docker-name-todo
         ports:
-        - containerPort: 80
+        - containerPort: 8000
