@@ -28,7 +28,7 @@ func createDirectories(opName string) error {
 }
 
 func createService(opName string, services []string) error {
-	services = filterServices(services)
+	// services = filterServices(services)
 	return generateAllFiles(opName, services)
 }
 
@@ -86,12 +86,17 @@ func generateFilesForService(opName, service string) error {
 
 func generateDeploymentFile(opName, service string) error {
 	options := utils.CreateFileOptions("deployment.yml", fmt.Sprintf("%s/", service),
-		"deployment.gen", "", "operations", true)
+		"deployment.gen", "", "operations", false)
+	options.Data = createOptionsDeploymentData(service)
 	return utils.GenerateFile(opName, options)
 }
 
 func generateServiceFile(opName, service string) error {
 	options := utils.CreateFileOptions("service.yml", fmt.Sprintf("%s/", service),
-		"service.gen", "", "operations", true)
+		"service.gen", "", "operations", false)
 	return utils.GenerateFile(opName, options)
+}
+
+func createOptionsDeploymentData(service string) interface{} {
+	return struct{ Service string }{Service: service}
 }

@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .ServiceName }}-deployment
+  name: {{ .Service }}-deployment
 spec:
   selector:
     matchLabels:
-      app: {{ .ServiceName }}
+      app: {{ .Service }}
   replicas: 1 # tells deployment to run 2 pods matching the template
   template: # create pods using pod definition in this template
     metadata:
       # unlike pod-nginx.yaml, the name is not included in the meta data as a unique name is
       # generated from the deployment name
       labels:
-        app: {{ .ServiceName }}
+        app: {{ .Service }}
     spec:
       containers:
-      - name: {{ .ServiceName }}
+      - name: {{ .Service }}
         image: image-docker-name-todo
         ports:
         - containerPort: 8000
