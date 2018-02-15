@@ -2,6 +2,7 @@ package operationsBuilder
 
 import (
 	"fmt"
+	"os"
 	"strings"
 
 	"github.com/reivaj05/micro-gen/generator/utils"
@@ -98,5 +99,11 @@ func generateServiceFile(opName, service string) error {
 }
 
 func createOptionsDeploymentData(service string) interface{} {
-	return struct{ Service string }{Service: service}
+	return struct {
+		Service        string
+		DockerUsername string
+	}{
+		Service:        service,
+		DockerUsername: os.Getenv("DOCKER_USERNAME"),
+	}
 }

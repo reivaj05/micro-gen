@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
       - name: {{ .Service }}
-        image: image-docker-name-todo
+        image: {{ .DockerUsername }}/{{ .Service }}:latest
         ports:
         - containerPort: 8000
