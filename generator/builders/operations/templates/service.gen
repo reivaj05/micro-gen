@@ -16,3 +16,4 @@ spec:
   # traffic to.
   selector:
     app: {{ .Service }}
+  type: LoadBalancer
