@@ -49,18 +49,21 @@ func (client *travisClient) ActivateRepo(serviceName string) error {
 	if err := client.syncAccount(); err != nil {
 		return err
 	}
-	time.Sleep(5 * time.Second) // Wait 5 seconds until sync is done
 	repo, err := client.filterRepoByName(serviceName)
 	if err != nil {
-		if client.attempts < MAX_ATTEMPTS {
-			client.attempts++
-			return client.ActivateRepo(serviceName)
-		}
-		return err
+		return client.retrySyncAccount(serviceName, err)
 	}
 	slug, _ := repo.GetStringFromPath("slug")
 	client.createEnvVars(slug)
 	return client.activateRepoRequest(slug)
+}
+
+func (client *travisClient) retrySyncAccount(serviceName string, err error) error {
+	if client.attempts < MAX_ATTEMPTS {
+		client.attempts++
+		return client.ActivateRepo(serviceName)
+	}
+	return err
 }
 
 func (client *travisClient) syncAccount() error {
@@ -88,6 +91,7 @@ func (client *travisClient) syncAccountRequest(userID string) error {
 }
 
 func (client *travisClient) filterRepoByName(serviceName string) (*GoJSON.JSONWrapper, error) {
+	time.Sleep(5 * time.Second) // Wait 5 seconds until sync is done
 	repos, err := client.getRepos()
 	if err != nil {
 		return nil, err
