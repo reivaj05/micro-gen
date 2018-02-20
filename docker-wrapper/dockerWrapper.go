@@ -83,6 +83,38 @@ func (manager *dockerRegistryManager) parseLoginResponse(response string) (strin
 	return value, nil
 }
 
+func (manager *dockerRegistryManager) FilterByExistingRepos(dataToFilter []string) []string {
+	if reposResponse, err := manager.SearchRepos(); err == nil {
+		dataToFilter = manager.filterExistingRepos(dataToFilter, reposResponse)
+	}
+	return dataToFilter
+}
+
+func (manager *dockerRegistryManager) filterExistingRepos(
+	dataToFilter []string, reposResponse *GoJSON.JSONWrapper) (results []string) {
+
+	repos := reposResponse.GetArrayFromPath("results")
+	for _, item := range dataToFilter {
+		if manager.isItemInDockerRegistry(repos, item) {
+			results = append(results, item)
+		}
+	}
+	return results
+}
+
+func (manager *dockerRegistryManager) isItemInDockerRegistry(
+	repos []*GoJSON.JSONWrapper, item string) bool {
+
+	for _, repo := range repos {
+		if repo.HasPath("name") {
+			if name, ok := repo.GetStringFromPath("name"); ok && name == item {
+				return true
+			}
+		}
+	}
+	return false
+}
+
 func (manager *dockerRegistryManager) SearchRepos() (*GoJSON.JSONWrapper, error) {
 	response, status, err := manager.client.MakeRequest(manager.createSearchReposRequestConfig())
 	if err != nil || status >= 400 {
