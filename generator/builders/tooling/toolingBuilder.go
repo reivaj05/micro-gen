@@ -2,7 +2,6 @@ package toolingBuilder
 
 import (
 	"fmt"
-	"github.com/reivaj05/GoJSON"
 	"os"
 	"strings"
 
@@ -39,35 +38,9 @@ func createService(serviceName, services string) error {
 
 func filterServices(services []string) string {
 	if docker, err := dockerWrapper.NewDockerRegistryManager(); err == nil {
-		reposResponse, err := docker.SearchRepos()
-		if err == nil {
-			services = filterAgainstDockerRegistryRepos(services, reposResponse)
-		}
+		services = docker.FilterByExistingRepos(services)
 	}
 	return strings.Join(services, ",")
-}
-
-func filterAgainstDockerRegistryRepos(
-	services []string, reposResponse *GoJSON.JSONWrapper) (filteredServices []string) {
-
-	repos := reposResponse.GetArrayFromPath("results")
-	for _, service := range services {
-		if serviceIsInDockerRegistry(repos, service) {
-			filteredServices = append(filteredServices, service)
-		}
-	}
-	return filteredServices
-}
-
-func serviceIsInDockerRegistry(repos []*GoJSON.JSONWrapper, service string) bool {
-	for _, repo := range repos {
-		if repo.HasPath("name") {
-			if name, ok := repo.GetStringFromPath("name"); ok && name == service {
-				return true
-			}
-		}
-	}
-	return false
 }
 
 func generateAllFiles(serviceName, services string) error {

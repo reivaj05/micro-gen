@@ -7,7 +7,6 @@ import (
 
 	"github.com/reivaj05/micro-gen/generator/utils"
 
-	"github.com/reivaj05/GoJSON"
 	"github.com/reivaj05/micro-gen/docker-wrapper"
 )
 
@@ -29,41 +28,15 @@ func createDirectories(opName string) error {
 }
 
 func createService(opName string, services []string) error {
-	// services = filterServices(services)
+	services = filterServices(services)
 	return generateAllFiles(opName, services)
 }
 
 func filterServices(services []string) []string {
 	if docker, err := dockerWrapper.NewDockerRegistryManager(); err == nil {
-		reposResponse, err := docker.SearchRepos()
-		if err == nil {
-			services = filterAgainstDockerRegistryRepos(services, reposResponse)
-		}
+		return docker.FilterByExistingRepos(services)
 	}
 	return services
-}
-
-func filterAgainstDockerRegistryRepos(
-	services []string, reposResponse *GoJSON.JSONWrapper) (filteredServices []string) {
-
-	repos := reposResponse.GetArrayFromPath("results")
-	for _, service := range services {
-		if serviceIsInDockerRegistry(repos, service) {
-			filteredServices = append(filteredServices, service)
-		}
-	}
-	return filteredServices
-}
-
-func serviceIsInDockerRegistry(repos []*GoJSON.JSONWrapper, service string) bool {
-	for _, repo := range repos {
-		if repo.HasPath("name") {
-			if name, ok := repo.GetStringFromPath("name"); ok && name == service {
-				return true
-			}
-		}
-	}
-	return false
 }
 
 func generateAllFiles(opName string, services []string) error {
