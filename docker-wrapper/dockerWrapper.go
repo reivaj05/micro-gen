@@ -62,7 +62,7 @@ func (manager *dockerRegistryManager) getToken() (string, error) {
 
 func (manager *dockerRegistryManager) login(data string) (string, error) {
 	response, status, err := manager.client.MakeRequest(manager.createLoginRequestConfig(data))
-	if err != nil || status > 400 {
+	if err != nil || status >= 400 {
 		return "", fmt.Errorf("Error %v: Got status %d", status, err)
 	}
 	return manager.parseLoginResponse(response)
