@@ -36,6 +36,8 @@ func (suite *DockerWrapperTestSuite) SetupSuite() {
 func (suite *DockerWrapperTestSuite) createMockServers() {
 	suite.loginServer = httptest.NewServer(&loginHandler{})
 	suite.reposServer = httptest.NewServer(&reposHandler{})
+	loginEndpoint = fmt.Sprintf("%s?%s", suite.loginServer.URL)
+	repositoriesEndpoint = fmt.Sprintf("%s?%s%s", suite.reposServer.URL)
 }
 
 func (handler *loginHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -43,7 +45,7 @@ func (handler *loginHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func (handler *reposHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	sendResponse(w, `{"results":[]}`)
+	sendResponse(w, `{"results":[{"name": "mockName"}]}`)
 }
 
 func sendResponse(w http.ResponseWriter, response string) {
@@ -76,7 +78,6 @@ func (suite *DockerWrapperTestSuite) TearDownTest() {
 
 func (suite *DockerWrapperTestSuite) TestNewDockerRegistryManagerSuccessful() {
 	currentStatus = successStatus
-	loginEndpoint = fmt.Sprintf("%s?%s", suite.loginServer.URL)
 	suite.setupEnvVars("MOCK_USERNAME", "MOCK_PASSWORD", "MOCK_REGISTRY")
 	manager, err := NewDockerRegistryManager()
 	suite.assert.NotNil(manager)
@@ -110,9 +111,16 @@ func (suite *DockerWrapperTestSuite) assertWrongNewDockerRegistryManager() {
 	suite.assert.NotNil(err)
 }
 
+func (suite *DockerWrapperTestSuite) TestFilterByExistingRepos() {
+	currentStatus = successStatus
+	suite.setupEnvVars("MOCK_USERNAME", "MOCK_PASSWORD", "MOCK_REGISTRY")
+	manager, _ := NewDockerRegistryManager()
+	results := manager.FilterByExistingRepos([]string{"mockName", "mockName2"})
+	suite.assert.True(len(results) == 1)
+}
+
 func (suite *DockerWrapperTestSuite) TestSearchReposSuccessful() {
 	currentStatus = successStatus
-	repositoriesEndpoint = fmt.Sprintf("%s?%s%s", suite.reposServer.URL)
 	suite.setupEnvVars("MOCK_USERNAME", "MOCK_PASSWORD", "MOCK_REGISTRY")
 	manager, _ := NewDockerRegistryManager()
 	data, err := manager.SearchRepos()
@@ -122,10 +130,10 @@ func (suite *DockerWrapperTestSuite) TestSearchReposSuccessful() {
 }
 
 func (suite *DockerWrapperTestSuite) TestSearchReposUnsuccessful() {
-	currentStatus = failureStatus
-	repositoriesEndpoint = fmt.Sprintf("%s?%s%s", suite.reposServer.URL)
+	currentStatus = successStatus
 	suite.setupEnvVars("MOCK_USERNAME", "MOCK_PASSWORD", "MOCK_REGISTRY")
 	manager, _ := NewDockerRegistryManager()
+	currentStatus = failureStatus
 	data, err := manager.SearchRepos()
 	suite.assert.Nil(data)
 	suite.assert.NotNil(err)
@@ -133,7 +141,6 @@ func (suite *DockerWrapperTestSuite) TestSearchReposUnsuccessful() {
 
 func (suite *DockerWrapperTestSuite) setupSearchRepos(status int) {
 	currentStatus = status
-	repositoriesEndpoint = fmt.Sprintf("%s?%s%s", suite.reposServer.URL)
 	suite.setupEnvVars("MOCK_USERNAME", "MOCK_PASSWORD", "MOCK_REGISTRY")
 }
 
