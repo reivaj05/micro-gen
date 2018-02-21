@@ -14,7 +14,7 @@ func Build(opName, services string) error {
 	if err := createDirectories(opName); err != nil {
 		return err
 	}
-	return createService(opName, strings.Split(services, ","))
+	return createServices(opName, strings.Split(services, ","))
 }
 
 func createDirectories(opName string) error {
@@ -27,7 +27,7 @@ func createDirectories(opName string) error {
 	return nil
 }
 
-func createService(opName string, services []string) error {
+func createServices(opName string, services []string) error {
 	services = filterServices(services)
 	return generateAllFiles(opName, services)
 }
