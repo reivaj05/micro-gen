@@ -35,7 +35,7 @@
 
 [[constraint]]
   name = "github.com/reivaj05/GoConfig"
-  version = "0.0.3"
+  version = "0.0.4"
 
 [[constraint]]
   name = "github.com/reivaj05/GoJSON"
@@ -50,6 +50,10 @@
   version = "0.0.1"
 
 [[constraint]]
+  name = "github.com/reivaj05/GoServer"
+  version = "0.0.3"
+
+[[constraint]]
   branch = "master"
   name = "github.com/serenize/snaker"
 
@@ -59,7 +63,7 @@
 
 [[constraint]]
   name = "github.com/xanzy/go-gitlab"
-  version = "0.7.5"
+  version = "0.8.1"
 
 [[constraint]]
   branch = "master"
