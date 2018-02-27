@@ -87,6 +87,7 @@ func createCommands() []*GoCLI.Command {
 		createServiceCommand(),
 		createToolingCommand(),
 		createOperationsCommand(),
+		createDeployCommand(),
 	}
 }
 
@@ -129,6 +130,21 @@ func getCreateToolingStringFlags() []*GoCLI.StringFlag {
 	return []*GoCLI.StringFlag{
 		createStringFlag("services", "Space separated list of the services you want to manage", ""),
 		createStringFlag("repo-provider", "Service to handle repos(github, gitlab)", "github"),
+	}
+}
+
+func createDeployCommand() *GoCLI.Command {
+	return &GoCLI.Command{
+		Name:        "deploy-service",
+		Usage:       "Deploy a new service to one of the cloud providers(aws, gce, heroku)",
+		Action:      generator.DeployService,
+		StringFlags: getDeployServiceStringFlags(),
+	}
+}
+
+func getDeployServiceStringFlags() []*GoCLI.StringFlag {
+	return []*GoCLI.StringFlag{
+		createStringFlag("provider", "Cloud provider(aws, gce, heroku)", "aws"),
 	}
 }
 
