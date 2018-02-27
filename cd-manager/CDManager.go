@@ -20,10 +20,10 @@ var CDKeys = map[string]string{
 }
 
 var CDClients = map[string]func(string) CDClient{
-	"aws": NewAWSClient,
+// "aws": NewAWSClient,
 }
 
-func ConnectWithCIProvider(serviceName, provider string) error {
+func DeployServiceWithCDProvider(serviceName, provider string) error {
 	token, err := getToken(provider)
 	if err != nil {
 		return err
@@ -34,7 +34,7 @@ func ConnectWithCIProvider(serviceName, provider string) error {
 }
 
 func getToken(provider string) (string, error) {
-	if key, ok := CDClient[provider]; ok {
+	if key, ok := CDKeys[provider]; ok {
 		accessToken := os.Getenv(key)
 		if accessToken == "" {
 			return "", fmt.Errorf("%s env var does not exist", key)

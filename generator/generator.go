@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/reivaj05/micro-gen/cd-manager"
 	"github.com/reivaj05/micro-gen/ci-manager"
 	goBuilder "github.com/reivaj05/micro-gen/generator/builders/go"
 	jsBuilder "github.com/reivaj05/micro-gen/generator/builders/javascript"
@@ -87,6 +88,21 @@ func GenerateOperations(flags map[string]string, args ...string) error {
 		return err
 	}
 	return repoManager.CreateRepo("operations", flags["repo-provider"])
+}
+
+func DeployService(flags map[string]string, args ...string) error {
+	if err := validateDeployServiceParameters(args...); err != nil {
+		return err
+	}
+	serviceName := args[0]
+	return CDManager.DeployServiceWithCDProvider(serviceName, flags["cd-provider"])
+}
+
+func validateDeployServiceParameters(args ...string) error {
+	if len(args) == 0 {
+		return fmt.Errorf("You didn't pass a name for the service to deploy")
+	}
+	return nil
 }
 
 func rollback(serviceName string) {
