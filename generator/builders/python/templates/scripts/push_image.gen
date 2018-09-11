@@ -3,7 +3,7 @@
 IMAGE_NAME={{ .ServiceName }}
 BRANCH_NAME=$TRAVIS_BRANCH
 
-if [ $BRANCH_NAME == "master" ]; then
+if [ "$BRANCH_NAME"="master" ]; then
 	BRANCH_NAME="latest"
 fi
 
